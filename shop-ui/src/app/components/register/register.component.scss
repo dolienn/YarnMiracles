@@ -7,112 +7,114 @@
   align-items: center;
   width: 100%;
   margin-top: 2.5rem;
-}
 
-.form-wrapper {
-  width: 28rem;
-  padding: 4rem;
-  border-radius: $border-radius;
-  box-shadow: inset 0 0 0 0.15rem $color--01;
-}
+  .form-wrapper {
+    width: 28rem;
+    padding: 4rem;
+    border-radius: $border-radius;
+    box-shadow: inset 0 0 0 0.15rem $color--01;
 
-.form-wrapper h2 {
-  color: $color--01;
-  font-size: 2rem;
-}
+    .alerts {
+      .alert {
+        background-color: $error--01;
+        padding: 1.3rem 0.8rem;
+        max-width: 100%;
+        height: auto;
+        margin-top: 1rem;
+        border-radius: $border-radius;
+        border-left: 0.4rem solid $error--02;
 
-.form-wrapper .form {
-  margin: 2rem 0 2.5rem;
-}
+        .msg {
+          font-size: 1rem;
+          color: $error--02;
+        }
+      }
+    }
 
-.form .form-control {
-  position: relative;
-  height: 3.2rem;
-  margin-bottom: 1rem;
-}
+    :where(label, p) {
+      color: $color--02;
+    }
 
-.form-control input {
-  height: 100%;
-  width: 100%;
-  background-color: $background-color--01;
-  outline: none;
-  border: none;
-  color: $color--01;
-  font-size: 1rem;
-  border-radius: $border-radius;
-  padding: 0 1.3rem;
-  box-shadow: inset 0 0 0 0.15rem $color--01;
-}
+    h2 {
+      color: $color--01;
+      font-size: 2rem;
+    }
 
-.form-control input:is(:focus, :valid):not(:placeholder-shown) {
-  padding: 1rem 1.3rem 0;
-  background: $background-color--01;
-}
+    .form {
+      margin: 2rem 0 2.5rem;
 
-.form-control label {
-  position: absolute;
-  left: 1.3rem;
-  top: 50%;
-  color: $color--02;
-  pointer-events: none;
-  font-size: 1rem;
-  transform: translateY(-50%);
-  transition: all 0.1s ease;
-}
+      button {
+        width: 100%;
+        padding: 1rem 0;
+        font-size: 1rem;
+        color: $background-color--01;
+        font-size: 500;
+        border-radius: $border-radius;
+        background-color: $color--01;
+        margin: 1.6rem 0 0.7rem;
+        transition: 0.1s ease;
+      }
 
-.form-control input:is(:focus, :valid):not(:placeholder-shown) ~ label {
-  font-size: 0.75rem;
-  transform: translateY(-130%);
-}
+      button:hover {
+        background-color: $color--00;
+      }
 
-button {
-  border: none;
-  outline: none;
-  cursor: pointer;
-}
+      .form-control {
+        position: relative;
+        height: 3.2rem;
+        margin-bottom: 1rem;
 
-.form button {
-  width: 100%;
-  padding: 1rem 0;
-  font-size: 1rem;
-  color: $background-color--01;
-  font-size: 500;
-  border-radius: $border-radius;
-  background-color: $color--01;
-  margin: 1.6rem 0 0.7rem;
-  transition: 0.1s ease;
-}
+        input {
+          height: 100%;
+          width: 100%;
+          background-color: $background-color--01;
+          outline: none;
+          border: none;
+          color: $color--01;
+          font-size: 1rem;
+          border-radius: $border-radius;
+          padding: 0 1.3rem;
+          box-shadow: inset 0 0 0 0.15rem $color--01;
+        }
 
-.form button:hover {
-  background-color: $color--00;
-}
+        input:is(:focus, :valid):not(:placeholder-shown) {
+          padding: 1rem 1.3rem 0;
+          background: $background-color--01;
+        }
 
-.container :where(label, p) {
-  color: $color--02;
-}
+        label {
+          position: absolute;
+          left: 1.3rem;
+          top: 50%;
+          color: $color--02;
+          pointer-events: none;
+          font-size: 1rem;
+          transform: translateY(-50%);
+          transition: all 0.1s ease;
+        }
 
-.container p button {
-  font-size: 1rem;
-  color: $color--01;
-  background-color: $background-color--01;
-  text-decoration: none;
-}
+        input:is(:focus, :valid):not(:placeholder-shown) ~ label {
+          font-size: 0.75rem;
+          transform: translateY(-130%);
+        }
+      }
+    }
+  }
 
-.container p button:hover {
-  text-decoration: underline;
-}
+  button {
+    border: none;
+    outline: none;
+    cursor: pointer;
+  }
 
-.alert {
-  background-color: $error--01;
-  padding: 1.3rem 0.8rem;
-  max-width: 100%;
-  height: auto;
-  margin-top: 1rem;
-  border-radius: $border-radius;
-  border-left: 0.4rem solid $error--02;
-}
+  p button {
+    font-size: 1rem;
+    color: $color--01;
+    background-color: $background-color--01;
+    text-decoration: none;
+  }
 
-.alert .msg {
-  font-size: 1rem;
-  color: $error--02;
+  p button:hover {
+    text-decoration: underline;
+  }
 }

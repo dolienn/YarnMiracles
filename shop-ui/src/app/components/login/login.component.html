@@ -9,7 +9,7 @@
         </div>
 
 
-        <div class="form">
+        <div (keyup.enter)="login()" class="form">
             <div class="form-control">
                 <input [(ngModel)]="authRequest.email" type="text" id="email" placeholder=" ">
                 <label for="email">Email address</label>
@@ -25,6 +25,6 @@
             </button>
         </div>
 
-        <p>New to us? <button type="button" (click)="register()">Sign up now</button></p>
+        <p>New to us? <button type="button" routerLink="/register">Sign up now</button></p>
     </div>
 </div>
