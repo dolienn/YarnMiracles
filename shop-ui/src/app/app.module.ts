@@ -9,6 +9,8 @@ import { FormsModule } from '@angular/forms';
 import { RegisterComponent } from './components/register/register.component';
 import { ActivateAccountComponent } from './components/activate-account/activate-account.component';
 import { CodeInputModule } from 'angular-code-input';
+import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
+import { HomeComponent } from './components/home/home.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +18,8 @@ import { CodeInputModule } from 'angular-code-input';
     LoginComponent,
     RegisterComponent,
     ActivateAccountComponent,
+    NavigationBarComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,

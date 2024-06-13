@@ -1,8 +1,10 @@
+@import "../../variables.scss";
+
 .container {
+  height: 70vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
 }
 
 .activate-message,
@@ -11,5 +13,33 @@
 }
 
 .activate-error {
-  color: red;
+  color: $error--02;
+}
+
+.code-wrapper {
+  display: grid;
+  gap: 1rem;
+  width: 25rem;
+}
+
+button {
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+button {
+  width: 100%;
+  padding: 1rem 0;
+  font-size: 1rem;
+  color: $background-color--01;
+  font-size: 500;
+  border-radius: $border-radius;
+  background-color: $color--01;
+  margin: 1.6rem 0 0.7rem;
+  transition: 0.1s ease;
+}
+
+button:hover {
+  background-color: $color--00;
 }
