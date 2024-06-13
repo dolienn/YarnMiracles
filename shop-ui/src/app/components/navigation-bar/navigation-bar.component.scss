@@ -1,0 +1,61 @@
+@import "../../variables.scss";
+
+header {
+  position: fixed;
+  width: 100%;
+  height: $nav-height;
+  top: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5%;
+  background-color: $background-color--01;
+}
+
+.logo img {
+  max-width: 5rem;
+  height: auto;
+}
+
+.navmenu {
+  display: flex;
+}
+
+.navmenu a {
+  color: $color--01;
+  font-size: 1.1rem;
+  text-transform: capitalize;
+  padding: 0 1.2rem;
+  font-weight: 400;
+}
+
+.navmenu a:hover {
+  color: $error--02;
+}
+
+.nav-icon {
+  display: flex;
+  align-items: center;
+}
+
+.nav-icon i {
+  margin-right: 1.4rem;
+  color: $color--01;
+  font-size: 1.7rem;
+  font-weight: 400;
+  transition: all 0.42s ease;
+}
+
+.nav-icon i:hover {
+  transform: scale(1.1);
+  color: $error--02;
+}
+
+#menu-icon {
+  font-size: 2rem;
+  color: $color--01;
+  z-index: 10001;
+  cursor: pointer;
+}
