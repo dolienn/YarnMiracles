@@ -3,6 +3,9 @@ package pl.dolien.shop.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
+import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -13,6 +16,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import pl.dolien.shop.product.Product;
+import pl.dolien.shop.product.ProductCategory;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,7 +27,7 @@ import static org.springframework.http.HttpHeaders.*;
 
 @Configuration
 @RequiredArgsConstructor
-public class BeansConfig {
+public class BeansConfig implements RepositoryRestConfigurer {
 
     private final UserDetailsService userDetailsService;
 
@@ -64,5 +70,20 @@ public class BeansConfig {
         ));
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
+    }
+
+    @Override
+    public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors) {
+        HttpMethod[] theUnsupportedMethods = {HttpMethod.PUT, HttpMethod.POST, HttpMethod.DELETE, HttpMethod.PATCH};
+
+        config.getExposureConfiguration()
+                .forDomainType(Product.class)
+                .withItemExposure(((metdata, httpMethods) -> httpMethods.disable(theUnsupportedMethods)))
+                .withCollectionExposure(((metdata, httpMethods) -> httpMethods.disable(theUnsupportedMethods)));
+
+        config.getExposureConfiguration()
+                .forDomainType(ProductCategory.class)
+                .withItemExposure(((metdata, httpMethods) -> httpMethods.disable(theUnsupportedMethods)))
+                .withCollectionExposure(((metdata, httpMethods) -> httpMethods.disable(theUnsupportedMethods)));
     }
 }

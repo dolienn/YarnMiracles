@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AuthenticationRequest } from '../../commons/authentication-request';
+import { AuthenticationRequest } from '../../common/authentication-request';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication-service.service';
 import { TokenService } from '../../services/token.service';

@@ -3,8 +3,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { ActivateAccountComponent } from './components/activate-account/activate-account.component';
+import { ProductListComponent } from './components/product-list/product-list.component';
 
 const routes: Routes = [
+  {
+    path: 'products',
+    component: ProductListComponent,
+  },
   {
     path: 'register',
     component: RegisterComponent,

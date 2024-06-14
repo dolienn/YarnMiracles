@@ -11,6 +11,8 @@ import { ActivateAccountComponent } from './components/activate-account/activate
 import { CodeInputModule } from 'angular-code-input';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import { HomeComponent } from './components/home/home.component';
+import { ProductService } from './services/product/product.service';
+import { ProductListComponent } from './components/product-list/product-list.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +22,7 @@ import { HomeComponent } from './components/home/home.component';
     ActivateAccountComponent,
     NavigationBarComponent,
     HomeComponent,
+    ProductListComponent,
   ],
   imports: [
     BrowserModule,
@@ -28,7 +31,7 @@ import { HomeComponent } from './components/home/home.component';
     FormsModule,
     CodeInputModule,
   ],
-  providers: [HttpClient],
+  providers: [ProductService, HttpClient],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
