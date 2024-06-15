@@ -1,0 +1,12 @@
+@import "../../variables.scss";
+
+.end-text {
+  background-color: $background-color--01;
+  text-align: center;
+  padding: 20px;
+
+  p {
+    color: $color--00;
+    text-transform: capitalize;
+  }
+}

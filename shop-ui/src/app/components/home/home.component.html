@@ -1,1 +1,88 @@
-<p>home works!</p>
+<section class="main-home">
+    <div class="main-text">
+        <h5>Winter Collection</h5>
+        <h1>New Winter <br> Collection 2024</h1>
+        <p>There's Nothing like Trend</p>
+
+        <a href="#" class="main-btn">Shop Now <i class="bx bx-right-arrow-alt"></i></a>
+    </div>
+
+    <div class="down-arrow">
+        <a href="#trending" class="down"><i class="bx bx-down-arrow-alt"></i></a>
+    </div>
+</section>
+
+<section class="trending-product" id="trending">
+    <div class="center-text">
+        <h2>Our Trending <span>Products</span></h2>
+    </div>
+
+    <div class="products">
+        <div class="product" *ngFor="let product of products">
+            <img src='../../../assets{{product.imageUrl}}' alt="Product Name">
+            <div class="product-text">
+                <h5>new</h5>
+            </div>
+            <div class="heart-icon">
+                <i class="bx bx-heart"></i>
+            </div>
+            <div class="ratting">
+                <i class="bx bxs-star"></i>
+                <i class="bx bxs-star"></i>
+                <i class="bx bxs-star"></i>
+                <i class="bx bxs-star"></i>
+                <i class="bx bxs-star-half"></i>
+            </div>
+
+            <div class="price">
+                <h4>{{product.name}}</h4>
+                <p>{{product.unitPrice | currency: 'PLN'}}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="features">
+    <div class="up-center-text">
+        <h2>Features</h2>
+    </div>
+
+    <div class="advantages-wrapper">
+        <div class="advantage">
+            <img src="../../../assets/images/features/f1.png" alt="">
+            <h4>Wyjątkowość każdego detalu</h4>
+            <p>Każdy nasz produkt jest starannie i ręcznie wykonany przez jedną osobę, co gwarantuje niepowtarzalny
+                charakter i dbałość o najmniejsze detale.</p>
+        </div>
+        <div class="advantage">
+            <img src="../../../assets/images/features/f2.png" alt="">
+            <h4>Pasja i autentyczność</h4>
+            <p>Nasze rzeczy są nie tylko wytworem rzemiosła, ale także pasji do tworzenia, co widać w każdym wątku i
+                pętli.</p>
+        </div>
+        <div class="advantage">
+            <img src="../../../assets/images/features/f3.png" alt="">
+            <h4>Indywidualne podejście</h4>
+            <p>Tworzymy na zamówienie i personalizujemy nasze wyroby, aby spełniały oczekiwania naszych klientów i były
+                wyjątkowe tak samo, jak każda osoba, dla której są przeznaczone.</p>
+        </div>
+        <div class="advantage">
+            <img src="../../../assets/images/features/f4.png" alt="">
+            <h4>Odpowiedzialność za jakość</h4>
+            <p>Używamy tylko najwyższej jakości materiałów, aby zapewnić trwałość i komfort użytkowania naszych
+                produktów.</p>
+        </div>
+        <div class="advantage">
+            <img src="../../../assets/images/features/f5.png" alt="">
+            <h4>Zaufanie i przejrzystość</h4>
+            <p>Jesteśmy dumni z naszej rzemieślniczej pracy i zawsze dążymy do uczciwości i transparentności w naszym
+                działaniu.</p>
+        </div>
+        <div class="advantage">
+            <img src="../../../assets/images/features/f6.png" alt="">
+            <h4>Bezpośredni kontakt z twórcą</h4>
+            <p>Kupując u nas, otrzymujesz nie tylko unikalny przedmiot, ale również bezpośrednią łączność z osobą, która
+                go stworzyła, co zapewnia osobisty i autentyczny zakup.</p>
+        </div>
+    </div>
+</section>

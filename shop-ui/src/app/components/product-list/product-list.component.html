@@ -1,10 +1,10 @@
-<div class="container">
+<div class="container" *ngIf="products.length">
     <div class="center-text">
         <h2>Our <span>Products</span></h2>
     </div>
 
-    <div class="products" *ngFor="let product of products">
-        <div class="product">
+    <div class="products">
+        <div class="product" *ngFor="let product of products">
             <img src='../../../assets{{product.imageUrl}}' alt="Product Name">
             <div class="product-text">
                 <h5>Sale</h5>

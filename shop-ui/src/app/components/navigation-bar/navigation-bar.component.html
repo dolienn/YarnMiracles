@@ -2,9 +2,9 @@
     <a href="#" class="logo"><img src="../assets/images/temporery_logo.png" alt=""> </a>
 
     <ul class="navmenu">
-        <li><a href="#">home</a></li>
+        <li><a href="#" routerLink="/">home</a></li>
         <li><a href="#">shop</a></li>
-        <li><a href="#">products</a></li>
+        <li><a href="#" routerLink="/products">products</a></li>
         <li><a href="#">page</a></li>
         <li><a href="#">docs</a></li>
     </ul>
@@ -14,6 +14,6 @@
         <a href="#" routerLink="/login"><i class="bx bx-user"></i></a>
         <a href="#"><i class="bx bx-cart"></i></a>
 
-        <div class="bx bx-menu" id="menu-icon"></div>
+        <div class="bx bx-menu" (click)="toggleMenu()" id="menu-icon"></div>
     </div>
 </header>

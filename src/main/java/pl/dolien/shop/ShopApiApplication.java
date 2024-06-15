@@ -39,30 +39,71 @@ public class ShopApiApplication {
 				);
 			}
 
-			if(productCategoryRepository.findByCategoryName("Shirts").isEmpty()) {
-				productCategoryRepository.save(
-						ProductCategory.builder().categoryName("Shirts").build()
+			if(productRepository.findByName("Urban shirt").isEmpty()) {
+
+//				productRepository.save(
+//						Product.builder()
+//								.sku("4324213421")
+//								.active(true)
+//								.category(productCategoryRepository.findByCategoryName("Shirts").get())
+//								.name("Night shirt")
+//								.description("xppppp")
+//								.imageUrl("/images/products/product2.jpg")
+//								.unitsInStock(100)
+//								.unitPrice(BigDecimal.valueOf(15.99))
+//								.lowestPriceWithin30Days(BigDecimal.valueOf(10.99))
+//								.build()
+//				);
+//
+//				productRepository.save(
+//						Product.builder()
+//								.sku("54351341")
+//								.active(true)
+//								.category(productCategoryRepository.findByCategoryName("Shirts").get())
+//								.name("Classic shirt")
+//								.description("djkiasdjidasjd")
+//								.imageUrl("/images/products/product3.jpg")
+//								.unitsInStock(100)
+//								.unitPrice(BigDecimal.valueOf(25.99))
+//								.lowestPriceWithin30Days(BigDecimal.valueOf(20.99))
+//								.build()
+//				);
+
+				productRepository.save(
+						Product.builder()
+								.sku("412421412312")
+								.active(true)
+								.category(productCategoryRepository.findByCategoryName("Shirts").get())
+								.name("Urban shirt")
+								.description("dassdkamdakldmaklsmdkla")
+								.imageUrl("/images/products/product4.jpg")
+								.unitsInStock(100)
+								.unitPrice(BigDecimal.valueOf(10.99))
+								.lowestPriceWithin30Days(BigDecimal.valueOf(9.99))
+								.build()
 				);
 
 				productRepository.save(
 						Product.builder()
-								.sku("31241232")
+								.sku("412312313")
 								.active(true)
 								.category(productCategoryRepository.findByCategoryName("Shirts").get())
-								.name("Oversized fit shirt")
-								.description("xddd")
-								.imageUrl("/images/products/product1.jpg")
+								.name("Bershka shirt")
+								.description("dassdkamdakldmaklsmdkla")
+								.imageUrl("/images/products/product5.jpg")
 								.unitsInStock(100)
-								.unitPrice(BigDecimal.valueOf(12.99))
-								.lowestPriceWithin30Days(BigDecimal.valueOf(12.99))
+								.unitPrice(BigDecimal.valueOf(20.99))
+								.lowestPriceWithin30Days(BigDecimal.valueOf(15.99))
 								.build()
 				);
 
 				Set<Product> products = new HashSet<>();
 				products.add(productRepository.findByName("Oversized fit shirt").get());
+				products.add(productRepository.findByName("Night shirt").get());
+				products.add(productRepository.findByName("Classic shirt").get());
+				products.add(productRepository.findByName("Urban shirt").get());
+				products.add(productRepository.findByName("Bershka shirt").get());
 				productCategoryRepository.findByCategoryName("Shirts").get().setProducts(products);
-			} else {
-				System.out.println(productCategoryRepository.findByCategoryName("Shirts").get().getCategoryName());
 			}
 		};
 	}

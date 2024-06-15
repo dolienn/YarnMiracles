@@ -13,6 +13,8 @@ import { NavigationBarComponent } from './components/navigation-bar/navigation-b
 import { HomeComponent } from './components/home/home.component';
 import { ProductService } from './services/product/product.service';
 import { ProductListComponent } from './components/product-list/product-list.component';
+import { ContactComponent } from './components/contact/contact.component';
+import { CopyrightComponent } from './components/copyright/copyright.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +25,8 @@ import { ProductListComponent } from './components/product-list/product-list.com
     NavigationBarComponent,
     HomeComponent,
     ProductListComponent,
+    ContactComponent,
+    CopyrightComponent,
   ],
   imports: [
     BrowserModule,
