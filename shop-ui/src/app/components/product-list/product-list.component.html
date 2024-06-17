@@ -1,6 +1,7 @@
 <div class="container" *ngIf="products.length">
     <div class="center-text">
-        <h2>Our <span>Products</span></h2>
+        <h2>Our <span *ngIf="currentCategoryName.length">{{currentCategoryName}}</span> <span
+                *ngIf="currentCategoryName.length == 0">Products</span></h2>
     </div>
 
     <div class="products">

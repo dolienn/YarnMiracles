@@ -2,15 +2,29 @@
     <a href="#" class="logo"><img src="../assets/images/temporery_logo.png" alt=""> </a>
 
     <ul class="navmenu">
-        <li><a href="#" routerLink="/">home</a></li>
-        <li><a href="#">shop</a></li>
-        <li><a href="#" routerLink="/products">products</a></li>
-        <li><a href="#">page</a></li>
-        <li><a href="#">docs</a></li>
+        <li><a class="navlink" href="#" routerLink="/">home</a></li>
+        <li>
+            <a class="categories navlink">categories</a>
+            <div class="categoryList" *ngFor="let productCategory of productCategories">
+                <p routerLink="/category/{{productCategory.id }}/{{ productCategory.categoryName }}"
+                    class="categoryName">{{productCategory.categoryName}}
+                </p>
+            </div>
+        </li>
+        <li><a class="navlink" href="#" routerLink="/products" routerLinkActive="active-link">products</a></li>
+        <li><a class="navlink" href="#">page</a></li>
+        <li><a class="navlink" href="#">docs</a></li>
     </ul>
 
     <div class="nav-icon">
-        <a href="#"><i class="bx bx-search"></i></a>
+        <div class="search-bar">
+            <div class="search-button" (click)="toggleSearch()">
+                <i class="bx bx-search"></i>
+            </div>
+            <div class="search-input">
+                <input type="text" placeholder="Search" id="search">
+            </div>
+        </div>
         <a href="#" routerLink="/login"><i class="bx bx-user"></i></a>
         <a href="#"><i class="bx bx-cart"></i></a>
 
