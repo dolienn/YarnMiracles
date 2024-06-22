@@ -14,6 +14,7 @@ export class NavigationBarComponent implements OnInit {
 
   ngOnInit(): void {
     this.listProductCategories();
+    this.checkWindowWidth();
   }
 
   listProductCategories() {
@@ -28,6 +29,26 @@ export class NavigationBarComponent implements OnInit {
     header?.classList.toggle('sticky', window.scrollY > 0);
   }
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event) {
+    this.checkWindowWidth();
+  }
+
+  checkWindowWidth() {
+    if (
+      window.innerWidth <= 1000 &&
+      document
+        .querySelector('.search-bar')
+        ?.classList.contains('active-search-bar')
+    ) {
+      document.querySelector('header')?.classList.add('mobile-search-active');
+    } else {
+      document
+        .querySelector('header')
+        ?.classList.remove('mobile-search-active');
+    }
+  }
+
   toggleMenu() {
     document.querySelector('#menu-icon')?.classList.toggle('bx-x');
     document.querySelector('.navmenu')?.classList.toggle('open');
@@ -40,5 +61,24 @@ export class NavigationBarComponent implements OnInit {
     document
       .querySelector('.search-input')
       ?.classList.toggle('active-search-input');
+
+    if (
+      window.innerWidth <= 1000 &&
+      window.getComputedStyle(document.querySelector('.navmenu')!).position ===
+        'relative'
+    ) {
+      console.log('xd');
+      document.querySelector('header')?.classList.add('mobile-search-active');
+    }
+
+    if (
+      window.innerWidth <= 750 &&
+      window.getComputedStyle(document.querySelector('.navmenu')!).position ===
+        'absolute'
+    ) {
+      document
+        .querySelector('header')
+        ?.classList.remove('mobile-search-active');
+    }
   }
 }
