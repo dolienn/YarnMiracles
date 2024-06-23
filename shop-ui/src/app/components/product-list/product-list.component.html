@@ -1,4 +1,4 @@
-<div class="container" *ngIf="products.length">
+<div class="container">
     <div class="center-text">
         <h2>Our <span *ngIf="currentCategoryName.length">{{currentCategoryName}}</span> <span
                 *ngIf="currentCategoryName.length == 0">Products</span></h2>
@@ -6,7 +6,9 @@
 
     <div class="products">
         <div class="product" *ngFor="let product of products">
-            <img src='../../../assets{{product.imageUrl}}' alt="Product Name">
+            <a routerLink="/products/{{product.id}}">
+                <img src='../../../assets{{product.imageUrl}}' alt="Product Name">
+            </a>
             <div class="product-text">
                 <h5>Sale</h5>
             </div>
@@ -22,9 +24,15 @@
             </div>
 
             <div class="price">
-                <h4>{{product.name}}</h4>
+                <a routerLink="/products/{{product.id}}">
+                    <h4>{{product.name}}</h4>
+                </a>
                 <p>{{product.unitPrice | currency: 'PLN'}}</p>
             </div>
         </div>
+    </div>
+
+    <div class="alert" *ngIf="products?.length == 0" role="alert">
+        <span class="msg">No products found.</span>
     </div>
 </div>

@@ -1,6 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ProductCategory } from '../../common/product-category/product-category';
 import { ProductService } from '../../services/product/product.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navigation-bar',
@@ -10,7 +11,7 @@ import { ProductService } from '../../services/product/product.service';
 export class NavigationBarComponent implements OnInit {
   productCategories: ProductCategory[] = [];
 
-  constructor(private productService: ProductService) {}
+  constructor(private productService: ProductService, private router: Router) {}
 
   ngOnInit(): void {
     this.listProductCategories();
@@ -67,7 +68,6 @@ export class NavigationBarComponent implements OnInit {
       window.getComputedStyle(document.querySelector('.navmenu')!).position ===
         'relative'
     ) {
-      console.log('xd');
       document.querySelector('header')?.classList.add('mobile-search-active');
     }
 
@@ -80,5 +80,9 @@ export class NavigationBarComponent implements OnInit {
         .querySelector('header')
         ?.classList.remove('mobile-search-active');
     }
+  }
+
+  doSearch(value: string) {
+    this.router.navigateByUrl(`/search/${value}`);
   }
 }

@@ -15,6 +15,8 @@ import { ProductService } from './services/product/product.service';
 import { ProductListComponent } from './components/product-list/product-list.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { CopyrightComponent } from './components/copyright/copyright.component';
+import { SearchComponent } from './components/search/search.component';
+import { ProductDetailsComponent } from './components/product-details/product-details.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +29,8 @@ import { CopyrightComponent } from './components/copyright/copyright.component';
     ProductListComponent,
     ContactComponent,
     CopyrightComponent,
+    SearchComponent,
+    ProductDetailsComponent,
   ],
   imports: [
     BrowserModule,

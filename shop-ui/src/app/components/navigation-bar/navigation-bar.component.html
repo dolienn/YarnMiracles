@@ -22,7 +22,7 @@
                 <i class="bx bx-search"></i>
             </div>
             <div class="search-input">
-                <input type="text" placeholder="Search" id="search">
+                <input #myInput type="text" placeholder="Search" id="search" (keyup.enter)="doSearch(myInput.value)">
             </div>
         </div>
         <a href="#" routerLink="/login"><i class="bx bx-user"></i></a>
