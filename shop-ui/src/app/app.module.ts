@@ -3,7 +3,11 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import {
+  HttpClient,
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { LoginComponent } from './components/login/login.component';
 import { FormsModule } from '@angular/forms';
 import { RegisterComponent } from './components/register/register.component';
@@ -32,14 +36,12 @@ import { ProductDetailsComponent } from './components/product-details/product-de
     SearchComponent,
     ProductDetailsComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    FormsModule,
-    CodeInputModule,
-  ],
-  providers: [ProductService, HttpClient],
   bootstrap: [AppComponent],
+  imports: [BrowserModule, AppRoutingModule, FormsModule],
+  providers: [
+    ProductService,
+    HttpClient,
+    provideHttpClient(withInterceptorsFromDi()),
+  ],
 })
 export class AppModule {}
