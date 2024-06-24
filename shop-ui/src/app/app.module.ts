@@ -3,11 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import {
-  HttpClient,
-  provideHttpClient,
-  withInterceptorsFromDi,
-} from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './components/login/login.component';
 import { FormsModule } from '@angular/forms';
 import { RegisterComponent } from './components/register/register.component';
@@ -21,7 +17,6 @@ import { ContactComponent } from './components/contact/contact.component';
 import { CopyrightComponent } from './components/copyright/copyright.component';
 import { SearchComponent } from './components/search/search.component';
 import { ProductDetailsComponent } from './components/product-details/product-details.component';
-import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -37,18 +32,14 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     SearchComponent,
     ProductDetailsComponent,
   ],
-  bootstrap: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     FormsModule,
-    MatPaginatorModule,
     CodeInputModule,
   ],
-  providers: [
-    ProductService,
-    HttpClient,
-    provideHttpClient(withInterceptorsFromDi()),
-  ],
+  providers: [ProductService, HttpClient],
+  bootstrap: [AppComponent],
 })
 export class AppModule {}
