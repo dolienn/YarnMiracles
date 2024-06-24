@@ -21,6 +21,7 @@ import { ContactComponent } from './components/contact/contact.component';
 import { CopyrightComponent } from './components/copyright/copyright.component';
 import { SearchComponent } from './components/search/search.component';
 import { ProductDetailsComponent } from './components/product-details/product-details.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,13 @@ import { ProductDetailsComponent } from './components/product-details/product-de
     ProductDetailsComponent,
   ],
   bootstrap: [AppComponent],
-  imports: [BrowserModule, AppRoutingModule, FormsModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    MatPaginatorModule,
+    CodeInputModule,
+  ],
   providers: [
     ProductService,
     HttpClient,
