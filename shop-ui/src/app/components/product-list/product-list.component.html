@@ -32,10 +32,20 @@
         </div>
     </div>
 
-    <!-- <app-pagination [currentPage]="pageNumber" [pageSize]="pageSize" [collectionSize]="totalElements"></app-pagination> -->
-    <mat-paginator>
+    <ngb-pagination *ngIf="(this.totalElements/this.pageSize) > 1" class="custom-pagination" [(page)]="pageNumber"
+        [pageSize]="pageSize" [maxSize]="2" [collectionSize]="totalElements" (pageChange)="listProducts()">
 
-    </mat-paginator>
+    </ngb-pagination>
+
+    <div class="page-size">
+        <span>Page Size</span>
+        <select #pageSelect (change)="updatePageSize(pageSelect.value)">
+            <option selected="true">5</option>
+            <option>15</option>
+            <option>25</option>
+            <option>50</option>
+        </select>
+    </div>
 
 
 

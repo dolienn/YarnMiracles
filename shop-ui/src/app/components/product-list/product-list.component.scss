@@ -48,6 +48,61 @@
       color: $color--00;
     }
   }
+
+  .custom-pagination ::ng-deep {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2rem;
+    background-color: $background-color--01;
+    color: $background-color--01;
+
+    ul {
+      margin: 20px 30px;
+
+      li {
+        display: inline-block;
+        margin: 0 10px;
+        background-color: $background-color--02;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        text-align: center;
+        font-size: 22px;
+        font-weight: 500;
+        line-height: 45px;
+        box-shadow: inset 0 0 0 0.08rem $color--01;
+        cursor: pointer;
+        transition: all 0.42s;
+
+        a {
+          display: block;
+          color: $color--00;
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      li:hover {
+        background-color: $color--01;
+      }
+
+      a:hover {
+        color: $background-color--01;
+      }
+    }
+  }
+
+  .page-size {
+    display: flex;
+    justify-content: end;
+    font-size: 1.2rem;
+
+    select {
+      margin-left: 1rem;
+      font-size: 1.2rem;
+    }
+  }
 }
 
 a {
