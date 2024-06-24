@@ -12,7 +12,6 @@
             </div>
         </li>
         <li><a class="navlink" href="#" routerLink="/products" routerLinkActive="active-link">products</a></li>
-        <li><a class="navlink" href="#">page</a></li>
         <li><a class="navlink" href="#">docs</a></li>
     </ul>
 
@@ -26,7 +25,10 @@
             </div>
         </div>
         <a href="#" routerLink="/login"><i class="bx bx-user"></i></a>
-        <a href="#"><i class="bx bx-cart"></i></a>
+        <a href="#" class="cart-status">
+            <app-cart-status></app-cart-status>
+            <i class="bx bx-cart"></i>
+        </a>
 
         <div class="bx bx-menu" (click)="toggleMenu()" id="menu-icon"></div>
     </div>

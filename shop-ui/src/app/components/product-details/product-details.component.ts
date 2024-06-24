@@ -2,6 +2,8 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { Product } from '../../common/product/product';
 import { ProductService } from '../../services/product/product.service';
 import { ActivatedRoute } from '@angular/router';
+import { CartItem } from '../../common/cart-item/cart-item';
+import { CartService } from '../../services/cart/cart.service';
 
 @Component({
   selector: 'app-product-details',
@@ -13,6 +15,7 @@ export class ProductDetailsComponent implements OnInit {
   value = 1;
 
   constructor(
+    private cartService: CartService,
     private productService: ProductService,
     private route: ActivatedRoute
   ) {}
@@ -41,5 +44,11 @@ export class ProductDetailsComponent implements OnInit {
     ) {
       event.preventDefault();
     }
+  }
+
+  addToCart(product: Product) {
+    const cartItem = new CartItem(product);
+
+    this.cartService.addToCart(cartItem);
   }
 }
