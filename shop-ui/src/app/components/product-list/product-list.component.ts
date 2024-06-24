@@ -11,8 +11,13 @@ import { ActivatedRoute } from '@angular/router';
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
   currentCategoryId: number = 1;
+  previousCategoryId: number = 1;
   currentCategoryName: string = '';
   searchMode: boolean = false;
+
+  pageNumber: number = 1;
+  pageSize: number = 3;
+  totalElements: number = 0;
 
   constructor(
     private productService: ProductService,
@@ -53,10 +58,23 @@ export class ProductListComponent implements OnInit {
       this.currentCategoryId = 1;
     }
 
+    if (this.previousCategoryId != this.currentCategoryId) {
+      this.pageNumber = 1;
+    }
+
+    this.previousCategoryId = this.currentCategoryId;
+
     this.productService
-      .getProductList(this.currentCategoryId)
+      .getProductListPaginate(
+        this.pageNumber - 1,
+        this.pageSize,
+        this.currentCategoryId
+      )
       .subscribe((data) => {
-        this.products = data;
+        this.products = data._embedded.products;
+        this.pageNumber = data.page.number + 1;
+        this.pageSize = data.page.size;
+        this.totalElements = data.page.totalElements;
       });
   }
 }
