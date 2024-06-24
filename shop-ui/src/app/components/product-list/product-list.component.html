@@ -2,9 +2,20 @@
     <div class="center-text">
         <h2>Our <span *ngIf="currentCategoryName.length">{{currentCategoryName}}</span> <span
                 *ngIf="currentCategoryName.length == 0">Products</span></h2>
+        <select>
+            <option>Default Shorting</option>
+            <option>Short by price</option>
+            <option>Short by popularity</option>
+            <option>Short by rating</option>
+            <option>Short by sale</option>
+        </select>
     </div>
 
-    <div class="products">
+    <div *ngIf="isLoading" class="loader">
+
+    </div>
+
+    <div class="products" *ngIf="!isLoading">
         <div class="product" *ngFor="let product of products">
             <a routerLink="/products/{{product.id}}">
                 <img src='../../../assets{{product.imageUrl}}' alt="Product Name">
@@ -32,12 +43,13 @@
         </div>
     </div>
 
-    <ngb-pagination *ngIf="(this.totalElements/this.pageSize) > 1" class="custom-pagination" [(page)]="pageNumber"
-        [pageSize]="pageSize" [maxSize]="2" [collectionSize]="totalElements" (pageChange)="listProducts()">
+    <ngb-pagination *ngIf="(this.totalElements/this.pageSize) > 1 && !isLoading" class="custom-pagination"
+        [(page)]="pageNumber" [pageSize]="pageSize" [maxSize]="2" [collectionSize]="totalElements"
+        (pageChange)="listProducts()">
 
     </ngb-pagination>
 
-    <div class="page-size">
+    <div class="page-size" *ngIf="products.length && !isLoading">
         <span>Page Size</span>
         <select #pageSelect (change)="updatePageSize(pageSelect.value)">
             <option selected="true">5</option>
@@ -49,7 +61,7 @@
 
 
 
-    <div class="alert" *ngIf="products?.length == 0" role="alert">
+    <div class="alert" *ngIf="products?.length == 0 && !isLoading" role="alert">
         <span class="msg">No products found.</span>
     </div>
 </div>

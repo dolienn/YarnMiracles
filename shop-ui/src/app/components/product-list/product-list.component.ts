@@ -9,6 +9,8 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './product-list.component.scss',
 })
 export class ProductListComponent implements OnInit {
+  isLoading: boolean = true;
+
   products: Product[] = [];
   currentCategoryId: number = 1;
   previousCategoryId: number = 1;
@@ -93,6 +95,7 @@ export class ProductListComponent implements OnInit {
       this.pageNumber = data.page.number + 1;
       this.pageSize = data.page.size;
       this.totalElements = data.page.totalElements;
+      this.isLoading = false;
     };
   }
 }

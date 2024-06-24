@@ -4,17 +4,43 @@
   padding: 5% 10%;
 
   .center-text {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 3rem;
+
     h2 {
       color: #111;
-      font-size: 28px;
+      font-size: 2rem;
       text-transform: capitalize;
-      text-align: center;
       margin-bottom: 30px;
 
       span {
         color: $error--02;
       }
     }
+
+    select {
+      margin: 1rem 0 1rem 1rem;
+      font-size: 1rem;
+    }
+  }
+
+  .loader {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .loader::after {
+    content: "";
+    width: 4rem;
+    height: 4rem;
+    border: 0.3rem solid $background-color--02;
+    border-top-color: $color--01;
+    border-radius: 50%;
+    animation: loading 0.75s ease infinite;
   }
 
   .products {
@@ -30,6 +56,57 @@
         width: 100%;
         height: auto;
         transition: all 0.4s;
+      }
+
+      img:hover {
+        transform: scale(0.9);
+      }
+
+      .product-text {
+        h5 {
+          position: absolute;
+          top: 13px;
+          left: 13px;
+          color: $background-color--01;
+          font-size: 12px;
+          font-weight: 500;
+          text-transform: uppercase;
+          background-color: $success--02;
+          padding: 3px 10px;
+          border-radius: calc($border-radius/2);
+        }
+      }
+
+      .heart-icon {
+        position: absolute;
+        right: 0;
+        font-size: 20px;
+      }
+
+      .heart-icon:hover {
+        color: $error--02;
+      }
+
+      .ratting {
+        i {
+          color: $star;
+          font-size: 18px;
+        }
+      }
+
+      .price {
+        h4 {
+          color: $color--01;
+          font-size: 16px;
+          text-transform: capitalize;
+          font-weight: 400;
+        }
+
+        p {
+          color: $color--00;
+          font-size: 14px;
+          font-weight: 600;
+        }
       }
     }
   }
@@ -108,4 +185,13 @@
 a {
   color: inherit;
   text-decoration: none;
+}
+
+@keyframes loading {
+  from {
+    transform: rotate(0turn);
+  }
+  to {
+    transform: rotate(1turn);
+  }
 }
