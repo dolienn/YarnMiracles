@@ -1,5 +1,5 @@
 <header>
-    <a href="#" class="logo"><img src="../assets/images/temporery_logo.png" alt=""> </a>
+    <a href="#" routerLink="/" class="logo"><img src="../assets/images/temporery_logo.png" alt=""> </a>
 
     <ul class="navmenu">
         <li><a class="navlink" href="#" routerLink="/">home</a></li>
@@ -24,7 +24,23 @@
                 <input #myInput type="text" placeholder="Search" id="search" (keyup.enter)="doSearch(myInput.value)">
             </div>
         </div>
-        <a href="#" routerLink="/login"><i class="bx bx-user"></i></a>
+        <div class="profile-wrapper">
+            <i class="bx bx-user profile-icon"></i>
+            <div class="profile-list">
+                <p class="profile-option">
+                    Profile
+                </p>
+                <p class="profile-option">
+                    Favourites
+                </p>
+                <p class="profile-option">
+                    Settings
+                </p>
+                <p class="profile-option">
+                    Log-out
+                </p>
+            </div>
+        </div>
         <a href="#" class="cart-status">
             <app-cart-status></app-cart-status>
             <i class="bx bx-cart"></i>

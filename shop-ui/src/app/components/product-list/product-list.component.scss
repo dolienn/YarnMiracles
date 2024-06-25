@@ -1,10 +1,15 @@
 @import "../../variables.scss";
 
+.navbox {
+  height: $nav-height;
+}
+
 .container {
-  padding: 5% 10%;
+  padding: 2% 10%;
 
   .center-text {
     display: flex;
+    align-items: center;
     justify-content: space-between;
     margin-bottom: 3rem;
 
@@ -20,7 +25,7 @@
     }
 
     select {
-      margin: 1rem 0 1rem 1rem;
+      margin: 0 0 1.7em 1rem;
       font-size: 1rem;
     }
   }
@@ -193,5 +198,35 @@ a {
   }
   to {
     transform: rotate(1turn);
+  }
+}
+
+.less-than-five .products {
+  @media (min-width: 1437px) {
+    grid-template-columns: repeat(auto-fit, 260px) !important;
+
+    .product {
+      width: auto !important;
+    }
+  }
+}
+
+.less-than-four .products {
+  @media (min-width: 1072px) {
+    grid-template-columns: repeat(auto-fit, 260px) !important;
+
+    .product {
+      width: auto !important;
+    }
+  }
+}
+
+.less-than-three .products {
+  @media (min-width: 707px) {
+    grid-template-columns: repeat(auto-fit, 260px) !important;
+
+    .product {
+      width: auto !important;
+    }
   }
 }

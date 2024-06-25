@@ -54,6 +54,7 @@ header {
 .nav-icon {
   display: flex;
   align-items: center;
+  height: 100%;
 }
 
 .nav-icon i {
@@ -155,7 +156,7 @@ header {
 
 @media (max-width: 890px) {
   header {
-    padding: 20px 3%;
+    padding: 0 3%;
     transition: 0.4s;
   }
 }
@@ -250,4 +251,37 @@ header {
   .open {
     right: 0;
   }
+}
+
+.profile-wrapper {
+  display: flex;
+  align-items: center;
+  height: 100%;
+
+  .profile-list {
+    display: none;
+    position: absolute;
+    top: 100%;
+    background-color: $background-color--02;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    min-width: 200px;
+
+    .profile-option {
+      padding: 1.2rem;
+      cursor: pointer;
+    }
+
+    .profile-option:hover {
+      color: $error--02;
+    }
+  }
+
+  .profile-icon {
+    cursor: pointer;
+  }
+}
+
+.nav-icon .profile-wrapper:hover .profile-list,
+.nav-icon .profile-wrapper:focus-within .profile-list {
+  display: block;
 }

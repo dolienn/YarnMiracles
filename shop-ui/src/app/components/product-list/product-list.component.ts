@@ -18,7 +18,7 @@ export class ProductListComponent implements OnInit {
   searchMode: boolean = false;
 
   pageNumber: number = 1;
-  pageSize: number = 5;
+  pageSize: number = 6;
   totalElements: number = 0;
 
   previousKeyword: string = '';
@@ -97,5 +97,17 @@ export class ProductListComponent implements OnInit {
       this.totalElements = data.page.totalElements;
       this.isLoading = false;
     };
+  }
+
+  isLessThanFiveProducts(): boolean {
+    return this.products.length < 5;
+  }
+
+  isLessThanFourProducts(): boolean {
+    return this.products.length < 4;
+  }
+
+  isLessThanThreeProducts(): boolean {
+    return this.products.length < 3;
   }
 }
