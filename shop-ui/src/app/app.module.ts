@@ -3,7 +3,11 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  HttpClient,
+  HttpClientModule,
+} from '@angular/common/http';
 import { LoginComponent } from './components/login/login.component';
 import { FormsModule } from '@angular/forms';
 import { RegisterComponent } from './components/register/register.component';
@@ -19,6 +23,8 @@ import { SearchComponent } from './components/search/search.component';
 import { ProductDetailsComponent } from './components/product-details/product-details.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CartStatusComponent } from './components/cart-status/cart-status.component';
+import { HttpTokenInterceptor } from './services/interceptor/http-token.interceptor';
+import { NotificationComponent } from './components/notification/notification.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +40,7 @@ import { CartStatusComponent } from './components/cart-status/cart-status.compon
     SearchComponent,
     ProductDetailsComponent,
     CartStatusComponent,
+    NotificationComponent,
   ],
   imports: [
     BrowserModule,
@@ -43,7 +50,11 @@ import { CartStatusComponent } from './components/cart-status/cart-status.compon
     CodeInputModule,
     NgbModule,
   ],
-  providers: [ProductService, HttpClient],
+  providers: [
+    ProductService,
+    HttpClient,
+    { provide: HTTP_INTERCEPTORS, useClass: HttpTokenInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

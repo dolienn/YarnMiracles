@@ -36,7 +36,6 @@ public class AuthenticationController {
     public void confirm(
             @RequestParam String token
     ) throws MessagingException {
-        System.out.println("Dziala");
         service.activateAccount(token);
     }
 }

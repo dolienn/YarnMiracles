@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
@@ -13,5 +14,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Page<Product> findByCategoryId(@Param("id") Long id, Pageable pageable);
 
+    Page<Product> findByCategoryIdOrderByUnitPriceAsc(@Param("id") Long id, Pageable pageable);
+
+    Page<Product> findByCategoryIdOrderByUnitPriceDesc(@Param("id") Long id, Pageable pageable);
+
     Page<Product> findByNameContaining(@Param("name") String name, Pageable pageable);
+
+    Page<Product> findByNameContainingOrderByUnitPriceAsc(@Param("name") String name, Pageable pageable);
+
+    Page<Product> findByNameContainingOrderByUnitPriceDesc(@Param("name") String name, Pageable pageable);
 }

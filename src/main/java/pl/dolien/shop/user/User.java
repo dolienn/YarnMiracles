@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import pl.dolien.shop.product.Product;
 import pl.dolien.shop.role.Role;
 
 import java.security.Principal;
@@ -48,6 +49,14 @@ public class User implements UserDetails, Principal {
 
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "favourite_products",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    private List<Product> favourites;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

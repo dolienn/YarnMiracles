@@ -1,7 +1,9 @@
+import { TokenService } from './../../services/token.service';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ProductCategory } from '../../common/product-category/product-category';
 import { ProductService } from '../../services/product/product.service';
 import { Router } from '@angular/router';
+import { NotificationService } from '../../services/notification/notification.service';
 
 @Component({
   selector: 'app-navigation-bar',
@@ -10,10 +12,23 @@ import { Router } from '@angular/router';
 })
 export class NavigationBarComponent implements OnInit {
   productCategories: ProductCategory[] = [];
+  isUserLoggedIn: boolean = false;
+  isNotificationVisible: boolean = false;
 
-  constructor(private productService: ProductService, private router: Router) {}
+  constructor(
+    private tokenService: TokenService,
+    private productService: ProductService,
+    private router: Router,
+    private notificationService: NotificationService
+  ) {}
 
   ngOnInit(): void {
+    this.tokenService.isLoggedIn.subscribe((loggedIn) => {
+      this.isUserLoggedIn = loggedIn;
+    });
+    this.notificationService.isVisible$.subscribe((visible) => {
+      this.isNotificationVisible = visible;
+    });
     this.listProductCategories();
     this.checkWindowWidth();
   }
@@ -84,5 +99,10 @@ export class NavigationBarComponent implements OnInit {
 
   doSearch(value: string) {
     this.router.navigateByUrl(`/search/${value}`);
+  }
+
+  logout() {
+    this.tokenService.logout();
+    this.router.navigate(['']);
   }
 }

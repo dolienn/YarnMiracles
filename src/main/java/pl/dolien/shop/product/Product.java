@@ -6,9 +6,11 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import pl.dolien.shop.user.User;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -25,6 +27,7 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
+    @JsonIgnore
     private ProductCategory category;
 
     private String sku;
@@ -43,6 +46,10 @@ public class Product {
     private boolean active;
 
     private int unitsInStock;
+
+    @ManyToMany(mappedBy = "favourites")
+    @JsonIgnore
+    private List<User> usersWhoFavourited;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

@@ -23,6 +23,8 @@ export class ProductListComponent implements OnInit {
 
   previousKeyword: string = '';
 
+  selectedSortOption: string = 'default';
+
   constructor(
     private productService: ProductService,
     private route: ActivatedRoute
@@ -40,7 +42,7 @@ export class ProductListComponent implements OnInit {
     if (this.searchMode) {
       this.handleSearchProducts();
     } else {
-      this.hadleListProducts();
+      this.handleListProducts();
     }
   }
 
@@ -53,12 +55,30 @@ export class ProductListComponent implements OnInit {
 
     this.previousKeyword = keyword;
 
-    this.productService
-      .searchProductsPaginate(this.pageNumber - 1, this.pageSize, keyword)
-      .subscribe(this.processResult());
+    if (this.selectedSortOption === 'default') {
+      this.productService
+        .searchProductsPaginate(this.pageNumber - 1, this.pageSize, keyword)
+        .subscribe(this.processResult());
+    } else if (this.selectedSortOption === 'lowest-price') {
+      this.productService
+        .searchProductsPaginateOrderByUnitPriceAsc(
+          this.pageNumber - 1,
+          this.pageSize,
+          keyword
+        )
+        .subscribe(this.processResult());
+    } else if (this.selectedSortOption === 'highest-price') {
+      this.productService
+        .searchProductsPaginateOrderByUnitPriceDesc(
+          this.pageNumber - 1,
+          this.pageSize,
+          keyword
+        )
+        .subscribe(this.processResult());
+    }
   }
 
-  hadleListProducts() {
+  handleListProducts() {
     const hasCategoryId: boolean = this.route.snapshot.paramMap.has('id');
 
     if (hasCategoryId) {
@@ -74,13 +94,31 @@ export class ProductListComponent implements OnInit {
 
     this.previousCategoryId = this.currentCategoryId;
 
-    this.productService
-      .getProductListPaginate(
-        this.pageNumber - 1,
-        this.pageSize,
-        this.currentCategoryId
-      )
-      .subscribe(this.processResult());
+    if (this.selectedSortOption === 'default') {
+      this.productService
+        .getProductListPaginate(
+          this.pageNumber - 1,
+          this.pageSize,
+          this.currentCategoryId
+        )
+        .subscribe(this.processResult());
+    } else if (this.selectedSortOption === 'lowest-price') {
+      this.productService
+        .getProductListPaginateOrderByUnitPriceAsc(
+          this.pageNumber - 1,
+          this.pageSize,
+          this.currentCategoryId
+        )
+        .subscribe(this.processResult());
+    } else if (this.selectedSortOption === 'highest-price') {
+      this.productService
+        .getProductListPaginateOrderByUnitPriceDesc(
+          this.pageNumber - 1,
+          this.pageSize,
+          this.currentCategoryId
+        )
+        .subscribe(this.processResult());
+    }
   }
 
   updatePageSize(pageSize: string) {
@@ -109,5 +147,10 @@ export class ProductListComponent implements OnInit {
 
   isLessThanThreeProducts(): boolean {
     return this.products.length < 3;
+  }
+
+  onSortOptionChange() {
+    this.pageNumber = 1;
+    this.listProducts();
   }
 }

@@ -1,6 +1,10 @@
 @import "../../variables.scss";
 
 header {
+  &.with-notification {
+    margin-top: $noti-height;
+  }
+
   position: fixed;
   width: 100%;
   height: $nav-height;

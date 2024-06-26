@@ -6,6 +6,8 @@ import { ActivateAccountComponent } from './components/activate-account/activate
 import { ProductListComponent } from './components/product-list/product-list.component';
 import { HomeComponent } from './components/home/home.component';
 import { ProductDetailsComponent } from './components/product-details/product-details.component';
+import { authGuard } from './services/guard/auth.guard';
+import { loggedInGuard } from './services/guard/logged-in.guard';
 
 const routes: Routes = [
   {
@@ -23,22 +25,27 @@ const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
+    canActivate: [authGuard],
   },
   {
     path: 'products',
     component: ProductListComponent,
+    canActivate: [authGuard],
   },
   {
     path: 'register',
     component: RegisterComponent,
+    canActivate: [loggedInGuard],
   },
   {
     path: 'login',
     component: LoginComponent,
+    canActivate: [loggedInGuard],
   },
   {
     path: 'activate-account',
     component: ActivateAccountComponent,
+    canActivate: [loggedInGuard],
   },
 ];
 

@@ -1,4 +1,4 @@
-<header>
+<header [ngClass]="{ 'with-notification': isNotificationVisible }">
     <a href="#" routerLink="/" class="logo"><img src="../assets/images/temporery_logo.png" alt=""> </a>
 
     <ul class="navmenu">
@@ -31,13 +31,19 @@
                     Profile
                 </p>
                 <p class="profile-option">
+                    Orders
+                </p>
+                <p class="profile-option">
                     Favourites
                 </p>
                 <p class="profile-option">
                     Settings
                 </p>
-                <p class="profile-option">
+                <p class="profile-option" *ngIf="isUserLoggedIn" (click)="logout()">
                     Log-out
+                </p>
+                <p class="profile-option" *ngIf="!isUserLoggedIn" routerLink="/login">
+                    Login / Register
                 </p>
             </div>
         </div>

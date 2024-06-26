@@ -5,12 +5,13 @@
     <div class="center-text">
         <h2>Our <span *ngIf="currentCategoryName.length">{{currentCategoryName}}</span> <span
                 *ngIf="currentCategoryName.length == 0">Products</span></h2>
-        <select>
-            <option>Default Shorting</option>
-            <option>Short by price</option>
-            <option>Short by popularity</option>
-            <option>Short by rating</option>
-            <option>Short by sale</option>
+        <select [(ngModel)]="selectedSortOption" (change)="onSortOptionChange()">
+            <option value="default">Default Sorting</option>
+            <option value="lowest-price">Sort by lowest price</option>
+            <option value="highest-price">Sort by highest price</option>
+            <option value="popularity">Sort by popularity</option>
+            <option value="rating">Sort by rating</option>
+            <option value="sale">Sort by sale</option>
         </select>
     </div>
 
