@@ -2,12 +2,16 @@ import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject } from 'rxjs';
 import { NotificationService } from './notification/notification.service';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TokenService {
-  constructor(private notificationService: NotificationService) {}
+  constructor(
+    private notificationService: NotificationService,
+    private httpClient: HttpClient
+  ) {}
 
   private loggedIn = new BehaviorSubject<boolean>(this.isTokenValid());
 
@@ -50,5 +54,19 @@ export class TokenService {
     localStorage.clear();
     this.loggedIn.next(false);
     this.notificationService.showMessage('Pomyślnie wylogowano');
+  }
+
+  getUserInfo() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      return this.httpClient.get<any>(
+        'http://localhost:8088/api/v1/auth/info',
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+    }
+
+    return null;
   }
 }

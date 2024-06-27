@@ -25,6 +25,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CartStatusComponent } from './components/cart-status/cart-status.component';
 import { HttpTokenInterceptor } from './services/interceptor/http-token.interceptor';
 import { NotificationComponent } from './components/notification/notification.component';
+import { UserDetailsComponent } from './components/user-details/user-details.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { NotificationComponent } from './components/notification/notification.co
     ProductDetailsComponent,
     CartStatusComponent,
     NotificationComponent,
+    UserDetailsComponent,
   ],
   imports: [
     BrowserModule,

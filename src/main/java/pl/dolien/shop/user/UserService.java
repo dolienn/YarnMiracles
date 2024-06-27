@@ -1,5 +1,6 @@
 package pl.dolien.shop.user;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.dolien.shop.product.Product;
@@ -8,12 +9,12 @@ import pl.dolien.shop.product.ProductRepository;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
-    @Autowired
-    private UserRepository userRepository;
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final UserRepository userRepository;
+
+    private final ProductRepository productRepository;
 
     public void addFavouriteProduct(Integer userId, Long productId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));

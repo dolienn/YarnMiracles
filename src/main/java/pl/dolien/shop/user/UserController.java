@@ -1,18 +1,22 @@
 package pl.dolien.shop.user;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import pl.dolien.shop.product.Product;
+import pl.dolien.shop.security.JwtService;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("users")
+@RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    private final JwtService jwtService;
 
     @PostMapping("/{userId}/favourites/{productId}")
     public ResponseEntity<String> addFavouriteProduct(@PathVariable Integer userId, @PathVariable Long productId) {
@@ -31,4 +35,5 @@ public class UserController {
         List<Product> favourites = userService.getFavouriteProducts(userId);
         return ResponseEntity.ok(favourites);
     }
+
 }

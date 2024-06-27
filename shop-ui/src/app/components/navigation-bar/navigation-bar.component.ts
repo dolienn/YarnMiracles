@@ -4,6 +4,7 @@ import { ProductCategory } from '../../common/product-category/product-category'
 import { ProductService } from '../../services/product/product.service';
 import { Router } from '@angular/router';
 import { NotificationService } from '../../services/notification/notification.service';
+import { User } from '../../common/user/user';
 
 @Component({
   selector: 'app-navigation-bar',

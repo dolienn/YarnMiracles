@@ -9,6 +9,5 @@ export const authGuard: CanActivateFn = () => {
     router.navigate(['login']);
     return false;
   }
-  console.log('xd?');
   return true;
 };

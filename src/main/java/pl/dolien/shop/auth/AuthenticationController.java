@@ -6,7 +6,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import pl.dolien.shop.user.User;
 
 @RestController
 @RequestMapping("auth")
@@ -37,5 +39,11 @@ public class AuthenticationController {
             @RequestParam String token
     ) throws MessagingException {
         service.activateAccount(token);
+    }
+
+    @GetMapping("/info")
+    public ResponseEntity<User> getUserInfo(Authentication connectedUser) {
+
+        return ResponseEntity.ok((User) connectedUser.getPrincipal());
     }
 }

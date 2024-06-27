@@ -8,8 +8,13 @@ import { HomeComponent } from './components/home/home.component';
 import { ProductDetailsComponent } from './components/product-details/product-details.component';
 import { authGuard } from './services/guard/auth.guard';
 import { loggedInGuard } from './services/guard/logged-in.guard';
+import { UserDetailsComponent } from './components/user-details/user-details.component';
 
 const routes: Routes = [
+  {
+    path: 'profile',
+    component: UserDetailsComponent,
+  },
   {
     path: 'products/:id',
     component: ProductDetailsComponent,
