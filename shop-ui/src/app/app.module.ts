@@ -26,6 +26,7 @@ import { CartStatusComponent } from './components/cart-status/cart-status.compon
 import { HttpTokenInterceptor } from './services/interceptor/http-token.interceptor';
 import { NotificationComponent } from './components/notification/notification.component';
 import { UserDetailsComponent } from './components/user-details/user-details.component';
+import { FavouriteProductComponent } from './components/favourite-product/favourite-product.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { UserDetailsComponent } from './components/user-details/user-details.com
     CartStatusComponent,
     NotificationComponent,
     UserDetailsComponent,
+    FavouriteProductComponent,
   ],
   imports: [
     BrowserModule,

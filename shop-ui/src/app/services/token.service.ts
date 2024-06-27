@@ -3,6 +3,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject } from 'rxjs';
 import { NotificationService } from './notification/notification.service';
 import { HttpClient } from '@angular/common/http';
+import { User } from '../common/user/user';
 
 @Injectable({
   providedIn: 'root',
@@ -59,7 +60,7 @@ export class TokenService {
   getUserInfo() {
     const token = localStorage.getItem('token');
     if (token) {
-      return this.httpClient.get<any>(
+      return this.httpClient.get<User>(
         'http://localhost:8088/api/v1/auth/info',
         {
           headers: { Authorization: `Bearer ${token}` },

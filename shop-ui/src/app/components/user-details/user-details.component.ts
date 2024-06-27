@@ -14,7 +14,6 @@ export class UserDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.tokenService.getUserInfo()?.subscribe((data) => {
-      console.log(data.firstname);
       this.user.id = data.id;
       this.user.firstname = data.firstname;
       this.user.lastname = data.lastname;

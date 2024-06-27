@@ -1,0 +1,9 @@
+<div class="heart-icon" (click)="addFavourite()" *ngIf="!isFavourited()">
+    <i class="bx" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()"
+        [ngClass]="{'bxs-heart' : isHovered, 'bx-heart': !isHovered}"></i>
+</div>
+
+<div class="heart-icon" (click)="removeFavourite()" *ngIf="isFavourited()">
+    <i class="bx" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()"
+        [ngClass]="{'bxs-heart' : !isHovered, 'bx-heart': isHovered}"></i>
+</div>

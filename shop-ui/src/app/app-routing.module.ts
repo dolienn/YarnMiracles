@@ -12,6 +12,11 @@ import { UserDetailsComponent } from './components/user-details/user-details.com
 
 const routes: Routes = [
   {
+    path: 'favourites',
+    component: ProductListComponent,
+    data: { isFavouriteRoute: true },
+  },
+  {
     path: 'profile',
     component: UserDetailsComponent,
   },

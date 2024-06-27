@@ -3,8 +3,9 @@
 <div class="container"
     [ngClass]="{'less-than-five': isLessThanFiveProducts(), 'less-than-four': isLessThanFourProducts(), 'less-than-three': isLessThanThreeProducts()}">
     <div class="center-text">
-        <h2>Our <span *ngIf="currentCategoryName.length">{{currentCategoryName}}</span> <span
+        <h2 *ngIf="!isFavouriteRoute">Our <span *ngIf="currentCategoryName.length">{{currentCategoryName}}</span> <span
                 *ngIf="currentCategoryName.length == 0">Products</span></h2>
+        <h2>Your <span *ngIf="isFavouriteRoute">Favourites</span></h2>
         <select [(ngModel)]="selectedSortOption" (change)="onSortOptionChange()">
             <option value="default">Default Sorting</option>
             <option value="lowest-price">Sort by lowest price</option>
@@ -27,9 +28,7 @@
             <div class="product-text">
                 <h5>Sale</h5>
             </div>
-            <div class="heart-icon">
-                <i class="bx bx-heart"></i>
-            </div>
+            <app-favourite-product [product]="product"></app-favourite-product>
             <div class="ratting">
                 <i class="bx bxs-star"></i>
                 <i class="bx bxs-star"></i>

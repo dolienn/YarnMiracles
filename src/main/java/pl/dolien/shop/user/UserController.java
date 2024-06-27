@@ -1,6 +1,8 @@
 package pl.dolien.shop.user;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -19,21 +21,24 @@ public class UserController {
     private final JwtService jwtService;
 
     @PostMapping("/{userId}/favourites/{productId}")
-    public ResponseEntity<String> addFavouriteProduct(@PathVariable Integer userId, @PathVariable Long productId) {
+    public void addFavouriteProduct(@PathVariable Integer userId, @PathVariable Long productId) {
         userService.addFavouriteProduct(userId, productId);
-        return ResponseEntity.ok("Product added to favourites");
     }
 
     @DeleteMapping("/{userId}/favourites/{productId}")
-    public ResponseEntity<String> removeFavouriteProduct(@PathVariable Integer userId, @PathVariable Long productId) {
+    public void removeFavouriteProduct(@PathVariable Integer userId, @PathVariable Long productId) {
         userService.removeFavouriteProduct(userId, productId);
-        return ResponseEntity.ok("Product removed from favourites");
     }
+
+//    @GetMapping("/{userId}/favourites")
+//    public ResponseEntity<List<Product>> getFavouriteProducts(@PathVariable Integer userId) {
+//        List<Product> favourites = userService.getFavouriteProducts(userId);
+//        return ResponseEntity.ok(favourites);
+//    }
 
     @GetMapping("/{userId}/favourites")
-    public ResponseEntity<List<Product>> getFavouriteProducts(@PathVariable Integer userId) {
-        List<Product> favourites = userService.getFavouriteProducts(userId);
+    public ResponseEntity<Page<Product>> getFavouriteProducts(@PathVariable Integer userId, Pageable pageable) {
+        Page<Product> favourites = userService.getFavouriteProducts(userId, pageable);
         return ResponseEntity.ok(favourites);
     }
-
 }

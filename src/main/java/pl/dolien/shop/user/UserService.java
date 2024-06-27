@@ -2,6 +2,10 @@ package pl.dolien.shop.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.dolien.shop.product.Product;
 import pl.dolien.shop.product.ProductRepository;
@@ -32,8 +36,20 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public List<Product> getFavouriteProducts(Integer userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        return user.getFavourites();
+//    public List<Product> getFavouriteProducts(Integer userId) {
+//        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+//        return user.getFavourites();
+//    }
+
+    public Page<Product> getFavouriteProducts(Integer userId, Pageable pageable) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Product> favourites = List.copyOf(user.getFavourites());
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), favourites.size());
+
+        return new PageImpl<>(favourites.subList(start, end), pageable, favourites.size());
     }
 }
