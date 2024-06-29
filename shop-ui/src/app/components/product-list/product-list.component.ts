@@ -54,7 +54,6 @@ export class ProductListComponent implements OnInit {
           (segment) => segment.path === 'favourites'
         );
       });
-      console.log(this.isFavouriteRoute);
       if (this.isFavouriteRoute) {
         this.handleFavouritesProducts();
       } else {
@@ -139,45 +138,37 @@ export class ProductListComponent implements OnInit {
   }
 
   handleFavouritesProducts() {
-    console.log('halo');
-    if (this.selectedSortOption === 'default') {
-      this.tokenService.getUserInfo()?.subscribe((data) => {
-        this.user.id = data.id;
-        this.user.firstname = data.firstname;
-        this.user.lastname = data.lastname;
-        this.user.email = data.email;
+    this.tokenService.getUserInfo()?.subscribe((data) => {
+      this.user.id = data.id;
+      this.user.firstname = data.firstname;
+      this.user.lastname = data.lastname;
+      this.user.email = data.email;
+      if (this.selectedSortOption === 'default') {
         this.userService
           .getFavouriteProductsPaginate(
             this.pageNumber - 1,
             this.pageSize,
             this.user.id
           )
-          .subscribe((data: any) => {
-            this.products = data.content;
-            this.pageNumber = data.page.number + 1;
-            this.pageSize = data.page.size;
-            this.totalElements = data.page.totalElements;
-            this.isLoading = false;
-          });
-      });
-    }
-    // } else if (this.selectedSortOption === 'lowest-price') {
-    //   this.productService
-    //     .getProductListPaginateOrderByUnitPriceAsc(
-    //       this.pageNumber - 1,
-    //       this.pageSize,
-    //       this.currentCategoryId
-    //     )
-    //     .subscribe(this.processResult());
-    // } else if (this.selectedSortOption === 'highest-price') {
-    //   this.productService
-    //     .getProductListPaginateOrderByUnitPriceDesc(
-    //       this.pageNumber - 1,
-    //       this.pageSize,
-    //       this.currentCategoryId
-    //     )
-    //     .subscribe(this.processResult());
-    // }
+          .subscribe(this.processResult());
+      } else if (this.selectedSortOption === 'lowest-price') {
+        this.userService
+          .getFavouriteProductsPaginateOrderByUnitPriceAsc(
+            this.pageNumber - 1,
+            this.pageSize,
+            this.user.id
+          )
+          .subscribe(this.processResult());
+      } else if (this.selectedSortOption === 'highest-price') {
+        this.userService
+          .getFavouriteProductsPaginateOrderByUnitPriceDesc(
+            this.pageNumber - 1,
+            this.pageSize,
+            this.user.id
+          )
+          .subscribe(this.processResult());
+      }
+    });
   }
 
   updatePageSize(pageSize: string) {

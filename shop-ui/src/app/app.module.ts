@@ -27,6 +27,10 @@ import { HttpTokenInterceptor } from './services/interceptor/http-token.intercep
 import { NotificationComponent } from './components/notification/notification.component';
 import { UserDetailsComponent } from './components/user-details/user-details.component';
 import { FavouriteProductComponent } from './components/favourite-product/favourite-product.component';
+import { RatingComponent } from './components/rating/rating.component';
+import { FeedbackComponent } from './components/feedback/feedback.component';
+import { StarRatingConfigService, StarRatingModule } from 'angular-star-rating';
+import { CustomConfigRatingService } from './services/custom-config-rating/custom-config-rating.service';
 
 @NgModule({
   declarations: [
@@ -45,6 +49,8 @@ import { FavouriteProductComponent } from './components/favourite-product/favour
     NotificationComponent,
     UserDetailsComponent,
     FavouriteProductComponent,
+    RatingComponent,
+    FeedbackComponent,
   ],
   imports: [
     BrowserModule,
@@ -53,11 +59,16 @@ import { FavouriteProductComponent } from './components/favourite-product/favour
     FormsModule,
     CodeInputModule,
     NgbModule,
+    StarRatingModule.forRoot(),
   ],
   providers: [
     ProductService,
     HttpClient,
     { provide: HTTP_INTERCEPTORS, useClass: HttpTokenInterceptor, multi: true },
+    {
+      provide: StarRatingConfigService,
+      useClass: CustomConfigRatingService,
+    },
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

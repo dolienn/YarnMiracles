@@ -1,0 +1,18 @@
+<form (ngSubmit)="saveFeedback()" *ngIf="product" #feedbackForm="ngForm">
+    <h2>Feedback</h2>
+    <textarea type="text" id="comment" [(ngModel)]="feedback.comment" name="comment" required></textarea>
+    <star-rating-control [showHalfStars]="true" [hoverEnabled]="true" [rating]="feedback.note || 0" [size]="'large'"
+        [staticColor]="'ok'" (ratingChange)="ratingChange($event)" [starType]="'svg'"></star-rating-control>
+    <button type="submit" [disabled]="feedbackForm.invalid || feedback.note === 0">Submit Feedback</button>
+</form>
+
+<div class="feedbacks">
+    <div class="feedback" *ngFor="let feedback of feedbacks">
+        <div class="feedback-info">
+            <div class="user-and-date">user {{feedback.createdDate | date: 'MM/dd/yyyy HH:mm'}}</div>
+            <div class="comment">{{feedback.comment}}</div>
+        </div>
+        <app-rating [rating]="feedback.note || 0"></app-rating>
+
+    </div>
+</div>

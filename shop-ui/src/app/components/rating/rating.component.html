@@ -1,0 +1,11 @@
+<div class="rating">
+    <ng-container *ngFor="let _ of [].constructor(fullStars); let i = index">
+        <i class='bx bxs-star'></i>
+    </ng-container>
+    <ng-container *ngIf="hasHalfStar">
+        <i class='bx bxs-star-half'></i>
+    </ng-container>
+    <ng-container *ngFor="let _ of [].constructor(emptyStars); let i = index">
+        <i class='bx bx-star'></i>
+    </ng-container>
+</div>

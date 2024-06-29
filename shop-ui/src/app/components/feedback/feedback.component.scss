@@ -1,0 +1,50 @@
+@import "../../variables.scss";
+
+form {
+  background-color: $background-color--02;
+  display: grid;
+  place-items: center;
+  gap: 2rem;
+  width: 100%;
+
+  h2 {
+    font-size: 2rem;
+    margin-top: 3rem;
+  }
+
+  textarea {
+    width: 30rem;
+    height: 10rem;
+    resize: none;
+  }
+
+  button {
+    width: 12rem;
+    padding: 1rem 0;
+    font-size: 1rem;
+    color: $background-color--01;
+    font-size: 500;
+    border-radius: $border-radius;
+    background-color: $color--01;
+    justify-self: center;
+    transition: 0.1s ease;
+    margin-bottom: 4rem;
+  }
+
+  button:hover {
+    background-color: $color--00;
+  }
+}
+
+.feedbacks {
+  display: grid;
+  gap: 3rem;
+  padding: 3rem 0;
+
+  .feedback {
+    padding: 0 5%;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+}

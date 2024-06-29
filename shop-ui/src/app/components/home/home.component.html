@@ -26,16 +26,8 @@
             <div class="product-text">
                 <h5>new</h5>
             </div>
-            <div class="heart-icon">
-                <i class="bx bx-heart"></i>
-            </div>
-            <div class="ratting">
-                <i class="bx bxs-star"></i>
-                <i class="bx bxs-star"></i>
-                <i class="bx bxs-star"></i>
-                <i class="bx bxs-star"></i>
-                <i class="bx bxs-star-half"></i>
-            </div>
+            <app-favourite-product [product]="product"></app-favourite-product>
+            <app-rating [rating]="product.rate || 0"></app-rating>
 
             <div class="price">
                 <a routerLink="/products/{{product.id}}">

@@ -5,7 +5,7 @@
     <div class="center-text">
         <h2 *ngIf="!isFavouriteRoute">Our <span *ngIf="currentCategoryName.length">{{currentCategoryName}}</span> <span
                 *ngIf="currentCategoryName.length == 0">Products</span></h2>
-        <h2>Your <span *ngIf="isFavouriteRoute">Favourites</span></h2>
+        <h2 *ngIf="isFavouriteRoute">Your <span>Favourites</span></h2>
         <select [(ngModel)]="selectedSortOption" (change)="onSortOptionChange()">
             <option value="default">Default Sorting</option>
             <option value="lowest-price">Sort by lowest price</option>
@@ -29,13 +29,7 @@
                 <h5>Sale</h5>
             </div>
             <app-favourite-product [product]="product"></app-favourite-product>
-            <div class="ratting">
-                <i class="bx bxs-star"></i>
-                <i class="bx bxs-star"></i>
-                <i class="bx bxs-star"></i>
-                <i class="bx bxs-star"></i>
-                <i class="bx bxs-star-half"></i>
-            </div>
+            <app-rating [rating]="product.rate || 0"></app-rating>
 
             <div class="price">
                 <a routerLink="/products/{{product.id}}">

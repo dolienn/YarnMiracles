@@ -9,12 +9,14 @@ import { ProductDetailsComponent } from './components/product-details/product-de
 import { authGuard } from './services/guard/auth.guard';
 import { loggedInGuard } from './services/guard/logged-in.guard';
 import { UserDetailsComponent } from './components/user-details/user-details.component';
+import { StarRatingModule } from 'angular-star-rating';
 
 const routes: Routes = [
   {
     path: 'favourites',
     component: ProductListComponent,
     data: { isFavouriteRoute: true },
+    canActivate: [authGuard],
   },
   {
     path: 'profile',
@@ -35,12 +37,10 @@ const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
-    canActivate: [authGuard],
   },
   {
     path: 'products',
     component: ProductListComponent,
-    canActivate: [authGuard],
   },
   {
     path: 'register',
@@ -64,7 +64,10 @@ const routerOptions: ExtraOptions = {
 };
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, routerOptions)],
+  imports: [
+    RouterModule.forRoot(routes, routerOptions),
+    StarRatingModule.forRoot(),
+  ],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

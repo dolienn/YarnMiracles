@@ -7,6 +7,7 @@ export class Product {
     public unitPrice: number,
     public lowestPriceWithin30Days: number,
     public imageUrl: string,
+    public rate: number,
     public active: boolean,
     public unitsInStock: number,
     public dateCreated: Date,

@@ -31,14 +31,8 @@ public class UserController {
     }
 
 //    @GetMapping("/{userId}/favourites")
-//    public ResponseEntity<List<Product>> getFavouriteProducts(@PathVariable Integer userId) {
-//        List<Product> favourites = userService.getFavouriteProducts(userId);
+//    public ResponseEntity<Page<Product>> getFavouriteProducts(@PathVariable Integer userId, Pageable pageable) {
+//        Page<Product> favourites = userService.getFavouriteProducts(userId, pageable);
 //        return ResponseEntity.ok(favourites);
 //    }
-
-    @GetMapping("/{userId}/favourites")
-    public ResponseEntity<Page<Product>> getFavouriteProducts(@PathVariable Integer userId, Pageable pageable) {
-        Page<Product> favourites = userService.getFavouriteProducts(userId, pageable);
-        return ResponseEntity.ok(favourites);
-    }
 }

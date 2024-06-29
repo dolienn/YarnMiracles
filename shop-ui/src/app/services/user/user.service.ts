@@ -28,7 +28,7 @@ export class UserService {
 
     return this.httpClient
       .get<GetResponseProducts>(favouritesUrl)
-      .pipe(map((response) => response.content));
+      .pipe(map((response) => response._embedded.products));
   }
 
   getFavouriteProductsPaginate(
@@ -36,14 +36,36 @@ export class UserService {
     pageSize: number,
     userId: number
   ): Observable<GetResponseProducts> {
-    const favouritesUrl = `${this.userUrl}/${userId}/favourites?page=${page}&size=${pageSize}`;
+    const favouritesUrl = `${this.userUrl}/search/findFavouritesByUserId?userId=${userId}&page=${page}&size=${pageSize}`;
+
+    return this.httpClient.get<GetResponseProducts>(favouritesUrl);
+  }
+
+  getFavouriteProductsPaginateOrderByUnitPriceAsc(
+    page: number,
+    pageSize: number,
+    userId: number
+  ): Observable<GetResponseProducts> {
+    const favouritesUrl = `${this.userUrl}/search/findFavouritesByUserIdOrderAsc?userId=${userId}&page=${page}&size=${pageSize}`;
+
+    return this.httpClient.get<GetResponseProducts>(favouritesUrl);
+  }
+
+  getFavouriteProductsPaginateOrderByUnitPriceDesc(
+    page: number,
+    pageSize: number,
+    userId: number
+  ): Observable<GetResponseProducts> {
+    const favouritesUrl = `${this.userUrl}/search/findFavouritesByUserIdOrderDesc?userId=${userId}&page=${page}&size=${pageSize}`;
 
     return this.httpClient.get<GetResponseProducts>(favouritesUrl);
   }
 }
 
 interface GetResponseProducts {
-  content: Product[];
+  _embedded: {
+    products: Product[];
+  };
   page: {
     size: number;
     totalElements: number;

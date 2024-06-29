@@ -3,6 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { UserService } from '../../services/user/user.service';
 import { TokenService } from '../../services/token.service';
 import { User } from '../../common/user/user';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-favourite-product',
@@ -12,7 +13,8 @@ import { User } from '../../common/user/user';
 export class FavouriteProductComponent implements OnInit {
   constructor(
     private userService: UserService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private router: Router
   ) {}
 
   @Input()
@@ -25,7 +27,6 @@ export class FavouriteProductComponent implements OnInit {
   isHovered: boolean = false;
 
   ngOnInit() {
-    console.log(this.product);
     this.tokenService.getUserInfo()?.subscribe((data) => {
       this.user = data;
       this.getFavourites();
@@ -33,27 +34,37 @@ export class FavouriteProductComponent implements OnInit {
   }
 
   addFavourite() {
-    this.userService
-      .addFavouriteProduct(this.user.id, +this.product.id)
-      .subscribe({
-        next: () => {
-          this.products.push(this.product);
-        },
-        error: (err) =>
-          console.error('Error adding product to favourites', err),
-      });
+    if (this.user.id !== 0) {
+      this.userService
+        .addFavouriteProduct(this.user.id, +this.product.id)
+        .subscribe({
+          next: () => {
+            this.products.push(this.product);
+          },
+          error: (err) =>
+            console.error('Error adding product to favourites', err),
+        });
+    } else {
+      this.router.navigate(['login']);
+    }
   }
 
   removeFavourite() {
-    this.userService
-      .removeFavouriteProduct(this.user.id, +this.product.id)
-      .subscribe({
-        next: () => {
-          this.products = this.products.filter((p) => p.id !== this.product.id);
-        },
-        error: (err) =>
-          console.error('Error removed product to favourites', err),
-      });
+    if (this.user.id !== 0) {
+      this.userService
+        .removeFavouriteProduct(this.user.id, +this.product.id)
+        .subscribe({
+          next: () => {
+            this.products = this.products.filter(
+              (p) => p.id !== this.product.id
+            );
+          },
+          error: (err) =>
+            console.error('Error removed product to favourites', err),
+        });
+    } else {
+      this.router.navigate(['login']);
+    }
   }
 
   getFavourites() {
