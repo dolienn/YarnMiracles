@@ -4,6 +4,10 @@ import { Feedback } from '../../common/feedback/feedback';
 import { Product } from '../../common/product/product';
 import { FeedbackRequest } from '../../common/feedback-request/feedback-request';
 import { HoverRatingChangeEvent, RatingChangeEvent } from 'angular-star-rating';
+import { TokenService } from '../../services/token.service';
+import { UserService } from '../../services/user/user.service';
+import { User } from '../../common/user/user';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-feedback',
@@ -17,11 +21,15 @@ export class FeedbackComponent implements OnInit {
   totalElements: number = 0;
 
   feedback: FeedbackRequest = new FeedbackRequest();
+  user: User = new User();
 
   @Input()
   product!: Product;
 
-  constructor(private feedbackService: FeedbackService) {}
+  constructor(
+    private feedbackService: FeedbackService,
+    private userService: UserService
+  ) {}
 
   ngOnInit(): void {
     this.listFeedbacks();
@@ -43,7 +51,17 @@ export class FeedbackComponent implements OnInit {
         this.pageNumber = data.number + 1;
         this.pageSize = data.size;
         this.totalElements = data.totalElements;
+
+        this.feedbacks.forEach((feedback) => {
+          this.getUser(feedback.createdBy || 0).subscribe((user: User) => {
+            feedback.createdByUser = user;
+          });
+        });
       });
+  }
+
+  getUser(id: number): Observable<User> {
+    return this.userService.getById(id);
   }
 
   saveFeedback() {

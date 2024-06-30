@@ -9,7 +9,11 @@
 <div class="feedbacks">
     <div class="feedback" *ngFor="let feedback of feedbacks">
         <div class="feedback-info">
-            <div class="user-and-date">user {{feedback.createdDate | date: 'MM/dd/yyyy HH:mm'}}</div>
+            <div class="user-and-date">
+                {{feedback.createdByUser?.firstname}} {{feedback.createdByUser?.lastname}} {{feedback.createdDate |
+                date:
+                'MM/dd/yyyy
+                HH:mm'}}</div>
             <div class="comment">{{feedback.comment}}</div>
         </div>
         <app-rating [rating]="feedback.note || 0"></app-rating>

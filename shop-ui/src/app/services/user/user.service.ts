@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { Product } from '../../common/product/product';
+import { User } from '../../common/user/user';
 
 @Injectable({
   providedIn: 'root',
@@ -59,6 +60,12 @@ export class UserService {
     const favouritesUrl = `${this.userUrl}/search/findFavouritesByUserIdOrderDesc?userId=${userId}&page=${page}&size=${pageSize}`;
 
     return this.httpClient.get<GetResponseProducts>(favouritesUrl);
+  }
+
+  getById(id: number): Observable<User> {
+    const findUserUrl = `${this.userUrl}/${id}`;
+
+    return this.httpClient.get<User>(findUserUrl);
   }
 }
 

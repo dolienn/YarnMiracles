@@ -29,19 +29,30 @@ public class FeedbackService {
         Product product = productRepository.findById(request.productId())
                 .orElseThrow(() -> new EntityNotFoundException("No product found with the ID: " + request.productId()));
 
-        User user = ((User) connectedUser.getPrincipal());
-        System.out.println(user.getEmail());
         Feedback feedback = feedbackMapper.toFeedback(request);
+        User user = ((User) connectedUser.getPrincipal());
         feedback.setCreatedBy(user.getId());
         return feedbackRepository.save(feedback).getId();
     }
 
     public PageResponse<FeedbackResponse> findAllFeedbacksByProduct(Long productId, int page, int size, Authentication connectedUser) {
         Pageable pageable = PageRequest.of(page, size);
-        User user = ((User) connectedUser.getPrincipal());
+        Integer userId;
+
+        if (connectedUser != null) {
+            User user = ((User) connectedUser.getPrincipal());
+            if (user != null) {
+                userId = user.getId();
+            } else {
+                userId = null;
+            }
+        } else {
+            userId = null;
+        }
+
         Page<Feedback> feedbacks = feedbackRepository.findAllByProductId(productId, pageable);
         List<FeedbackResponse> feedbackResponses = feedbacks.stream()
-                .map(f -> feedbackMapper.toFeedbackResponse(f, user.getId()))
+                .map(f -> feedbackMapper.toFeedbackResponse(f, userId != null ? userId : 0))
                 .toList();
         return new PageResponse<>(
                 feedbackResponses,

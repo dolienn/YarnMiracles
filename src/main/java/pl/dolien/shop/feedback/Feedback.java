@@ -13,6 +13,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pl.dolien.shop.product.Product;
+import pl.dolien.shop.user.User;
 
 import java.time.LocalDateTime;
 

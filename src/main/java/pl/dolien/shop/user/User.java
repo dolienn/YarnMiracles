@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import pl.dolien.shop.feedback.Feedback;
 import pl.dolien.shop.product.Product;
 import pl.dolien.shop.role.Role;
 
@@ -16,7 +17,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
@@ -58,6 +58,9 @@ public class User implements UserDetails, Principal {
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
     private List<Product> favourites;
+
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Feedback> feedbacks;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

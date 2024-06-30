@@ -82,6 +82,12 @@
         }
       }
 
+      .rating-and-favourite {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+
       .price {
         h4 {
           color: $color--01;

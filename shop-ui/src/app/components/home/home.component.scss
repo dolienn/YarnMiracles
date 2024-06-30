@@ -141,11 +141,10 @@ section {
         color: $error--02;
       }
 
-      .ratting {
-        i {
-          color: $star;
-          font-size: 18px;
-        }
+      .rating-and-favourite {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
       }
 
       .price {
@@ -180,6 +179,7 @@ section {
       justify-self: center;
       margin-top: 5rem;
       transition: 0.1s ease;
+      cursor: pointer;
     }
 
     button:hover {

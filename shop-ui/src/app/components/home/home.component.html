@@ -26,8 +26,11 @@
             <div class="product-text">
                 <h5>new</h5>
             </div>
-            <app-favourite-product [product]="product"></app-favourite-product>
-            <app-rating [rating]="product.rate || 0"></app-rating>
+
+            <div class="rating-and-favourite">
+                <app-rating [rating]="product.rate || 0"></app-rating>
+                <app-favourite-product [product]="product"></app-favourite-product>
+            </div>
 
             <div class="price">
                 <a routerLink="/products/{{product.id}}">

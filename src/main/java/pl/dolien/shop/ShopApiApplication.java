@@ -3,15 +3,12 @@ package pl.dolien.shop;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
 import pl.dolien.shop.feedback.Feedback;
 import pl.dolien.shop.feedback.FeedbackRepository;
 import pl.dolien.shop.product.Product;
-import pl.dolien.shop.product.ProductCategory;
 import pl.dolien.shop.product.ProductCategoryRepository;
 import pl.dolien.shop.product.ProductRepository;
 import pl.dolien.shop.role.Role;
@@ -35,9 +32,9 @@ public class ShopApiApplication {
 	@Bean
 	public CommandLineRunner runner(RoleRepository roleRepository, ProductRepository productRepository, ProductCategoryRepository productCategoryRepository, FeedbackRepository feedbackRepository) {
 		return args -> {
-			Feedback feedback = feedbackRepository.findById(998).get();
-			feedback.setNote(5.0);
-			feedbackRepository.save(feedback);
+//			Feedback feedback = feedbackRepository.findById(998).get();
+//			feedback.setNote(5.0);
+//			feedbackRepository.save(feedback);
 
 			if(roleRepository.findByName("USER").isEmpty()) {
 				roleRepository.save(
