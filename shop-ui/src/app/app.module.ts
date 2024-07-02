@@ -31,6 +31,7 @@ import { RatingComponent } from './components/rating/rating.component';
 import { FeedbackComponent } from './components/feedback/feedback.component';
 import { StarRatingConfigService, StarRatingModule } from 'angular-star-rating';
 import { CustomConfigRatingService } from './services/custom-config-rating/custom-config-rating.service';
+import { LoaderComponent } from './components/loader/loader.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { CustomConfigRatingService } from './services/custom-config-rating/custo
     FavouriteProductComponent,
     RatingComponent,
     FeedbackComponent,
+    LoaderComponent,
   ],
   imports: [
     BrowserModule,

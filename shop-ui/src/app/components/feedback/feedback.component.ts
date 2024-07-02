@@ -1,13 +1,13 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FeedbackService } from '../../services/feedback/feedback.service';
 import { Feedback } from '../../common/feedback/feedback';
 import { Product } from '../../common/product/product';
 import { FeedbackRequest } from '../../common/feedback-request/feedback-request';
-import { HoverRatingChangeEvent, RatingChangeEvent } from 'angular-star-rating';
+import { RatingChangeEvent } from 'angular-star-rating';
 import { TokenService } from '../../services/token.service';
 import { UserService } from '../../services/user/user.service';
 import { User } from '../../common/user/user';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin, map, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-feedback',
@@ -15,10 +15,15 @@ import { Observable } from 'rxjs';
   styleUrl: './feedback.component.scss',
 })
 export class FeedbackComponent implements OnInit {
+  @ViewChild('feedbackSection') feedbackSection!: ElementRef;
+
+  isLoadingComments: boolean = true;
+
   feedbacks: Feedback[] = [];
   pageNumber: number = 1;
-  pageSize: number = 6;
+  pageSize: number = 10;
   totalElements: number = 0;
+  isNotLoggedIn: boolean = true;
 
   feedback: FeedbackRequest = new FeedbackRequest();
   user: User = new User();
@@ -28,11 +33,18 @@ export class FeedbackComponent implements OnInit {
 
   constructor(
     private feedbackService: FeedbackService,
-    private userService: UserService
+    private userService: UserService,
+    private tokenService: TokenService
   ) {}
 
   ngOnInit(): void {
     this.listFeedbacks();
+    this.tokenService.getUserInfo()?.subscribe((data) => {
+      this.user = data;
+      if (this.user !== null) {
+        this.notLoggedIn();
+      }
+    });
   }
 
   ratingChange(event: RatingChangeEvent): void {
@@ -40,23 +52,42 @@ export class FeedbackComponent implements OnInit {
   }
 
   listFeedbacks() {
+    this.isLoadingComments = true;
+
     this.feedbackService
       .getFeedbacksByProduct(
         this.pageNumber - 1,
         this.pageSize,
         this.product.id
       )
-      .subscribe((data: any) => {
-        this.feedbacks = data.content;
-        this.pageNumber = data.number + 1;
-        this.pageSize = data.size;
-        this.totalElements = data.totalElements;
+      .pipe(
+        switchMap((data: any) => {
+          this.feedbacks = data.content;
+          this.pageNumber = data.number + 1;
+          this.pageSize = data.size;
+          this.totalElements = data.totalElements;
 
-        this.feedbacks.forEach((feedback) => {
-          this.getUser(feedback.createdBy || 0).subscribe((user: User) => {
-            feedback.createdByUser = user;
-          });
-        });
+          const userObservables = this.feedbacks.map((feedback) =>
+            this.getUser(feedback.createdBy || 0).pipe(
+              map((user) => {
+                feedback.createdByUser = user;
+                return feedback;
+              })
+            )
+          );
+
+          return forkJoin(userObservables);
+        })
+      )
+      .subscribe({
+        next: (feedbacksWithUsers) => {
+          this.feedbacks = feedbacksWithUsers;
+          this.isLoadingComments = false;
+        },
+        error: (err) => {
+          console.error('Error loading feedbacks:', err);
+          this.isLoadingComments = false;
+        },
       });
   }
 
@@ -73,5 +104,18 @@ export class FeedbackComponent implements OnInit {
       },
       error: (err) => console.error('Error saving feedback:', err.error),
     });
+  }
+
+  notLoggedIn() {
+    this.isNotLoggedIn = false;
+  }
+
+  scrollToFeedbacks() {
+    if (this.feedbackSection) {
+      this.listFeedbacks();
+      this.feedbackSection.nativeElement.scrollIntoView({
+        behavior: 'smooth',
+      });
+    }
   }
 }

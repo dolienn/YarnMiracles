@@ -1,5 +1,6 @@
 <div class="navbox"></div>
-<div class="container" *ngIf="product">
+<app-loader [isLoading]="isLoading"></app-loader>
+<div class="container" *ngIf="product && !isLoading">
     <div class="product-wrapper">
         <div class="product-image">
             <img src="../../../assets{{product.imageUrl}}" alt="">
@@ -9,7 +10,8 @@
             <h1>{{product.name}}</h1>
             <h4>{{product.unitPrice | currency: 'PLN'}}</h4>
             <div class="cart-button">
-                <input type="number" value="1" min="1" max="99" step="1" appPreventTyping [(ngModel)]="value" />
+                <input #quantityInput type="number" value="1" min="1" max="10" step="1" appPreventTyping
+                    [(ngModel)]="value" />
                 <button (click)="addToCart(product)">Add to Cart</button>
             </div>
 

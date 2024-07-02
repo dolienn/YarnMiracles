@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ProductService } from '../../services/product/product.service';
 import { Product } from '../../common/product/product';
 import { ActivatedRoute } from '@angular/router';
@@ -12,6 +12,8 @@ import { TokenService } from '../../services/token.service';
   styleUrl: './product-list.component.scss',
 })
 export class ProductListComponent implements OnInit {
+  @ViewChild('productsSection') productsSection!: ElementRef;
+
   isLoading: boolean = true;
 
   products: Product[] = [];
@@ -44,6 +46,7 @@ export class ProductListComponent implements OnInit {
   }
 
   listProducts() {
+    this.isLoading = true;
     this.searchMode = this.route.snapshot.paramMap.has('keyword');
 
     if (this.searchMode) {
@@ -86,6 +89,14 @@ export class ProductListComponent implements OnInit {
     } else if (this.selectedSortOption === 'highest-price') {
       this.productService
         .searchProductsPaginateOrderByUnitPriceDesc(
+          this.pageNumber - 1,
+          this.pageSize,
+          keyword
+        )
+        .subscribe(this.processResult());
+    } else if (this.selectedSortOption === 'rating') {
+      this.productService
+        .searchProductsPaginateOrderByRateDesc(
           this.pageNumber - 1,
           this.pageSize,
           keyword
@@ -134,6 +145,14 @@ export class ProductListComponent implements OnInit {
           this.currentCategoryId
         )
         .subscribe(this.processResult());
+    } else if (this.selectedSortOption === 'rating') {
+      this.productService
+        .getProductListPaginateOrderByRateDesc(
+          this.pageNumber - 1,
+          this.pageSize,
+          this.currentCategoryId
+        )
+        .subscribe(this.processResult());
     }
   }
 
@@ -162,6 +181,14 @@ export class ProductListComponent implements OnInit {
       } else if (this.selectedSortOption === 'highest-price') {
         this.userService
           .getFavouriteProductsPaginateOrderByUnitPriceDesc(
+            this.pageNumber - 1,
+            this.pageSize,
+            this.user.id
+          )
+          .subscribe(this.processResult());
+      } else if (this.selectedSortOption === 'rating') {
+        this.userService
+          .getFavouriteProductsPaginateOrderByRateDesc(
             this.pageNumber - 1,
             this.pageSize,
             this.user.id
@@ -202,5 +229,14 @@ export class ProductListComponent implements OnInit {
   onSortOptionChange() {
     this.pageNumber = 1;
     this.listProducts();
+  }
+
+  scrollToProducts() {
+    if (this.productsSection) {
+      this.listProducts();
+      this.productsSection.nativeElement.scrollIntoView({
+        behavior: 'smooth',
+      });
+    }
   }
 }

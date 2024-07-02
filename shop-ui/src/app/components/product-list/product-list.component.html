@@ -1,6 +1,6 @@
 <div class="navbox"></div>
 
-<div class="container"
+<div class="container" #productsSection
     [ngClass]="{'less-than-five': isLessThanFiveProducts(), 'less-than-four': isLessThanFourProducts(), 'less-than-three': isLessThanThreeProducts()}">
     <div class="center-text">
         <h2 *ngIf="!isFavouriteRoute">Our <span *ngIf="currentCategoryName.length">{{currentCategoryName}}</span> <span
@@ -16,9 +16,7 @@
         </select>
     </div>
 
-    <div *ngIf="isLoading" class="loader">
-
-    </div>
+    <app-loader [isLoading]="isLoading"></app-loader>
 
     <div class="products" *ngIf="!isLoading">
         <div class="product" *ngFor="let product of products">
@@ -44,7 +42,7 @@
 
     <ngb-pagination *ngIf="(this.totalElements/this.pageSize) > 1 && !isLoading" class="custom-pagination"
         [(page)]="pageNumber" [pageSize]="pageSize" [maxSize]="2" [collectionSize]="totalElements"
-        (pageChange)="listProducts()">
+        (pageChange)="scrollToProducts()">
 
     </ngb-pagination>
 

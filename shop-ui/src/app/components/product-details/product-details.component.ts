@@ -1,4 +1,10 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Product } from '../../common/product/product';
 import { ProductService } from '../../services/product/product.service';
 import { ActivatedRoute } from '@angular/router';
@@ -11,8 +17,12 @@ import { CartService } from '../../services/cart/cart.service';
   styleUrl: './product-details.component.scss',
 })
 export class ProductDetailsComponent implements OnInit {
+  isLoading: boolean = true;
+
   product!: Product;
   value = 1;
+
+  @ViewChild('quantityInput') quantityInput!: ElementRef;
 
   constructor(
     private cartService: CartService,
@@ -27,16 +37,23 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   handleProductDetails() {
+    this.isLoading = true;
+
     const id: number = +this.route.snapshot.paramMap.get('id')!;
 
     this.productService.getProduct(id).subscribe((data) => {
       this.product = data;
+      this.isLoading = false;
     });
   }
 
   @HostListener('keydown', ['$event'])
   onKeyDown(event: KeyboardEvent) {
+    const isQuantityInput = this.quantityInput.nativeElement.contains(
+      event.target
+    );
     if (
+      isQuantityInput &&
       event.key !== 'ArrowUp' &&
       event.key !== 'ArrowDown' &&
       event.key !== 'Tab' &&

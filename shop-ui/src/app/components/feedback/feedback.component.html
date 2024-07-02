@@ -1,22 +1,46 @@
-<form (ngSubmit)="saveFeedback()" *ngIf="product" #feedbackForm="ngForm">
-    <h2>Feedback</h2>
-    <textarea type="text" id="comment" [(ngModel)]="feedback.comment" name="comment" required></textarea>
-    <star-rating-control [showHalfStars]="true" [hoverEnabled]="true" [rating]="feedback.note || 0" [size]="'large'"
-        [staticColor]="'ok'" (ratingChange)="ratingChange($event)" [starType]="'svg'"></star-rating-control>
-    <button type="submit" [disabled]="feedbackForm.invalid || feedback.note === 0">Submit Feedback</button>
-</form>
+<div #feedbackSection class="form-wrapper">
+    <div *ngIf="isNotLoggedIn" class="overlay">
+        <i class='bx bxs-lock-alt'></i>
+        <h2>You need to login</h2>
+        <button routerLink="/login" type="button">
+            Log In
+        </button>
+    </div>
+    <form (ngSubmit)="saveFeedback()" *ngIf="product" #feedbackForm="ngForm" id="feedback-form"
+        [ngClass]="{'not-logged-in': isNotLoggedIn}">
+        <h2>Feedback</h2>
 
-<div class="feedbacks">
+        <textarea type="text" id="comment" maxlength="255" [(ngModel)]="feedback.comment" name="comment"
+            required></textarea>
+        <star-rating-control [showHalfStars]="true" [hoverEnabled]="true" [rating]="feedback.note || 0" [size]="'large'"
+            [staticColor]="'ok'" (ratingChange)="ratingChange($event)" [starType]="'svg'"></star-rating-control>
+        <button type="submit" [disabled]="feedbackForm.invalid || feedback.note === 0">Submit Feedback</button>
+    </form>
+</div>
+
+<app-loader [isLoading]="isLoadingComments"></app-loader>
+
+<div #feedbacksSection class="feedbacks" *ngIf="!isLoadingComments">
     <div class="feedback" *ngFor="let feedback of feedbacks">
         <div class="feedback-info">
             <div class="user-and-date">
-                {{feedback.createdByUser?.firstname}} {{feedback.createdByUser?.lastname}} {{feedback.createdDate |
-                date:
-                'MM/dd/yyyy
-                HH:mm'}}</div>
+                <div class="username">
+                    {{feedback.createdByUser?.firstname}} {{feedback.createdByUser?.lastname}}
+                </div>
+                <div class="date">
+                    {{feedback.createdDate |
+                    date:
+                    'MM/dd/yyyy HH:mm'}}
+                </div>
+            </div>
             <div class="comment">{{feedback.comment}}</div>
         </div>
         <app-rating [rating]="feedback.note || 0"></app-rating>
 
     </div>
+
+    <ngb-pagination *ngIf="(this.totalElements/this.pageSize) > 1" class="custom-pagination" [(page)]="pageNumber"
+        [pageSize]="pageSize" [maxSize]="2" [collectionSize]="totalElements" (pageChange)="scrollToFeedbacks()">
+
+    </ngb-pagination>
 </div>

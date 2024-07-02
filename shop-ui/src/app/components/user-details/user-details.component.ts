@@ -8,6 +8,8 @@ import { User } from '../../common/user/user';
   styleUrl: './user-details.component.scss',
 })
 export class UserDetailsComponent implements OnInit {
+  isLoading: boolean = true;
+
   user: User = new User();
 
   constructor(private tokenService: TokenService) {}
@@ -18,6 +20,7 @@ export class UserDetailsComponent implements OnInit {
       this.user.firstname = data.firstname;
       this.user.lastname = data.lastname;
       this.user.email = data.email;
+      this.isLoading = false;
     });
   }
 }

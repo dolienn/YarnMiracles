@@ -51,6 +51,15 @@ export class NavigationBarComponent implements OnInit {
     this.checkWindowWidth();
   }
 
+  @HostListener('window:load', [])
+  onLoad() {
+    const iconContainer = document.querySelector('.nav-icon');
+    if (iconContainer) {
+      iconContainer.classList.remove('loading');
+      iconContainer.classList.add('loaded');
+    }
+  }
+
   checkWindowWidth() {
     if (
       window.innerWidth <= 1000 &&

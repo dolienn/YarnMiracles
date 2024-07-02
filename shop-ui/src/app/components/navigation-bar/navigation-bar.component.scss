@@ -74,6 +74,14 @@ header {
   color: $error--02;
 }
 
+.loading i {
+  visibility: hidden;
+}
+
+.nav-icon.loaded i {
+  visibility: visible !important;
+}
+
 .search-bar {
   display: flex;
   justify-content: center;

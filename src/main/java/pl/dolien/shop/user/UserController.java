@@ -29,10 +29,4 @@ public class UserController {
     public void removeFavouriteProduct(@PathVariable Integer userId, @PathVariable Long productId) {
         userService.removeFavouriteProduct(userId, productId);
     }
-
-//    @GetMapping("/{userId}/favourites")
-//    public ResponseEntity<Page<Product>> getFavouriteProducts(@PathVariable Integer userId, Pageable pageable) {
-//        Page<Product> favourites = userService.getFavouriteProducts(userId, pageable);
-//        return ResponseEntity.ok(favourites);
-//    }
 }

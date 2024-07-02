@@ -35,16 +35,4 @@ public class UserService {
         user.getFavourites().remove(product);
         userRepository.save(user);
     }
-
-//    public Page<Product> getFavouriteProducts(Integer userId, Pageable pageable) {
-//        User user = userRepository.findById(userId)
-//                .orElseThrow(() -> new RuntimeException("User not found"));
-//
-//        List<Product> favourites = List.copyOf(user.getFavourites());
-//
-//        int start = (int) pageable.getOffset();
-//        int end = Math.min((start + pageable.getPageSize()), favourites.size());
-//
-//        return new PageImpl<>(favourites.subList(start, end), pageable, favourites.size());
-//    }
 }

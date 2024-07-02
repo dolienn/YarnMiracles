@@ -62,6 +62,16 @@ export class UserService {
     return this.httpClient.get<GetResponseProducts>(favouritesUrl);
   }
 
+  getFavouriteProductsPaginateOrderByRateDesc(
+    page: number,
+    pageSize: number,
+    userId: number
+  ): Observable<GetResponseProducts> {
+    const favouritesUrl = `${this.userUrl}/search/findFavouritesByUserIdOrderByRateDesc?userId=${userId}&page=${page}&size=${pageSize}`;
+
+    return this.httpClient.get<GetResponseProducts>(favouritesUrl);
+  }
+
   getById(id: number): Observable<User> {
     const findUserUrl = `${this.userUrl}/${id}`;
 

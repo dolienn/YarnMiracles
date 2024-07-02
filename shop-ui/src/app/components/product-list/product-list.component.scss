@@ -30,24 +30,6 @@
     }
   }
 
-  .loader {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .loader::after {
-    content: "";
-    width: 4rem;
-    height: 4rem;
-    border: 0.3rem solid $background-color--02;
-    border-top-color: $color--01;
-    border-radius: 50%;
-    animation: loading 0.75s ease infinite;
-  }
-
   .products {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, auto));
@@ -179,15 +161,6 @@
 a {
   color: inherit;
   text-decoration: none;
-}
-
-@keyframes loading {
-  from {
-    transform: rotate(0turn);
-  }
-  to {
-    transform: rotate(1turn);
-  }
 }
 
 .less-than-five .products {
