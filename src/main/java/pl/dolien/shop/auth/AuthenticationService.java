@@ -1,7 +1,6 @@
 package pl.dolien.shop.auth;
 
 import jakarta.mail.MessagingException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -75,7 +74,8 @@ public class AuthenticationService {
     }
 
     private String generateAndSaveActivationToken(User user) {
-        String generatedToken = generateActivationCode(6);
+        int length = 6;
+        String generatedToken = generateActivationCode(length);
         var token = Token.builder()
                 .token(generatedToken)
                 .createdAt(LocalDateTime.now())
@@ -114,7 +114,6 @@ public class AuthenticationService {
                 .token(jwtToken).build();
     }
 
-    //@Transactional
     public void activateAccount(String token) throws MessagingException {
         Token savedToken = tokenRepository.findByToken(token)
                 .orElseThrow(() -> new RuntimeException("Invalid token"));

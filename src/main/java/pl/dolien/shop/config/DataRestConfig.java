@@ -40,13 +40,11 @@ public class DataRestConfig implements RepositoryRestConfigurer {
 
     private void exposeIds(RepositoryRestConfiguration config) {
         Set<EntityType<?>> entities = entityManager.getMetamodel().getEntities();
-        List<Class> entityClasses = new ArrayList<>();
+        List<Class<?>> entityClasses = new ArrayList<>();
 
-        entities.forEach(entityType -> {
-            entityClasses.add(entityType.getJavaType());
-        });
+        entities.forEach(entityType -> entityClasses.add(entityType.getJavaType()));
 
-        Class[] domainTypes = entityClasses.toArray(new Class[0]);
+        Class<?>[] domainTypes = entityClasses.toArray(new Class[0]);
         config.exposeIdsFor(domainTypes);
 
     }

@@ -1,7 +1,6 @@
 package pl.dolien.shop.feedback;
 
 import jakarta.validation.constraints.*;
-import pl.dolien.shop.user.User;
 
 public record FeedbackRequest(
         @Positive(message = "200")

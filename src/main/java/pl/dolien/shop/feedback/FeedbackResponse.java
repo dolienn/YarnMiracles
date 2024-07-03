@@ -1,7 +1,6 @@
 package pl.dolien.shop.feedback;
 
 import lombok.*;
-import pl.dolien.shop.user.User;
 
 import java.time.LocalDateTime;
 

@@ -43,7 +43,6 @@ public class AuthenticationController {
 
     @GetMapping("/info")
     public ResponseEntity<User> getUserInfo(Authentication connectedUser) {
-        System.out.println((User) connectedUser.getPrincipal());
         return ResponseEntity.ok((User) connectedUser.getPrincipal());
     }
 }

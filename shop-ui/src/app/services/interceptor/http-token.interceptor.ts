@@ -8,7 +8,7 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { TokenService } from '../token.service';
+import { TokenService } from '../token/token.service';
 
 @Injectable()
 export class HttpTokenInterceptor implements HttpInterceptor {

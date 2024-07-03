@@ -4,7 +4,7 @@ import { Feedback } from '../../common/feedback/feedback';
 import { Product } from '../../common/product/product';
 import { FeedbackRequest } from '../../common/feedback-request/feedback-request';
 import { RatingChangeEvent } from 'angular-star-rating';
-import { TokenService } from '../../services/token.service';
+import { TokenService } from '../../services/token/token.service';
 import { UserService } from '../../services/user/user.service';
 import { User } from '../../common/user/user';
 import { Observable, forkJoin, map, switchMap } from 'rxjs';

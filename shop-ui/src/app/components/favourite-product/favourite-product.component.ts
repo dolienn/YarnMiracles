@@ -1,7 +1,7 @@
 import { Product } from './../../common/product/product';
 import { Component, Input, OnInit } from '@angular/core';
 import { UserService } from '../../services/user/user.service';
-import { TokenService } from '../../services/token.service';
+import { TokenService } from '../../services/token/token.service';
 import { User } from '../../common/user/user';
 import { Router } from '@angular/router';
 

@@ -1,4 +1,4 @@
-import { TokenService } from './../../services/token.service';
+import { TokenService } from './../../services/token/token.service';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ProductCategory } from '../../common/product-category/product-category';
 import { ProductService } from '../../services/product/product.service';

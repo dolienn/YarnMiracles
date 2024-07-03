@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject } from 'rxjs';
-import { NotificationService } from './notification/notification.service';
+import { NotificationService } from '../notification/notification.service';
 import { HttpClient } from '@angular/common/http';
-import { User } from '../common/user/user';
+import { User } from '../../common/user/user';
 
 @Injectable({
   providedIn: 'root',
