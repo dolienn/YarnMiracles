@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import pl.dolien.shop.common.PageResponse;
+import pl.dolien.shop.product.Product;
+import pl.dolien.shop.product.ProductRepository;
 import pl.dolien.shop.user.User;
 
 import java.util.List;
@@ -19,7 +21,12 @@ public class FeedbackService {
 
     private final FeedbackRepository feedbackRepository;
 
+    private final ProductRepository productRepository;
+
     public Integer save(FeedbackRequest request, Authentication connectedUser) {
+        if(request == null) {
+            throw new NullPointerException("Feedback request should not be null");
+        }
         Feedback feedback = feedbackMapper.toFeedback(request);
         User user = ((User) connectedUser.getPrincipal());
         feedback.setCreatedBy(user.getId());
@@ -27,6 +34,15 @@ public class FeedbackService {
     }
 
     public PageResponse<FeedbackResponse> findAllFeedbacksByProduct(Long productId, int page, int size, Authentication connectedUser) {
+
+        if(productId == 0) {
+            throw new IllegalArgumentException("Invalid product ID");
+        }
+
+        if(productRepository.findById(productId).isEmpty()) {
+            throw new NullPointerException("Can't find a product with the id");
+        }
+
         Pageable pageable = PageRequest.of(page, size);
         Integer userId;
 

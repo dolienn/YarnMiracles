@@ -1,11 +1,12 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Product } from '../../common/product/product';
 import { ProductService } from '../../services/product/product.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrl: './home.component.scss',
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
   isLoading: boolean = true;
@@ -13,10 +14,15 @@ export class HomeComponent implements OnInit {
 
   products: Product[] = [];
 
-  constructor(private productService: ProductService) {}
+  constructor(private productService: ProductService, private router: Router) {}
 
   ngOnInit(): void {
     this.listProducts();
+    if (document.readyState === 'complete') {
+      this.onLoad();
+    } else {
+      window.addEventListener('load', this.onLoad.bind(this));
+    }
   }
 
   listProducts() {
@@ -27,8 +33,9 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  @HostListener('window:load', [])
   onLoad() {
+    console.log('xd');
+    this.isLoading = true;
     const container = document.querySelector('.container');
     if (container) {
       this.isLoading = false;

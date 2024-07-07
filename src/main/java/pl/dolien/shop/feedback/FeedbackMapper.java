@@ -8,6 +8,9 @@ import java.util.Objects;
 @Service
 public class FeedbackMapper {
     public Feedback toFeedback(FeedbackRequest request) {
+        if(request == null) {
+            throw new NullPointerException("The feedback request should not be null");
+        }
         return Feedback.builder()
                 .note(request.note())
                 .comment(request.comment())
@@ -18,6 +21,9 @@ public class FeedbackMapper {
     }
 
     public FeedbackResponse toFeedbackResponse(Feedback feedback, Integer id) {
+        if(feedback == null) {
+            throw new NullPointerException("The feedback should not be null");
+        }
         return FeedbackResponse.builder()
                 .note(feedback.getNote())
                 .comment(feedback.getComment())
