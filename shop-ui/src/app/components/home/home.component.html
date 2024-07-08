@@ -10,14 +10,14 @@
             <a href="#" routerLink="/products" class="main-btn">Shop Now <i class="bx bx-right-arrow-alt"></i></a>
         </div>
 
-        <div class="down-arrow">
-            <a href="#trending" class="down"><i class="bx bx-down-arrow-alt"></i></a>
+        <div class="down-arrow" (click)="scrollToTrending()">
+            <i class="bx bx-down-arrow-alt"></i>
         </div>
     </section>
 
     <app-loader [isLoading]="isLoadingProducts"></app-loader>
 
-    <section class="trending-product" id="trending" *ngIf="!isLoadingProducts">
+    <section class="trending-product" *ngIf="!isLoadingProducts" #trendingSection>
         <div class="center-text">
             <h2>Our Trending <span>Products</span></h2>
         </div>

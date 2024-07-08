@@ -19,9 +19,10 @@ export class UserDetailsComponent implements OnInit {
     this.tokenService.getUserInfo()?.subscribe((data) => {
       this.user = data;
       this.isLoading = false;
+
+      if (this.user.id == 0) {
+        this.router.navigate(['login']);
+      }
     });
-    if (this.user.id == 0) {
-      this.router.navigate(['login']);
-    }
   }
 }

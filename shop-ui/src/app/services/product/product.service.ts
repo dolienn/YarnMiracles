@@ -8,10 +8,10 @@ import { ProductCategory } from '../../common/product-category/product-category'
   providedIn: 'root',
 })
 export class ProductService {
-  private readonly productUrl = 'http://localhost:8088/api/v1/products';
+  private readonly productUrl = 'http://192.168.1.162:8088/api/v1/products';
 
   private readonly categoryUrl =
-    'http://localhost:8088/api/v1/product-category';
+    'http://192.168.1.162:8088/api/v1/product-category';
 
   constructor(private httpClient: HttpClient) {}
 

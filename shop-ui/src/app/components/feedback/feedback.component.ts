@@ -101,14 +101,21 @@ export class FeedbackComponent implements OnInit {
   }
 
   saveFeedback() {
-    this.feedback.productId = this.product.id;
-    this.feedbackService.saveFeedback(this.feedback).subscribe({
-      next: (response) => {
-        console.log('Feedback saved with id:', response);
-        this.listFeedbacks();
-      },
-      error: (err) => console.error('Error saving feedback:', err.error),
-    });
+    if (
+      this.feedback.comment?.trim() !== null &&
+      this.feedback.note !== 0 &&
+      this.feedback.note !== null &&
+      this.feedback.note !== undefined
+    ) {
+      this.feedback.productId = this.product.id;
+      this.feedbackService.saveFeedback(this.feedback).subscribe({
+        next: (response) => {
+          console.log('Feedback saved with id:', response);
+          this.listFeedbacks();
+        },
+        error: (err) => console.error('Error saving feedback:', err.error),
+      });
+    }
   }
 
   notLoggedIn() {

@@ -1,4 +1,10 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Product } from '../../common/product/product';
 import { ProductService } from '../../services/product/product.service';
 import { Router } from '@angular/router';
@@ -9,6 +15,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
+  @ViewChild('trendingSection') trendingSection: ElementRef | undefined;
+
   isLoading: boolean = true;
   isLoadingProducts: boolean = true;
 
@@ -39,6 +47,12 @@ export class HomeComponent implements OnInit {
     const container = document.querySelector('.container');
     if (container) {
       this.isLoading = false;
+    }
+  }
+
+  scrollToTrending() {
+    if (this.trendingSection) {
+      this.trendingSection.nativeElement.scrollIntoView({ behavior: 'smooth' });
     }
   }
 }

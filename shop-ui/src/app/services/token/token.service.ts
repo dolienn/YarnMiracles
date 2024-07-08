@@ -61,7 +61,7 @@ export class TokenService {
     const token = localStorage.getItem('token');
     if (token) {
       return this.httpClient.get<User>(
-        'http://localhost:8088/api/v1/auth/info',
+        'http://192.168.1.162:8088/api/v1/auth/info',
         {
           headers: { Authorization: `Bearer ${token}` },
         }

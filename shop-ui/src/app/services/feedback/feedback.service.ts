@@ -8,7 +8,7 @@ import { FeedbackRequest } from '../../common/feedback-request/feedback-request'
   providedIn: 'root',
 })
 export class FeedbackService {
-  private readonly feedbackUrl = 'http://localhost:8088/api/v1/feedbacks';
+  private readonly feedbackUrl = 'http://192.168.1.162:8088/api/v1/feedbacks';
 
   constructor(private httpClient: HttpClient) {}
 

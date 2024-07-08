@@ -97,14 +97,15 @@ header {
   display: none;
   align-items: center;
   justify-content: center;
-  width: 160px;
+  width: 8.8rem;
   height: 100%;
+  margin-right: 1.1rem;
 
   input {
     background-color: inherit;
     border: none;
     outline: none;
-    font-size: 15px;
+    font-size: 0.9rem;
   }
 }
 
@@ -115,8 +116,8 @@ header {
 .search-bar.active-search-bar {
   background-color: $background-color--02;
   padding: 2%;
-  width: 240px;
-  margin-right: 20px;
+  width: 14rem;
+  margin-right: 1.2rem;
 }
 
 #menu-icon {
@@ -129,7 +130,7 @@ header {
 
 .sticky {
   background: $background-color--01;
-  box-shadow: 0px 0px 10px rgb(0 0 0 / 10%);
+  box-shadow: 0px 0px 0.8rem rgb(0 0 0 / 10%);
 }
 
 .cart-status {
@@ -144,7 +145,7 @@ header {
   position: absolute;
   top: 100%;
   background-color: $background-color--02;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
   min-width: 200px;
 
   .categoryName {
@@ -178,14 +179,14 @@ header {
     position: absolute;
     top: 100%;
     right: -100%;
-    width: 300px;
+    width: 20rem;
     height: 130vh;
     background: $background-color--02;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding: 60px 0 60px 0;
+    padding: 4rem 0;
     transition: all 0.42s;
 
     li {
@@ -198,7 +199,7 @@ header {
       .navlink {
         display: flex;
         align-items: center;
-        margin: 18px 0;
+        margin: 1.1rem 0;
         height: auto;
       }
 
@@ -224,14 +225,14 @@ header {
     position: absolute;
     top: 100%;
     right: -100%;
-    width: 300px;
+    width: 20rem;
     height: 130vh;
     background: $background-color--02;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding: 60px 0 60px 0;
+    padding: 4rem 0;
     transition: all 0.42s;
 
     li {
@@ -244,7 +245,7 @@ header {
       .navlink {
         display: flex;
         align-items: center;
-        margin: 18px 0;
+        margin: 1.1rem 0;
         height: auto;
       }
 
@@ -275,7 +276,7 @@ header {
     position: absolute;
     top: 100%;
     background-color: $background-color--02;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
     min-width: 200px;
 
     .profile-option {

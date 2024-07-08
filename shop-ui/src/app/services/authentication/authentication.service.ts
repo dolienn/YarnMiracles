@@ -9,12 +9,13 @@ import { RegistrationRequest } from '../../common/registration-request/registrat
 })
 export class AuthenticationService {
   private readonly authenticateUrl =
-    'http://localhost:8088/api/v1/auth/authenticate';
+    'http://192.168.1.162:8088/api/v1/auth/authenticate';
 
-  private readonly registerUrl = 'http://localhost:8088/api/v1/auth/register';
+  private readonly registerUrl =
+    'http://192.168.1.162:8088/api/v1/auth/register';
 
   private readonly confirmUrl =
-    'http://localhost:8088/api/v1/auth/activate-account';
+    'http://192.168.1.162:8088/api/v1/auth/activate-account';
 
   constructor(private httpClient: HttpClient) {}
 

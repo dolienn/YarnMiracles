@@ -6,15 +6,15 @@
             Log In
         </button>
     </div>
-    <form (ngSubmit)="saveFeedback()" *ngIf="product" #feedbackForm="ngForm" id="feedback-form"
-        [ngClass]="{'not-logged-in': isNotLoggedIn}">
+    <form *ngIf="product" #feedbackForm="ngForm" id="feedback-form" [ngClass]="{'not-logged-in': isNotLoggedIn}">
         <h2>Feedback</h2>
 
         <textarea type="text" id="comment" maxlength="255" [(ngModel)]="feedback.comment" name="comment"
             required></textarea>
         <star-rating-control [showHalfStars]="true" [hoverEnabled]="true" [rating]="feedback.note || 0" [size]="'large'"
             [staticColor]="'ok'" (ratingChange)="ratingChange($event)" [starType]="'svg'"></star-rating-control>
-        <button type="submit" [disabled]="feedbackForm.invalid || feedback.note === 0">Submit Feedback</button>
+        <button type="submit" (click)="saveFeedback()">Submit
+            Feedback</button>
     </form>
 </div>
 

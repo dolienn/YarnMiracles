@@ -19,7 +19,6 @@ import { ProductService } from './services/product/product.service';
 import { ProductListComponent } from './components/product-list/product-list.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { CopyrightComponent } from './components/copyright/copyright.component';
-import { SearchComponent } from './components/search/search.component';
 import { ProductDetailsComponent } from './components/product-details/product-details.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CartStatusComponent } from './components/cart-status/cart-status.component';
@@ -30,7 +29,6 @@ import { FavouriteProductComponent } from './components/favourite-product/favour
 import { RatingComponent } from './components/rating/rating.component';
 import { FeedbackComponent } from './components/feedback/feedback.component';
 import { StarRatingConfigService, StarRatingModule } from 'angular-star-rating';
-import { CustomConfigRatingService } from './services/custom-config-rating/custom-config-rating.service';
 import { LoaderComponent } from './components/loader/loader.component';
 import { AlertComponent } from './components/alert/alert.component';
 
@@ -45,7 +43,6 @@ import { AlertComponent } from './components/alert/alert.component';
     ProductListComponent,
     ContactComponent,
     CopyrightComponent,
-    SearchComponent,
     ProductDetailsComponent,
     CartStatusComponent,
     NotificationComponent,
@@ -71,7 +68,6 @@ import { AlertComponent } from './components/alert/alert.component';
     { provide: HTTP_INTERCEPTORS, useClass: HttpTokenInterceptor, multi: true },
     {
       provide: StarRatingConfigService,
-      useClass: CustomConfigRatingService,
     },
   ],
   bootstrap: [AppComponent],

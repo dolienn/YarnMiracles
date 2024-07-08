@@ -27,35 +27,35 @@ section {
   .main-text {
     h5 {
       color: $error--02;
-      font-size: 16px;
+      font-size: 1rem;
       text-transform: capitalize;
       font-weight: 500;
     }
 
     h1 {
       color: $color--00;
-      font-size: 65px;
+      font-size: 4rem;
       text-transform: capitalize;
       line-height: 1.1;
       font-weight: 600;
-      margin: 6px 0 10px;
+      margin: 0.5rem 0 0.8rem;
     }
 
     p {
       color: $color--02;
-      font-size: 20px;
+      font-size: 1.2rem;
       font-style: italic;
-      margin-bottom: 20px;
+      margin-bottom: 1.2rem;
     }
 
     .main-btn {
       display: inline-block;
       color: $color--01;
-      font-size: 16px;
+      font-size: 1rem;
       font-weight: 500;
       text-transform: capitalize;
-      border: 2px solid $color--01;
-      padding: 12px 25px;
+      border: 0.1rem solid $color--01;
+      padding: 0.8rem 1.7rem;
       transition: all 0.42s ease;
 
       i {
@@ -73,21 +73,20 @@ section {
     position: absolute;
     top: 85%;
     right: 11%;
+    cursor: pointer;
 
-    .down {
-      i {
-        font-size: 30px;
-        color: $color--01;
-        border: 2px solid $color--01;
-        border-radius: 50px;
-        padding: 12px 12px;
-      }
+    i {
+      font-size: 1.6rem;
+      color: $color--01;
+      border: 0.1rem solid $color--01;
+      border-radius: 50%;
+      padding: 0.9rem;
+    }
 
-      i:hover {
-        background-color: $color--01;
-        color: $background-color--01;
-        transition: all 0.42s ease;
-      }
+    i:hover {
+      background-color: $color--01;
+      color: $background-color--01;
+      transition: all 0.42s ease;
     }
   }
 }
@@ -96,10 +95,10 @@ section {
   .center-text {
     h2 {
       color: $color--01;
-      font-size: 28px;
+      font-size: 1.8rem;
       text-transform: capitalize;
       text-align: center;
-      margin-bottom: 30px;
+      margin: 2rem 0;
 
       span {
         color: $error--02;
@@ -129,26 +128,16 @@ section {
       .product-text {
         h5 {
           position: absolute;
-          top: 13px;
-          left: 13px;
+          top: 0.8rem;
+          left: 0.8rem;
           color: $background-color--01;
-          font-size: 12px;
+          font-size: 0.75rem;
           font-weight: 500;
           text-transform: uppercase;
           background-color: $success--02;
-          padding: 3px 10px;
+          padding: 0.16rem 0.8rem;
           border-radius: calc($border-radius/2);
         }
-      }
-
-      .heart-icon {
-        position: absolute;
-        right: 0;
-        font-size: 20px;
-      }
-
-      .heart-icon:hover {
-        color: $error--02;
       }
 
       .rating-and-favourite {
@@ -160,14 +149,14 @@ section {
       .price {
         h4 {
           color: $color--01;
-          font-size: 16px;
+          font-size: 1rem;
           text-transform: capitalize;
           font-weight: 400;
         }
 
         p {
           color: $color--00;
-          font-size: 14px;
+          font-size: 0.9rem;
           font-weight: 600;
         }
       }
@@ -203,10 +192,10 @@ section {
     h2 {
       text-align: center;
       color: $color--00;
-      font-size: 25px;
+      font-size: 1.8rem;
       text-transform: capitalize;
       font-weight: 700;
-      margin-bottom: 30px;
+      margin-bottom: 2rem;
     }
   }
 
@@ -225,16 +214,17 @@ section {
 
       h4 {
         color: $color--00;
-        font-size: 18px;
+        font-size: 1.2rem;
         font-weight: 600;
+        margin-bottom: 1rem;
       }
 
       p {
         color: $color--02;
-        font-size: 15px;
+        font-size: 1rem;
         max-width: 380px;
-        line-height: 25px;
-        margin-bottom: 12px;
+        line-height: 1.8rem;
+        margin-bottom: 0.8rem;
       }
     }
   }
@@ -244,17 +234,17 @@ section {
   .main-home {
     .main-text {
       h1 {
-        font-size: 50px;
+        font-size: 3.2rem;
         transition: 0.4s;
       }
 
       p {
-        font-size: 18px;
+        font-size: 1rem;
         transition: 0.4s;
       }
 
       .main-btn {
-        padding: 10px 20px;
+        padding: 0.7rem 1.1rem;
         transition: 0.4s;
       }
     }
