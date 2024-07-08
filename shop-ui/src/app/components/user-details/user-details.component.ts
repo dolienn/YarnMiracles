@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TokenService } from '../../services/token/token.service';
 import { User } from '../../common/user/user';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-details',
@@ -12,15 +13,15 @@ export class UserDetailsComponent implements OnInit {
 
   user: User = new User();
 
-  constructor(private tokenService: TokenService) {}
+  constructor(private tokenService: TokenService, private router: Router) {}
 
   ngOnInit(): void {
     this.tokenService.getUserInfo()?.subscribe((data) => {
-      this.user.id = data.id;
-      this.user.firstname = data.firstname;
-      this.user.lastname = data.lastname;
-      this.user.email = data.email;
+      this.user = data;
       this.isLoading = false;
     });
+    if (this.user.id == 0) {
+      this.router.navigate(['login']);
+    }
   }
 }

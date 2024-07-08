@@ -7,7 +7,7 @@ import { RatingChangeEvent } from 'angular-star-rating';
 import { TokenService } from '../../services/token/token.service';
 import { UserService } from '../../services/user/user.service';
 import { User } from '../../common/user/user';
-import { Observable, forkJoin, map, switchMap } from 'rxjs';
+import { Observable, forkJoin, map, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-feedback',
@@ -66,6 +66,11 @@ export class FeedbackComponent implements OnInit {
           this.pageNumber = data.number + 1;
           this.pageSize = data.size;
           this.totalElements = data.totalElements;
+
+          if (this.feedbacks.length === 0) {
+            this.isLoadingComments = false;
+            return of([]);
+          }
 
           const userObservables = this.feedbacks.map((feedback) =>
             this.getUser(feedback.createdBy || 0).pipe(

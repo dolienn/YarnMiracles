@@ -43,4 +43,6 @@
         [pageSize]="pageSize" [maxSize]="2" [collectionSize]="totalElements" (pageChange)="scrollToFeedbacks()">
 
     </ngb-pagination>
+
+    <app-alert msg="There is no feedbacks yet." *ngIf="feedbacks?.length == 0 && !isLoadingComments"></app-alert>
 </div>

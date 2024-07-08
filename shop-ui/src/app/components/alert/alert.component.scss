@@ -1,0 +1,16 @@
+@import "../../variables.scss";
+
+.alert {
+  background-color: $warning--01;
+  padding: 1.3rem 0.8rem;
+  max-width: 100%;
+  height: auto;
+  margin-top: 1rem;
+  border-radius: $border-radius;
+  border-left: 0.4rem solid $warning--02;
+
+  .msg {
+    font-size: 1rem;
+    color: $color--00;
+  }
+}

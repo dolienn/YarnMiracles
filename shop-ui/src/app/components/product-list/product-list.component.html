@@ -58,7 +58,5 @@
 
 
 
-    <div class="alert" *ngIf="products?.length == 0 && !isLoading" role="alert">
-        <span class="msg">No products found.</span>
-    </div>
+    <app-alert msg="No products found." *ngIf="products?.length == 0 && !isLoading"></app-alert>
 </div>
