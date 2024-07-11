@@ -17,6 +17,7 @@ export class ProductListComponent implements OnInit {
   isLoading: boolean = true;
 
   products: Product[] = [];
+  fakeProducts: Product[] = [];
   currentCategoryId: number = 1;
   previousCategoryId: number = 1;
   currentCategoryName: string = '';

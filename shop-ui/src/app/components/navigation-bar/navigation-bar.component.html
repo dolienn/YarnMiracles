@@ -2,27 +2,36 @@
     <a href="#" routerLink="/" class="logo"><img src="../assets/images/temporery_logo.png" alt=""> </a>
 
     <ul class="navmenu">
-        <li><a class="navlink" href="#" routerLink="/">home</a></li>
-        <li>
-            <a class="categories navlink">categories</a>
+        <h2 *ngIf="isCategoryButtonClicked">Categories</h2>
+        <li *ngIf="!isCategoryButtonClicked"><a class="navlink" href="#" routerLink="/">home</a></li>
+        <li *ngIf="!isCategoryButtonClicked">
+            <a class="categories navlink" (click)="handleCategoryButton()">categories</a>
             <div class="categoryList" *ngFor="let productCategory of productCategories">
                 <p routerLink="/category/{{productCategory.id }}/{{ productCategory.categoryName }}"
                     class="categoryName">{{productCategory.categoryName}}
                 </p>
             </div>
         </li>
-        <li><a class="navlink" href="#" routerLink="/products" routerLinkActive="active-link">products</a></li>
-        <li><a class="navlink" href="#">docs</a></li>
+        <li *ngIf="!isCategoryButtonClicked"><a class="navlink" href="#" routerLink="/products"
+                routerLinkActive="active-link">products</a></li>
+        <li *ngIf="!isCategoryButtonClicked"><a class="navlink" href="#">docs</a></li>
+        <li *ngIf="isCategoryButtonClicked">
+            <a *ngFor="let productCategory of productCategories"
+                routerLink="/category/{{productCategory.id }}/{{ productCategory.categoryName }}" class="navlink">
+                {{productCategory.categoryName}}
+            </a>
+        </li>
     </ul>
 
     <div class="nav-icon loading">
-        <div class="search-bar">
-            <div class="search-button" (click)="toggleSearch()">
+        <div class="search-bar" *ngIf="!isDifferentSearchMode">
+            <div class="search-button" (click)="doSearch(myInput.value)">
                 <i class="bx bx-search"></i>
             </div>
             <div class="search-input">
                 <input #myInput type="text" placeholder="Search" id="search" (keyup.enter)="doSearch(myInput.value)">
             </div>
+            <i class="bx bx-x disabled" (click)="toggleSearch()"></i>
         </div>
         <div class="profile-wrapper">
             <i class="bx bx-user profile-icon"></i>
@@ -55,3 +64,14 @@
         <div class="bx bx-menu" (click)="toggleMenu()" id="menu-icon"></div>
     </div>
 </header>
+
+<div class="max-width-search" *ngIf="isDifferentSearchMode">
+    <div class="search-bar">
+        <div class="search-button " (click)="doSearch(myInput.value)">
+            <i class="bx bx-search"></i>
+        </div>
+        <div class="search-input">
+            <input #myInput type="text" placeholder="Search" id="search" (keyup.enter)="doSearch(myInput.value)">
+        </div>
+    </div>
+</div>

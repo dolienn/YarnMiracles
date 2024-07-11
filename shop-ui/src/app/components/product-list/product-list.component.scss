@@ -18,6 +18,7 @@
       font-size: 2rem;
       text-transform: capitalize;
       margin-bottom: 1.5rem;
+      transition: all 0.4s;
 
       span {
         color: $error--02;
@@ -32,7 +33,7 @@
 
   .products {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, auto));
+    grid-template-columns: repeat(5, 1fr);
     gap: 2rem;
 
     .product {
@@ -131,14 +132,23 @@
     }
   }
 
-  .page-size {
+  .page-size-wrapper {
     display: flex;
     justify-content: end;
-    font-size: 1.2rem;
+    margin-top: 2rem;
+    .page-size {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      align-items: center;
 
-    select {
-      margin-left: 1rem;
-      font-size: 1.2rem;
+      span {
+        font-size: 1.2rem;
+      }
+
+      select {
+        margin-left: 1rem;
+        font-size: 1.2rem;
+      }
     }
   }
 }
@@ -148,38 +158,77 @@ a {
   text-decoration: none;
 }
 
-.less-than-five .products {
-  @media (min-width: 1437px) {
-    grid-template-columns: repeat(auto-fit, 260px) !important;
-
-    .product {
-      width: auto !important;
-    }
-  }
-}
-
-.less-than-four .products {
-  @media (min-width: 1072px) {
-    grid-template-columns: repeat(auto-fit, 260px) !important;
-
-    .product {
-      width: auto !important;
-    }
-  }
-}
-
-.less-than-three .products {
-  @media (min-width: 707px) {
-    grid-template-columns: repeat(auto-fit, 260px) !important;
-
-    .product {
-      width: auto !important;
-    }
-  }
-}
-
-@media (max-width: 707px) {
+@media (max-width: 1176px) {
   .products {
-    grid-template-columns: repeat(auto-fit, minmax(180px, auto)) !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+}
+
+@media (max-width: 936px) {
+  .products {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .center-text {
+    h2 {
+      font-size: 1.6rem !important;
+    }
+
+    select {
+      font-size: 0.8rem !important;
+    }
+  }
+
+  .products {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .custom-pagination ::ng-deep {
+    ul {
+      li {
+        width: 2.4rem !important;
+        height: 2.4rem !important;
+        font-size: 1.1rem !important;
+        line-height: 2.6rem !important;
+      }
+    }
+  }
+
+  .page-size-wrapper {
+    .page-size {
+      display: flex;
+
+      span {
+        font-size: 1rem !important;
+      }
+
+      select {
+        font-size: 1rem !important;
+      }
+    }
+  }
+}
+
+@media (max-width: 375px) {
+  .center-text {
+    h2 {
+      font-size: 1.4rem !important;
+    }
+
+    select {
+      font-size: 0.7rem !important;
+    }
+  }
+
+  .products {
+    grid-template-columns: repeat(1, 1fr) !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .navbox {
+    height: $nav-height * 2;
   }
 }

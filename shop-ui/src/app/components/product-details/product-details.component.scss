@@ -103,3 +103,9 @@
     }
   }
 }
+
+@media (max-width: 600px) {
+  .navbox {
+    height: $nav-height * 2;
+  }
+}

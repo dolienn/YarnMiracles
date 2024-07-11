@@ -1,7 +1,6 @@
 <div class="navbox"></div>
 
-<div class="container" #productsSection
-    [ngClass]="{'less-than-five': isLessThanFiveProducts(), 'less-than-four': isLessThanFourProducts(), 'less-than-three': isLessThanThreeProducts()}">
+<div class="container" #productsSection>
     <div class="center-text">
         <h2 *ngIf="!isFavouriteRoute">Our <span *ngIf="currentCategoryName.length">{{currentCategoryName}}</span> <span
                 *ngIf="currentCategoryName.length == 0">Products</span></h2>
@@ -46,14 +45,16 @@
 
     </ngb-pagination>
 
-    <div class="page-size" *ngIf="products.length && !isLoading">
-        <span>Page Size</span>
-        <select #pageSelect (change)="updatePageSize(pageSelect.value)">
-            <option selected="true">5</option>
-            <option>15</option>
-            <option>25</option>
-            <option>50</option>
-        </select>
+    <div class="page-size-wrapper" *ngIf="products.length && !isLoading">
+        <div class="page-size">
+            <span>Page Size</span>
+            <select #pageSelect (change)="updatePageSize(pageSelect.value)">
+                <option selected="true">5</option>
+                <option>15</option>
+                <option>25</option>
+                <option>50</option>
+            </select>
+        </div>
     </div>
 
 

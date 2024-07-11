@@ -42,7 +42,6 @@ export class HomeComponent implements OnInit {
   }
 
   onLoad() {
-    console.log('xd');
     this.isLoading = true;
     const container = document.querySelector('.container');
     if (container) {
