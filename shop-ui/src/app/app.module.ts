@@ -31,6 +31,7 @@ import { FeedbackComponent } from './components/feedback/feedback.component';
 import { StarRatingConfigService, StarRatingModule } from 'angular-star-rating';
 import { LoaderComponent } from './components/loader/loader.component';
 import { AlertComponent } from './components/alert/alert.component';
+import { CartDetailsComponent } from './components/cart-details/cart-details.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { AlertComponent } from './components/alert/alert.component';
     FeedbackComponent,
     LoaderComponent,
     AlertComponent,
+    CartDetailsComponent,
   ],
   imports: [
     BrowserModule,

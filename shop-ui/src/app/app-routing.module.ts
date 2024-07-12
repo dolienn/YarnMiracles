@@ -10,8 +10,13 @@ import { authGuard } from './services/guard/auth.guard';
 import { loggedInGuard } from './services/guard/logged-in.guard';
 import { UserDetailsComponent } from './components/user-details/user-details.component';
 import { StarRatingModule } from 'angular-star-rating';
+import { CartDetailsComponent } from './components/cart-details/cart-details.component';
 
 const routes: Routes = [
+  {
+    path: 'cart',
+    component: CartDetailsComponent,
+  },
   {
     path: 'favourites',
     component: ProductListComponent,

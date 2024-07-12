@@ -1,5 +1,5 @@
 <header [ngClass]="{ 'with-notification': isNotificationVisible }">
-    <a href="#" routerLink="/" class="logo"><img src="../assets/images/temporery_logo.png" alt=""> </a>
+    <a href="#" routerLink="/" class="logo"><img src="../assets/images/temporary_logo-02.png" alt=""> </a>
 
     <ul class="navmenu">
         <h2 *ngIf="isCategoryButtonClicked">Categories</h2>
@@ -56,7 +56,7 @@
                 </p>
             </div>
         </div>
-        <a href="#" class="cart-status">
+        <a routerLink="/cart" class="cart-status">
             <app-cart-status></app-cart-status>
             <i class="bx bx-cart"></i>
         </a>

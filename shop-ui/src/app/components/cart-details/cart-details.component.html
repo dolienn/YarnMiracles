@@ -1,0 +1,37 @@
+<div class="navbox">
+
+</div>
+
+<div class="main-content">
+    <table class="table-bordered">
+        <tr>
+            <th>Product Image</th>
+            <th>Product Detail</th>
+            <th>Product</th>
+        </tr>
+
+        <tr *ngFor="let cartItem of cartItems">
+            <td>
+                xd
+            </td>
+            <td>
+                <p>{{cartItem.name}}</p>
+                <p>{{cartItem.unitPrice | currency: 'PLN'}}</p>
+            </td>
+            <td>
+                <div class="items">
+                    <label>Quantity</label> {{cartItem.quantity}}
+                </div>
+                <p>Subtotal: {{ cartItem.quantity * cartItem.unitPrice | currency: 'PLN'}}</p>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <p>Total Quantity: {{totalQuantity}}</p>
+                <p>Shipping: 19.99PLN</p>
+                <p>Total Price: {{totalPrice | currency: 'PLN'}}</p>
+            </td>
+        </tr>
+    </table>
+</div>

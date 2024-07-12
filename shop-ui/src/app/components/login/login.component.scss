@@ -1,7 +1,7 @@
 @import "../../variables.scss";
 
 .navbox {
-  height: $nav-height;
+  height: 0;
   width: 100%;
 }
 
@@ -10,11 +10,16 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-image: url(../../../assets/images/temporary_background-02.jpg);
+  background-position: center;
+  background-size: cover;
   width: 100%;
-  margin-top: 2.5rem;
+  height: 100vh;
+  min-height: 720px;
 
   .form-wrapper {
-    width: 28rem;
+    width: 80vw;
+    max-width: 28rem;
     padding: 4rem;
     border-radius: $border-radius;
     box-shadow: inset 0 0 0 0.15rem $color--01;
@@ -126,6 +131,6 @@
 
 @media (max-width: 600px) {
   .navbox {
-    height: $nav-height * 2;
+    height: $nav-height;
   }
 }
