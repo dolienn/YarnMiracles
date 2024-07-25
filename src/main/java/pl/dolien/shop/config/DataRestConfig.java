@@ -5,9 +5,11 @@ import jakarta.persistence.metamodel.EntityType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
+import org.springframework.data.rest.core.mapping.ExposureConfigurer;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import pl.dolien.shop.country.Country;
 import pl.dolien.shop.product.Product;
 import pl.dolien.shop.product.ProductCategory;
 
@@ -25,17 +27,22 @@ public class DataRestConfig implements RepositoryRestConfigurer {
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors) {
         HttpMethod[] theUnsupportedMethods = {HttpMethod.PUT, HttpMethod.POST, HttpMethod.DELETE, HttpMethod.PATCH};
 
-        config.getExposureConfiguration()
-                .forDomainType(Product.class)
-                .withItemExposure(((metdata, httpMethods) -> httpMethods.disable(theUnsupportedMethods)))
-                .withCollectionExposure(((metdata, httpMethods) -> httpMethods.disable(theUnsupportedMethods)));
+        disableHttpMethods(config.getExposureConfiguration()
+                .forDomainType(Product.class), theUnsupportedMethods);
 
-        config.getExposureConfiguration()
-                .forDomainType(ProductCategory.class)
-                .withItemExposure(((metdata, httpMethods) -> httpMethods.disable(theUnsupportedMethods)))
-                .withCollectionExposure(((metdata, httpMethods) -> httpMethods.disable(theUnsupportedMethods)));
+        disableHttpMethods(config.getExposureConfiguration()
+                .forDomainType(ProductCategory.class), theUnsupportedMethods);
+
+        disableHttpMethods(config.getExposureConfiguration()
+                .forDomainType(Country.class), theUnsupportedMethods);
 
         exposeIds(config);
+    }
+
+    private static void disableHttpMethods(ExposureConfigurer config, HttpMethod[] theUnsupportedMethods) {
+        config
+                .withItemExposure(((metdata, httpMethods) -> httpMethods.disable(theUnsupportedMethods)))
+                .withCollectionExposure(((metdata, httpMethods) -> httpMethods.disable(theUnsupportedMethods)));
     }
 
     private void exposeIds(RepositoryRestConfiguration config) {

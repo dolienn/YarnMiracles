@@ -5,13 +5,202 @@
 }
 
 .main-content {
-  display: grid;
-
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 100%;
+  padding: 5% 10%;
+
+  h2 {
+    margin-bottom: 2rem;
+  }
+
+  button {
+    padding: 0.5rem;
+    font-size: 1rem;
+    color: $background-color--01;
+    font-size: 500;
+    border-radius: $border-radius;
+    background-color: $color--01;
+    justify-self: center;
+    transition: 0.1s ease;
+    cursor: pointer;
+    border: none;
+    outline: none;
+  }
+
+  button:hover {
+    background-color: $color--00;
+  }
+
+  .cart-items {
+    width: 100%;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th {
+      text-align: left;
+      padding: 1rem;
+      color: $background-color--01;
+      background-color: $color--00;
+      font-weight: normal;
+    }
+
+    td {
+      padding: 10px 5px;
+    }
+
+    td:first-child {
+      padding-left: 1rem;
+    }
+
+    td:last-child {
+      text-align: right;
+      padding-right: 1rem;
+    }
+
+    img {
+      height: 100px;
+      transition: all 0.4s;
+    }
+
+    .cart-info {
+      display: flex;
+      flex-wrap: wrap;
+
+      .info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-left: 1rem;
+
+        .name {
+          font-size: 1.1rem;
+        }
+
+        .price {
+          margin-top: 0.5rem;
+          font-weight: 600;
+        }
+      }
+    }
+
+    .row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.2rem;
+        margin: 0 1rem;
+      }
+    }
+
+    .remove-button {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      margin-top: 1rem;
+    }
+
+    .subtotal {
+      font-size: 1.2rem;
+    }
+  }
+
+  .total-price {
+    display: flex;
+    justify-content: flex-end;
+    font-size: 1.2rem;
+
+    table {
+      border-top: 3px solid $color--00;
+      width: 100%;
+      max-width: 700px;
+      border-collapse: collapse;
+    }
+  }
+
+  .checkout-button {
+    display: flex;
+    justify-content: flex-end;
+    margin: 1rem 1rem 0 0;
+  }
+
+  .alert {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+
+    app-alert {
+      width: 100%;
+    }
+  }
 }
 
 @media (max-width: 600px) {
   .navbox {
     height: $nav-height * 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 0;
+  }
+
+  .alert {
+    padding: 5% 10%;
+  }
+
+  .cart-info {
+    flex-wrap: nowrap !important;
+  }
+
+  .row {
+    div {
+      font-size: 1rem !important;
+    }
+  }
+
+  .subtotal {
+    font-size: 1rem !important;
+  }
+
+  button {
+    font-size: 0.8rem !important;
+  }
+
+  .total-price {
+    font-size: 1rem !important;
+    padding: 0 1rem;
+  }
+
+  .checkout-button {
+    justify-content: center !important;
+    font-size: 1.1rem !important;
+
+    button {
+      width: 100% !important;
+      margin: 2rem !important;
+    }
+  }
+}
+
+@media (max-width: 400px) {
+  .cart-info {
+    flex-wrap: wrap !important;
+
+    .info {
+      margin-left: 0 !important;
+    }
   }
 }

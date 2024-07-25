@@ -5,9 +5,7 @@
         <h2>Sign up</h2>
 
         <div class="alerts" *ngFor="let msg of errorMsg">
-            <div class="alert">
-                <span class="msg">{{msg}}</span>
-            </div>
+            <app-alert backgroundColor="#ff6961" borderColor="#d60b00" msg="{{msg}}"></app-alert>
         </div>
 
 

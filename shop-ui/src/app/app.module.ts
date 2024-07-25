@@ -9,7 +9,7 @@ import {
   HttpClientModule,
 } from '@angular/common/http';
 import { LoginComponent } from './components/login/login.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RegisterComponent } from './components/register/register.component';
 import { ActivateAccountComponent } from './components/activate-account/activate-account.component';
 import { CodeInputModule } from 'angular-code-input';
@@ -32,6 +32,7 @@ import { StarRatingConfigService, StarRatingModule } from 'angular-star-rating';
 import { LoaderComponent } from './components/loader/loader.component';
 import { AlertComponent } from './components/alert/alert.component';
 import { CartDetailsComponent } from './components/cart-details/cart-details.component';
+import { CheckoutComponent } from './components/checkout/checkout.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { CartDetailsComponent } from './components/cart-details/cart-details.com
     LoaderComponent,
     AlertComponent,
     CartDetailsComponent,
+    CheckoutComponent,
   ],
   imports: [
     BrowserModule,
@@ -63,6 +65,7 @@ import { CartDetailsComponent } from './components/cart-details/cart-details.com
     CodeInputModule,
     NgbModule,
     StarRatingModule.forRoot(),
+    ReactiveFormsModule,
   ],
   providers: [
     ProductService,

@@ -1,0 +1,18 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 5% 10%;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.container.visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+.disabled {
+  display: none;
+}

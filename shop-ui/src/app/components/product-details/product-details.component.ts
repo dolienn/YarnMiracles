@@ -66,6 +66,8 @@ export class ProductDetailsComponent implements OnInit {
   addToCart(product: Product) {
     const cartItem = new CartItem(product);
 
-    this.cartService.addToCart(cartItem);
+    for (let i = 1; i <= this.value; i++) {
+      this.cartService.addToCart(cartItem);
+    }
   }
 }

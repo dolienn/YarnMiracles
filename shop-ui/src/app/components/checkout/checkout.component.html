@@ -1,0 +1,233 @@
+<app-loader [isLoading]="isLoading"></app-loader>
+
+<div class="container" [class.visible]="!isLoading">
+    <form [formGroup]="checkoutFormGroup" (ngSubmit)="onSubmit()">
+        <div formGroupName="customer">
+            <h3>Customer</h3>
+            <div class="row">
+                <div>First Name</div>
+                <input formControlName="firstName" type="text">
+
+                <div *ngIf="firstName?.invalid && (firstName?.dirty || firstName?.touched)">
+                    <app-alert msg="First name is required"
+                        *ngIf="firstName?.errors!['required'] || firstName?.errors!['notOnlyWhitespace']"
+                        backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
+
+                    <app-alert msg="First name must be at least 2 characters" *ngIf="firstName?.errors!['minlength']"
+                        backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>Last Name</div>
+                <input formControlName="lastName" type="text">
+
+                <div *ngIf="lastName?.invalid && (lastName?.dirty || lastName?.touched)">
+                    <app-alert msg="Last name is required"
+                        *ngIf="lastName?.errors!['required'] || lastName?.errors!['notOnlyWhitespace']"
+                        backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
+
+                    <app-alert msg="Last name must be at least 2 characters" *ngIf="lastName?.errors!['minlength']"
+                        backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>Email</div>
+                <input formControlName="email" type="text">
+
+                <div *ngIf="email?.invalid && (email?.dirty || email?.touched)">
+                    <app-alert msg="Email is required" *ngIf="email?.errors!['required']" backgroundColor="#ff6961"
+                        borderColor="#d60b00"></app-alert>
+
+                    <app-alert msg="Email must be a valid email address format" *ngIf="email?.errors!['pattern']"
+                        backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
+                </div>
+            </div>
+        </div>
+
+        <div formGroupName="billingAddress">
+            <h3>Billing Address</h3>
+            <div class="row">
+                <div>Country</div>
+                <select formControlName="country">
+                    <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }} ({{country.code}})
+                    </option>
+                </select>
+
+                <div
+                    *ngIf="billingAddressCountry?.invalid && (billingAddressCountry?.dirty || billingAddressCountry?.touched)">
+                    <app-alert msg="Country is required" *ngIf="billingAddressCountry?.errors!['required']"
+                        backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>Street</div>
+                <input formControlName="street" type="text">
+
+                <div
+                    *ngIf="billingAddressStreet?.invalid && (billingAddressStreet?.dirty || billingAddressStreet?.touched)">
+                    <app-alert msg="Street is required"
+                        *ngIf="billingAddressStreet?.errors!['required'] || billingAddressStreet?.errors!['notOnlyWhitespace']"
+                        backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
+
+                    <app-alert msg="Street must be at least 2 characters"
+                        *ngIf="billingAddressStreet?.errors!['minlength']" backgroundColor="#ff6961"
+                        borderColor="#d60b00"></app-alert>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>City</div>
+                <input formControlName="city" type="text">
+
+                <div *ngIf="billingAddressCity?.invalid && (billingAddressCity?.dirty || billingAddressCity?.touched)">
+                    <app-alert msg="City is required"
+                        *ngIf="billingAddressCity?.errors!['required'] || billingAddressCity?.errors!['notOnlyWhitespace']"
+                        backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
+
+                    <app-alert msg="City must be at least 2 characters" *ngIf="billingAddressCity?.errors!['minlength']"
+                        backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>Zip Code</div>
+                <input formControlName="zipCode" type="text">
+
+                <div
+                    *ngIf="billingAddressZipCode?.invalid && (billingAddressZipCode?.dirty || billingAddressZipCode?.touched)">
+                    <app-alert msg="Zip Code is required"
+                        *ngIf="billingAddressZipCode?.errors!['required'] || billingAddressZipCode?.errors!['notOnlyWhitespace']"
+                        backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
+
+                    <app-alert msg="Zip Code must be at least 2 characters"
+                        *ngIf="billingAddressZipCode?.errors!['minlength']" backgroundColor="#ff6961"
+                        borderColor="#d60b00"></app-alert>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <input type="checkbox" [checked]="isChecked" (change)="copyBillingAddressToShippingAddress($event)">
+            <span>Shipping Address same as Billing Address</span>
+        </div>
+
+        <div formGroupName="shippingAddress" class="shippingAddressContainer">
+            <h3>Shipping Address</h3>
+            <div class="row">
+                <div>Country</div>
+                <select formControlName="country">
+                    <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }} ({{country.code}})
+                    </option>
+                </select>
+
+                <div
+                    *ngIf="shippingAddressCountry?.invalid && (shippingAddressCountry?.dirty || shippingAddressCountry?.touched)">
+                    <app-alert msg="Country is required" *ngIf="shippingAddressCountry?.errors!['required']"
+                        backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>Street</div>
+                <input formControlName="street" type="text">
+
+                <div
+                    *ngIf="shippingAddressStreet?.invalid && (shippingAddressStreet?.dirty || shippingAddressStreet?.touched)">
+                    <app-alert msg="Street is required"
+                        *ngIf="shippingAddressStreet?.errors!['required'] || shippingAddressStreet?.errors!['notOnlyWhitespace']"
+                        backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
+
+                    <app-alert msg="Street must be at least 2 characters"
+                        *ngIf="shippingAddressStreet?.errors!['minlength']" backgroundColor="#ff6961"
+                        borderColor="#d60b00"></app-alert>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>City</div>
+                <input formControlName="city" type="text">
+
+                <div
+                    *ngIf="shippingAddressCity?.invalid && (shippingAddressCity?.dirty || shippingAddressCity?.touched)">
+                    <app-alert msg="City is required"
+                        *ngIf="shippingAddressCity?.errors!['required'] || shippingAddressCity?.errors!['notOnlyWhitespace']"
+                        backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
+
+                    <app-alert msg="City must be at least 2 characters"
+                        *ngIf="shippingAddressCity?.errors!['minlength']" backgroundColor="#ff6961"
+                        borderColor="#d60b00"></app-alert>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>Zip Code</div>
+                <input formControlName="zipCode" type="text">
+
+                <div
+                    *ngIf="shippingAddressZipCode?.invalid && (shippingAddressZipCode?.dirty || shippingAddressZipCode?.touched)">
+                    <app-alert msg="Zip Code is required"
+                        *ngIf="shippingAddressZipCode?.errors!['required'] || shippingAddressZipCode?.errors!['notOnlyWhitespace']"
+                        backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
+
+                    <app-alert msg="Zip Code must be at least 2 characters"
+                        *ngIf="shippingAddressZipCode?.errors!['minlength']" backgroundColor="#ff6961"
+                        borderColor="#d60b00"></app-alert>
+                </div>
+            </div>
+        </div>
+
+        <div formGroupName="creditCard">
+            <h3>Credit Card</h3>
+
+            <div class="row">
+                <div>Card Type</div>
+                <select formControlName="cardType">
+                    <option>Visa</option>
+                    <option>Mastercard</option>
+                </select>
+            </div>
+
+            <div class="row">
+                <div>Name on Card</div>
+                <input formControlName="nameOnCard" type="text">
+            </div>
+
+            <div class="row">
+                <div>Card Number</div>
+                <input formControlName="cardNumber" type="text">
+            </div>
+
+            <div class="row">
+                <div>Security Code</div>
+                <input formControlName="securityCode" type="text">
+            </div>
+
+            <div class="row">
+                <div>Expiration Month</div>
+                <select formControlName="expirationMonth">
+                    <option>TO DO</option>
+                </select>
+            </div>
+
+            <div class="row">
+                <div>Expiration Year</div>
+                <select formControlName="expirationYear">
+                    <option>TO DO</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="review-order">
+            <h3>Review Your Order</h3>
+
+            <p>Total Quantity: {{ totalQuantity }}</p>
+            <p>Shipping: PLN19.99</p>
+            <p>Total Price: {{ totalPrice | currency: 'PLN'}}</p>
+        </div>
+
+        <button type="submit">Purchase</button>
+    </form>
+</div>

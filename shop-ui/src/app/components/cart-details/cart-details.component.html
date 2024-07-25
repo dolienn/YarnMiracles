@@ -3,35 +3,74 @@
 </div>
 
 <div class="main-content">
-    <table class="table-bordered">
-        <tr>
-            <th>Product Image</th>
-            <th>Product Detail</th>
-            <th>Product</th>
-        </tr>
+    <h2>Cart</h2>
+    <div *ngIf="cartItems.length > 0" class="cart-items">
+        <table class="table-bordered">
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+            </tr>
 
-        <tr *ngFor="let cartItem of cartItems">
-            <td>
-                xd
-            </td>
-            <td>
-                <p>{{cartItem.name}}</p>
-                <p>{{cartItem.unitPrice | currency: 'PLN'}}</p>
-            </td>
-            <td>
-                <div class="items">
-                    <label>Quantity</label> {{cartItem.quantity}}
-                </div>
-                <p>Subtotal: {{ cartItem.quantity * cartItem.unitPrice | currency: 'PLN'}}</p>
-            </td>
-        </tr>
+            <tr *ngFor="let cartItem of cartItems">
+                <td>
+                    <div class="cart-info">
+                        <div class="image">
+                            <img src='../../../assets{{cartItem.imageUrl}}' alt="Product Name">
+                        </div>
+                        <div class="info">
+                            <div class="name">{{cartItem.name}}</div>
+                            <div class="price">{{cartItem.unitPrice | currency: 'PLN'}}</div>
+                            <div class="remove-button">
+                                <button (click)="remove(cartItem)">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="row">
+                        <button (click)="incrementQuantity(cartItem)" class="plus">
+                            <i class='bx bx-plus'></i>
+                        </button>
+                        <div>
+                            {{cartItem.quantity}}
+                        </div>
+                        <button (click)="decrementQuantity(cartItem)" class="minus">
+                            <i class='bx bx-minus'></i>
+                        </button>
+                    </div>
+                </td>
+                <td>
+                    <div class="subtotal">{{ cartItem.quantity * cartItem.unitPrice | currency: 'PLN'}}</div>
+                </td>
+            </tr>
+        </table>
 
-        <tr>
-            <td>
-                <p>Total Quantity: {{totalQuantity}}</p>
-                <p>Shipping: 19.99PLN</p>
-                <p>Total Price: {{totalPrice | currency: 'PLN'}}</p>
-            </td>
-        </tr>
-    </table>
+        <div class="total-price">
+            <table>
+                <tr>
+                    <td>Subtotal</td>
+                    <td>{{totalPrice | currency:'PLN'}}</td>
+                </tr>
+
+                <tr>
+                    <td>Shipping</td>
+                    <td>{{shipping}}</td>
+                </tr>
+
+                <tr>
+                    <td>Total</td>
+                    <td>{{totalPrice + shipping | currency: 'PLN'}}</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="checkout-button">
+            <button routerLink="/checkout">Checkout</button>
+        </div>
+    </div>
+
+    <div *ngIf="cartItems.length === 0" class="alert">
+        <app-alert msg="No products found."></app-alert>
+    </div>
 </div>
