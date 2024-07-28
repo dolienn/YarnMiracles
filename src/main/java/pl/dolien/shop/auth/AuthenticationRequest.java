@@ -13,7 +13,7 @@ import lombok.Setter;
 @Builder
 public class AuthenticationRequest {
 
-    @Email(message = "Email is not formatted")
+    @Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}", message = "Email is not formatted")
     @NotEmpty(message = "Email is mandatory")
     @NotBlank(message = "Email is mandatory")
     private String email;

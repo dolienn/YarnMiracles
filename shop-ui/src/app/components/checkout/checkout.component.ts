@@ -26,6 +26,8 @@ export class CheckoutComponent implements OnInit {
   isChecked: boolean = true;
   isLoading: boolean = true;
 
+  shipping: number = 19.99;
+
   constructor(
     private formBuilder: FormBuilder,
     private formService: FormService,

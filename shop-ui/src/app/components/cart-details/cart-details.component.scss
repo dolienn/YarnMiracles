@@ -4,7 +4,7 @@
   height: $nav-height;
 }
 
-.main-content {
+.container {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -20,7 +20,6 @@
     padding: 0.5rem;
     font-size: 1rem;
     color: $background-color--01;
-    font-size: 500;
     border-radius: $border-radius;
     background-color: $color--01;
     justify-self: center;
@@ -153,7 +152,7 @@
 }
 
 @media (max-width: 768px) {
-  .main-content {
+  .container {
     padding: 0;
   }
 
@@ -186,7 +185,6 @@
 
   .checkout-button {
     justify-content: center !important;
-    font-size: 1.1rem !important;
 
     button {
       width: 100% !important;

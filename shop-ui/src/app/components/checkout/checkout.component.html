@@ -1,12 +1,16 @@
+<div class="navbox"></div>
+
 <app-loader [isLoading]="isLoading"></app-loader>
 
 <div class="container" [class.visible]="!isLoading">
     <form [formGroup]="checkoutFormGroup" (ngSubmit)="onSubmit()">
-        <div formGroupName="customer">
+        <div formGroupName="customer" class="form-group">
             <h3>Customer</h3>
             <div class="row">
-                <div>First Name</div>
-                <input formControlName="firstName" type="text">
+                <div class="form-control">
+                    <input formControlName="firstName" type="text" id="firstName" placeholder=" ">
+                    <label for="firstName">First Name</label>
+                </div>
 
                 <div *ngIf="firstName?.invalid && (firstName?.dirty || firstName?.touched)">
                     <app-alert msg="First name is required"
@@ -19,8 +23,10 @@
             </div>
 
             <div class="row">
-                <div>Last Name</div>
-                <input formControlName="lastName" type="text">
+                <div class="form-control">
+                    <input formControlName="lastName" type="text" id="lastName" placeholder=" ">
+                    <label for="lastName">Last Name</label>
+                </div>
 
                 <div *ngIf="lastName?.invalid && (lastName?.dirty || lastName?.touched)">
                     <app-alert msg="Last name is required"
@@ -33,8 +39,10 @@
             </div>
 
             <div class="row">
-                <div>Email</div>
-                <input formControlName="email" type="text">
+                <div class="form-control">
+                    <input formControlName="email" type="text" id="email" placeholder=" ">
+                    <label for="email">Email</label>
+                </div>
 
                 <div *ngIf="email?.invalid && (email?.dirty || email?.touched)">
                     <app-alert msg="Email is required" *ngIf="email?.errors!['required']" backgroundColor="#ff6961"
@@ -46,14 +54,17 @@
             </div>
         </div>
 
-        <div formGroupName="billingAddress">
+        <div formGroupName="billingAddress" class="form-group">
             <h3>Billing Address</h3>
             <div class="row">
-                <div>Country</div>
-                <select formControlName="country">
-                    <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }} ({{country.code}})
-                    </option>
-                </select>
+                <div class="form-control">
+                    <select formControlName="country">
+                        <option *ngFor="let country of countries">{{ country.name }}
+                            ({{country.code}})
+                        </option>
+                    </select>
+                    <label for="country">Country</label>
+                </div>
 
                 <div
                     *ngIf="billingAddressCountry?.invalid && (billingAddressCountry?.dirty || billingAddressCountry?.touched)">
@@ -63,8 +74,10 @@
             </div>
 
             <div class="row">
-                <div>Street</div>
-                <input formControlName="street" type="text">
+                <div class="form-control">
+                    <input formControlName="street" type="text" id="street" placeholder=" ">
+                    <label for="street">Street</label>
+                </div>
 
                 <div
                     *ngIf="billingAddressStreet?.invalid && (billingAddressStreet?.dirty || billingAddressStreet?.touched)">
@@ -79,8 +92,10 @@
             </div>
 
             <div class="row">
-                <div>City</div>
-                <input formControlName="city" type="text">
+                <div class="form-control">
+                    <input formControlName="city" type="text" id="city" placeholder=" ">
+                    <label for="city">City</label>
+                </div>
 
                 <div *ngIf="billingAddressCity?.invalid && (billingAddressCity?.dirty || billingAddressCity?.touched)">
                     <app-alert msg="City is required"
@@ -93,8 +108,10 @@
             </div>
 
             <div class="row">
-                <div>Zip Code</div>
-                <input formControlName="zipCode" type="text">
+                <div class="form-control">
+                    <input formControlName="zipCode" type="text" id="zipCode" placeholder=" ">
+                    <label for="zipCode">Zip Code</label>
+                </div>
 
                 <div
                     *ngIf="billingAddressZipCode?.invalid && (billingAddressZipCode?.dirty || billingAddressZipCode?.touched)">
@@ -109,19 +126,23 @@
             </div>
         </div>
 
-        <div>
-            <input type="checkbox" [checked]="isChecked" (change)="copyBillingAddressToShippingAddress($event)">
-            <span>Shipping Address same as Billing Address</span>
+        <div class="shippingAsBilling">
+            <input type="checkbox" [checked]="isChecked" (change)="copyBillingAddressToShippingAddress($event)"
+                id="checkbox">
+            <label for="checkbox">Shipping Address same as Billing Address</label>
         </div>
 
-        <div formGroupName="shippingAddress" class="shippingAddressContainer">
+        <div formGroupName="shippingAddress" class="shippingAddressContainer form-group">
             <h3>Shipping Address</h3>
             <div class="row">
-                <div>Country</div>
-                <select formControlName="country">
-                    <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }} ({{country.code}})
-                    </option>
-                </select>
+                <div class="form-control">
+                    <select formControlName="country">
+                        <option *ngFor="let country of countries">{{ country.name }}
+                            ({{country.code}})
+                        </option>
+                    </select>
+                    <label for="country">Country</label>
+                </div>
 
                 <div
                     *ngIf="shippingAddressCountry?.invalid && (shippingAddressCountry?.dirty || shippingAddressCountry?.touched)">
@@ -131,8 +152,10 @@
             </div>
 
             <div class="row">
-                <div>Street</div>
-                <input formControlName="street" type="text">
+                <div class="form-control">
+                    <input formControlName="street" type="text" id="street" placeholder=" ">
+                    <label for="street">Street</label>
+                </div>
 
                 <div
                     *ngIf="shippingAddressStreet?.invalid && (shippingAddressStreet?.dirty || shippingAddressStreet?.touched)">
@@ -147,8 +170,10 @@
             </div>
 
             <div class="row">
-                <div>City</div>
-                <input formControlName="city" type="text">
+                <div class="form-control">
+                    <input formControlName="city" type="text" id="city" placeholder=" ">
+                    <label for="city">City</label>
+                </div>
 
                 <div
                     *ngIf="shippingAddressCity?.invalid && (shippingAddressCity?.dirty || shippingAddressCity?.touched)">
@@ -163,8 +188,10 @@
             </div>
 
             <div class="row">
-                <div>Zip Code</div>
-                <input formControlName="zipCode" type="text">
+                <div class="form-control">
+                    <input formControlName="zipCode" type="text" id="zipCode" placeholder=" ">
+                    <label for="zipCode">Zip Code</label>
+                </div>
 
                 <div
                     *ngIf="shippingAddressZipCode?.invalid && (shippingAddressZipCode?.dirty || shippingAddressZipCode?.touched)">
@@ -179,7 +206,7 @@
             </div>
         </div>
 
-        <div formGroupName="creditCard">
+        <div formGroupName="creditCard" class="form-group">
             <h3>Credit Card</h3>
 
             <div class="row">
@@ -221,13 +248,26 @@
         </div>
 
         <div class="review-order">
-            <h3>Review Your Order</h3>
+            <table>
+                <tr>
+                    <td>Subtotal</td>
+                    <td>{{totalPrice | currency:'PLN'}}</td>
+                </tr>
 
-            <p>Total Quantity: {{ totalQuantity }}</p>
-            <p>Shipping: PLN19.99</p>
-            <p>Total Price: {{ totalPrice | currency: 'PLN'}}</p>
+                <tr>
+                    <td>Shipping</td>
+                    <td>{{shipping | currency: 'PLN'}}</td>
+                </tr>
+
+                <tr>
+                    <td>Total</td>
+                    <td>{{totalPrice + shipping | currency: 'PLN'}}</td>
+                </tr>
+            </table>
         </div>
 
-        <button type="submit">Purchase</button>
+        <div class="purchase-button">
+            <button type="submit">Purchase</button>
+        </div>
     </form>
 </div>
