@@ -12,11 +12,13 @@ import { UserDetailsComponent } from './components/user-details/user-details.com
 import { StarRatingModule } from 'angular-star-rating';
 import { CartDetailsComponent } from './components/cart-details/cart-details.component';
 import { CheckoutComponent } from './components/checkout/checkout.component';
+import { checkoutGuard } from './services/guard/checkout.guard';
 
 const routes: Routes = [
   {
     path: 'checkout',
     component: CheckoutComponent,
+    canActivate: [checkoutGuard],
   },
   {
     path: 'cart',

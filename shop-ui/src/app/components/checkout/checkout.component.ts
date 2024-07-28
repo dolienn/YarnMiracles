@@ -25,6 +25,8 @@ export class CheckoutComponent implements OnInit {
 
   isChecked: boolean = true;
   isLoading: boolean = true;
+  isCheckboxDisabled: boolean = false;
+  isSelectDisabled: boolean = true;
 
   shipping: number = 19.99;
 
@@ -67,7 +69,9 @@ export class CheckoutComponent implements OnInit {
           Validators.minLength(2),
           FormValidators.notOnlyWhitespace,
         ]),
-        country: new FormControl('', [Validators.required]),
+        country: new FormControl({ value: '', disabled: true }, [
+          Validators.required,
+        ]),
         zipCode: new FormControl('', [
           Validators.required,
           Validators.minLength(2),
@@ -160,6 +164,7 @@ export class CheckoutComponent implements OnInit {
     const shippingAddressContainer = document.querySelector(
       '.shippingAddressContainer'
     );
+
     if (event.target.checked) {
       this.checkoutFormGroup.controls['shippingAddress'].setValue(
         this.checkoutFormGroup.controls['billingAddress'].value
@@ -173,6 +178,30 @@ export class CheckoutComponent implements OnInit {
       if (shippingAddressContainer?.classList.contains('disabled')) {
         shippingAddressContainer?.classList.remove('disabled');
       }
+    }
+
+    this.shippingAddressCountry?.setValue(
+      `${this.countries[0].name} (${this.countries[0].code})`
+    );
+  }
+
+  differentCountry(country: string) {
+    const shippingAddressContainer = document.querySelector(
+      '.shippingAddressContainer'
+    );
+
+    if (country !== 'Polska (PL)') {
+      this.isChecked = false;
+      if (shippingAddressContainer?.classList.contains('disabled')) {
+        shippingAddressContainer?.classList.remove('disabled');
+      }
+      this.isCheckboxDisabled = true;
+    } else {
+      this.isChecked = true;
+      if (!shippingAddressContainer?.classList.contains('disabled')) {
+        shippingAddressContainer?.classList.add('disabled');
+      }
+      this.isCheckboxDisabled = false;
     }
   }
 

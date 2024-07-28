@@ -33,6 +33,18 @@
     .row {
       margin: 1.5rem 0;
 
+      .onlyPoland {
+        display: flex;
+        justify-content: flex-end;
+        width: 100%;
+        margin-bottom: 0.5rem;
+
+        p {
+          font-size: 0.8rem;
+          color: $color--02;
+        }
+      }
+
       .form-control {
         position: relative;
         height: 3.2rem;
@@ -53,7 +65,7 @@
         }
 
         input:is(:focus, :valid):not(:placeholder-shown),
-        select:is(:focus, :valid):not(:placeholder-shown) {
+        select {
           padding: 1rem 1.3rem 0;
           background: $background-color--01;
         }
@@ -70,7 +82,7 @@
         }
 
         input:is(:focus, :valid):not(:placeholder-shown) ~ label,
-        select:is(:focus, :valid):not(:placeholder-shown) ~ label {
+        select ~ label {
           font-size: 0.75rem;
           transform: translateY(-130%);
         }
@@ -145,6 +157,10 @@
 
 .disabled {
   display: none;
+}
+
+.checkboxDisabled {
+  color: $color--02;
 }
 
 @media (max-width: 600px) {

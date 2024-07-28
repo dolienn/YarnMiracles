@@ -58,7 +58,7 @@
             <h3>Billing Address</h3>
             <div class="row">
                 <div class="form-control">
-                    <select formControlName="country">
+                    <select formControlName="country" (change)="differentCountry(countrySelect.value)" #countrySelect>
                         <option *ngFor="let country of countries">{{ country.name }}
                             ({{country.code}})
                         </option>
@@ -128,13 +128,17 @@
 
         <div class="shippingAsBilling">
             <input type="checkbox" [checked]="isChecked" (change)="copyBillingAddressToShippingAddress($event)"
-                id="checkbox">
-            <label for="checkbox">Shipping Address same as Billing Address</label>
+                id="checkbox" [disabled]="isCheckboxDisabled">
+            <label for="checkbox" [class.checkboxDisabled]="isCheckboxDisabled">Shipping Address same as Billing
+                Address</label>
         </div>
 
         <div formGroupName="shippingAddress" class="shippingAddressContainer form-group">
             <h3>Shipping Address</h3>
             <div class="row">
+                <div class="onlyPoland">
+                    <p>Shipping is only within Poland</p>
+                </div>
                 <div class="form-control">
                     <select formControlName="country">
                         <option *ngFor="let country of countries">{{ country.name }}
