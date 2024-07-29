@@ -30,9 +30,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
                             req.requestMatchers(
-                                    "/countries/**",
-                                            "/feedbacks/**",
-                                            "/users/**",
+                                             "/checkout/**",
+                                             "/countries/**",
+                                             "/feedbacks/**",
+                                             "/users/**",
                                              "/products/**",
                                              "/product-category/**",
                                              "/auth/**",

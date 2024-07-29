@@ -9,6 +9,11 @@ import { Country } from '../../common/country/country';
 import { FormService } from '../../services/form/form.service';
 import { FormValidators } from '../../validators/form-validators';
 import { CartService } from '../../services/cart/cart.service';
+import { CheckoutService } from '../../services/checkout/checkout.service';
+import { Router } from '@angular/router';
+import { Order } from '../../common/order/order';
+import { OrderItem } from '../../common/order-item/order-item';
+import { Purchase } from '../../common/purchase/purchase';
 
 @Component({
   selector: 'app-checkout',
@@ -26,14 +31,15 @@ export class CheckoutComponent implements OnInit {
   isChecked: boolean = true;
   isLoading: boolean = true;
   isCheckboxDisabled: boolean = false;
-  isSelectDisabled: boolean = true;
 
   shipping: number = 19.99;
 
   constructor(
     private formBuilder: FormBuilder,
     private formService: FormService,
-    private cartService: CartService
+    private cartService: CartService,
+    private checkoutService: CheckoutService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -69,9 +75,7 @@ export class CheckoutComponent implements OnInit {
           Validators.minLength(2),
           FormValidators.notOnlyWhitespace,
         ]),
-        country: new FormControl({ value: '', disabled: true }, [
-          Validators.required,
-        ]),
+        country: new FormControl('Polska (PL)', [Validators.required]),
         zipCode: new FormControl('', [
           Validators.required,
           Validators.minLength(2),
@@ -89,7 +93,7 @@ export class CheckoutComponent implements OnInit {
           Validators.minLength(2),
           FormValidators.notOnlyWhitespace,
         ]),
-        country: new FormControl('', [Validators.required]),
+        country: new FormControl('Polska (PL)', [Validators.required]),
         zipCode: new FormControl('', [
           Validators.required,
           Validators.minLength(2),
@@ -105,6 +109,15 @@ export class CheckoutComponent implements OnInit {
         expirationYear: [''],
       }),
     });
+
+    this.checkoutFormGroup
+      .get('billingAddress')!
+      .valueChanges.subscribe((value) => {
+        if (this.isChecked) {
+          console.log(this.isChecked);
+          this.checkoutFormGroup.get('shippingAddress')!.patchValue(value);
+        }
+      });
 
     this.formService.getCountries().subscribe((data) => {
       this.countries = data;
@@ -166,6 +179,7 @@ export class CheckoutComponent implements OnInit {
     );
 
     if (event.target.checked) {
+      this.isChecked = true;
       this.checkoutFormGroup.controls['shippingAddress'].setValue(
         this.checkoutFormGroup.controls['billingAddress'].value
       );
@@ -173,6 +187,7 @@ export class CheckoutComponent implements OnInit {
         shippingAddressContainer?.classList.add('disabled');
       }
     } else {
+      this.isChecked = false;
       this.checkoutFormGroup.controls['shippingAddress'].reset();
 
       if (shippingAddressContainer?.classList.contains('disabled')) {
@@ -180,9 +195,9 @@ export class CheckoutComponent implements OnInit {
       }
     }
 
-    this.shippingAddressCountry?.setValue(
-      `${this.countries[0].name} (${this.countries[0].code})`
-    );
+    this.checkoutFormGroup.controls['shippingAddress']
+      .get('country')
+      ?.setValue('Polska (PL)');
   }
 
   differentCountry(country: string) {
@@ -214,8 +229,12 @@ export class CheckoutComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log(this.checkoutFormGroup.controls['billingAddress'].value);
+    console.log(this.checkoutFormGroup.controls['shippingAddress'].value);
+
     if (this.checkoutFormGroup.invalid) {
       this.checkoutFormGroup.markAllAsTouched();
+      return;
     }
 
     const shippingAddressContainer = document.querySelector(
@@ -226,6 +245,66 @@ export class CheckoutComponent implements OnInit {
       this.checkoutFormGroup.controls['shippingAddress'].setValue(
         this.checkoutFormGroup.controls['billingAddress'].value
       );
+
+      this.shippingAddressCountry?.setValue(
+        `${this.countries[0].name} (${this.countries[0].code})`
+      );
     }
+
+    let order = new Order();
+    order.totalPrice = this.totalPrice;
+    order.totalQuantity = this.totalQuantity;
+
+    const cartItems = this.cartService.cartItems;
+
+    let orderItems: OrderItem[] = cartItems.map(
+      (cartItem) => new OrderItem(cartItem)
+    );
+
+    let purchase = new Purchase();
+
+    purchase.customer = this.checkoutFormGroup.controls['customer'].value;
+
+    purchase.shippingAddress =
+      this.checkoutFormGroup.controls['shippingAddress'].value;
+    const shippingCountry: Country = JSON.parse(
+      JSON.stringify(purchase.shippingAddress?.country)
+    );
+    purchase.shippingAddress!.country = shippingCountry.name;
+
+    purchase.billingAddress =
+      this.checkoutFormGroup.controls['billingAddress'].value;
+    const billingCountry: Country = JSON.parse(
+      JSON.stringify(purchase.billingAddress?.country)
+    );
+    purchase.billingAddress!.country = billingCountry.name;
+
+    purchase.order = order;
+    purchase.orderItems = orderItems;
+
+    console.log(purchase);
+
+    this.checkoutService.placeOrder(purchase).subscribe({
+      next: (response) => {
+        alert(
+          `Your order has ben received. \n Order tracking number: ${response.orderTrackingNumber}`
+        );
+
+        this.resetCart();
+      },
+      error: (err) => {
+        alert(`There was an error: ${err.message}`);
+      },
+    });
+  }
+
+  resetCart() {
+    this.cartService.cartItems = [];
+    this.cartService.totalPrice.next(0);
+    this.cartService.totalQuantity.next(0);
+
+    this.checkoutFormGroup.reset();
+
+    this.router.navigateByUrl('/');
   }
 }
