@@ -146,8 +146,7 @@
                         </option>
                     </select>
                     <select formControlName="country" hidden>
-                        <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}
-                            ({{country.code}})</option>
+                        <option *ngFor="let country of countries" [ngValue]="country"></option>
                     </select>
                     <label for="country">Country</label>
                 </div>

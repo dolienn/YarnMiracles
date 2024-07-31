@@ -10,7 +10,9 @@ import pl.dolien.shop.order.Order;
 import pl.dolien.shop.order.OrderItem;
 import pl.dolien.shop.purchase.Purchase;
 import pl.dolien.shop.purchase.PurchaseResponse;
+import pl.dolien.shop.user.User;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -37,12 +39,24 @@ public class CheckoutService {
 
         order.setStatus("pending");
 
-//        Customer customerFromDB = customerRepository.findByEmail(customer.getEmail());
-//
-//        System.out.println(customerFromDB);
-//        System.out.println(auth.getPrincipal());
+        Customer customerFromDB = customerRepository.findByEmail(customer.getEmail());
 
-        customer.add(order);
+        if(customerFromDB != null) {
+            if (auth != null && Objects.equals(((User) auth.getPrincipal()).getEmail(), customer.getEmail())) {
+                customerFromDB.setFirstname(customer.getFirstname());
+                customerFromDB.setLastname(customer.getLastname());
+                customerFromDB.setOrders(customer.getOrders());
+                customerFromDB.add(order);
+                customer = customerFromDB;
+            } else {
+                customer = customerFromDB;
+                customer.add(order);
+            }
+        } else {
+            customer.add(order);
+        }
+
+
 
         customerRepository.save(customer);
 

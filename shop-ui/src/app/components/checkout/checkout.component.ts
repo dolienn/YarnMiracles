@@ -114,7 +114,6 @@ export class CheckoutComponent implements OnInit {
       .get('billingAddress')!
       .valueChanges.subscribe((value) => {
         if (this.isChecked) {
-          console.log(this.isChecked);
           this.checkoutFormGroup.get('shippingAddress')!.patchValue(value);
         }
       });
@@ -243,10 +242,6 @@ export class CheckoutComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.checkoutFormGroup.controls['customer'].value);
-    console.log(this.checkoutFormGroup.controls['billingAddress'].value);
-    console.log(this.checkoutFormGroup.controls['shippingAddress'].value);
-
     if (this.checkoutFormGroup.invalid) {
       this.checkoutFormGroup.markAllAsTouched();
       return;
@@ -259,10 +254,6 @@ export class CheckoutComponent implements OnInit {
     if (shippingAddressContainer?.classList.contains('disabled')) {
       this.checkoutFormGroup.controls['shippingAddress'].setValue(
         this.checkoutFormGroup.controls['billingAddress'].value
-      );
-
-      this.shippingAddressCountry?.setValue(
-        `${this.countries[0].name} (${this.countries[0].code})`
       );
     }
 
@@ -282,13 +273,10 @@ export class CheckoutComponent implements OnInit {
 
     purchase.shippingAddress =
       this.checkoutFormGroup.controls['shippingAddress'].value;
-    console.log(purchase.shippingAddress?.country);
     const shippingCountry: Country = JSON.parse(
       JSON.stringify(purchase.shippingAddress?.country)
     );
-    console.log(shippingCountry.name);
     purchase.shippingAddress!.country = shippingCountry.name;
-    console.log(purchase.shippingAddress?.country);
 
     purchase.billingAddress =
       this.checkoutFormGroup.controls['billingAddress'].value;
@@ -299,8 +287,6 @@ export class CheckoutComponent implements OnInit {
 
     purchase.order = order;
     purchase.orderItems = orderItems;
-
-    console.log(purchase);
 
     this.checkoutService.placeOrder(purchase).subscribe({
       next: (response) => {
