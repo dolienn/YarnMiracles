@@ -47,13 +47,13 @@ export class CheckoutComponent implements OnInit {
 
     this.checkoutFormGroup = this.formBuilder.group({
       customer: this.formBuilder.group({
-        firstName: new FormControl('', [
+        firstname: new FormControl('', [
           Validators.required,
           Validators.minLength(2),
           Validators.maxLength(13),
           FormValidators.notOnlyWhitespace,
         ]),
-        lastName: new FormControl('', [
+        lastname: new FormControl('', [
           Validators.required,
           Validators.minLength(2),
           Validators.maxLength(20),
@@ -75,7 +75,7 @@ export class CheckoutComponent implements OnInit {
           Validators.minLength(2),
           FormValidators.notOnlyWhitespace,
         ]),
-        country: new FormControl('Polska (PL)', [Validators.required]),
+        country: new FormControl('', [Validators.required]),
         zipCode: new FormControl('', [
           Validators.required,
           Validators.minLength(2),
@@ -93,7 +93,7 @@ export class CheckoutComponent implements OnInit {
           Validators.minLength(2),
           FormValidators.notOnlyWhitespace,
         ]),
-        country: new FormControl('Polska (PL)', [Validators.required]),
+        country: new FormControl('', [Validators.required]),
         zipCode: new FormControl('', [
           Validators.required,
           Validators.minLength(2),
@@ -123,18 +123,27 @@ export class CheckoutComponent implements OnInit {
       this.countries = data;
       this.isLoading = false;
 
+      if (this.countries.length > 0) {
+        this.checkoutFormGroup
+          .get('billingAddress.country')
+          ?.setValue(this.countries[0]);
+        this.checkoutFormGroup
+          .get('shippingAddress.country')
+          ?.setValue(this.countries[0]);
+      }
+
       this.copyBillingAddressToShippingAddress({
         target: { checked: this.isChecked },
       });
     });
   }
 
-  get firstName() {
-    return this.checkoutFormGroup.get('customer.firstName');
+  get firstname() {
+    return this.checkoutFormGroup.get('customer.firstname');
   }
 
-  get lastName() {
-    return this.checkoutFormGroup.get('customer.lastName');
+  get lastname() {
+    return this.checkoutFormGroup.get('customer.lastname');
   }
 
   get email() {
@@ -197,7 +206,7 @@ export class CheckoutComponent implements OnInit {
 
     this.checkoutFormGroup.controls['shippingAddress']
       .get('country')
-      ?.setValue('Polska (PL)');
+      ?.setValue(this.countries[0]);
   }
 
   differentCountry(country: string) {
@@ -205,12 +214,13 @@ export class CheckoutComponent implements OnInit {
       '.shippingAddressContainer'
     );
 
-    if (country !== 'Polska (PL)') {
+    if (country !== '0: Object') {
       this.isChecked = false;
       if (shippingAddressContainer?.classList.contains('disabled')) {
         shippingAddressContainer?.classList.remove('disabled');
       }
       this.isCheckboxDisabled = true;
+      this.checkoutFormGroup.controls['shippingAddress'].reset();
     } else {
       this.isChecked = true;
       if (!shippingAddressContainer?.classList.contains('disabled')) {
@@ -218,6 +228,10 @@ export class CheckoutComponent implements OnInit {
       }
       this.isCheckboxDisabled = false;
     }
+
+    this.checkoutFormGroup.controls['shippingAddress']
+      .get('country')
+      ?.setValue(this.countries[0]);
   }
 
   reviewCartDetails() {
@@ -229,6 +243,7 @@ export class CheckoutComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log(this.checkoutFormGroup.controls['customer'].value);
     console.log(this.checkoutFormGroup.controls['billingAddress'].value);
     console.log(this.checkoutFormGroup.controls['shippingAddress'].value);
 
@@ -267,10 +282,13 @@ export class CheckoutComponent implements OnInit {
 
     purchase.shippingAddress =
       this.checkoutFormGroup.controls['shippingAddress'].value;
+    console.log(purchase.shippingAddress?.country);
     const shippingCountry: Country = JSON.parse(
       JSON.stringify(purchase.shippingAddress?.country)
     );
+    console.log(shippingCountry.name);
     purchase.shippingAddress!.country = shippingCountry.name;
+    console.log(purchase.shippingAddress?.country);
 
     purchase.billingAddress =
       this.checkoutFormGroup.controls['billingAddress'].value;

@@ -8,32 +8,32 @@
             <h3>Customer</h3>
             <div class="row">
                 <div class="form-control">
-                    <input formControlName="firstName" type="text" id="firstName" placeholder=" ">
-                    <label for="firstName">First Name</label>
+                    <input formControlName="firstname" type="text" id="firstname" placeholder=" ">
+                    <label for="firstname">First Name</label>
                 </div>
 
-                <div *ngIf="firstName?.invalid && (firstName?.dirty || firstName?.touched)">
+                <div *ngIf="firstname?.invalid && (firstname?.dirty || firstname?.touched)">
                     <app-alert msg="First name is required"
-                        *ngIf="firstName?.errors!['required'] || firstName?.errors!['notOnlyWhitespace']"
+                        *ngIf="firstname?.errors!['required'] || firstname?.errors!['notOnlyWhitespace']"
                         backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
 
-                    <app-alert msg="First name must be at least 2 characters" *ngIf="firstName?.errors!['minlength']"
+                    <app-alert msg="First name must be at least 2 characters" *ngIf="firstname?.errors!['minlength']"
                         backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
                 </div>
             </div>
 
             <div class="row">
                 <div class="form-control">
-                    <input formControlName="lastName" type="text" id="lastName" placeholder=" ">
-                    <label for="lastName">Last Name</label>
+                    <input formControlName="lastname" type="text" id="lastname" placeholder=" ">
+                    <label for="lastname">Last Name</label>
                 </div>
 
-                <div *ngIf="lastName?.invalid && (lastName?.dirty || lastName?.touched)">
+                <div *ngIf="lastname?.invalid && (lastname?.dirty || lastname?.touched)">
                     <app-alert msg="Last name is required"
-                        *ngIf="lastName?.errors!['required'] || lastName?.errors!['notOnlyWhitespace']"
+                        *ngIf="lastname?.errors!['required'] || lastname?.errors!['notOnlyWhitespace']"
                         backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
 
-                    <app-alert msg="Last name must be at least 2 characters" *ngIf="lastName?.errors!['minlength']"
+                    <app-alert msg="Last name must be at least 2 characters" *ngIf="lastname?.errors!['minlength']"
                         backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
                 </div>
             </div>
@@ -59,7 +59,7 @@
             <div class="row">
                 <div class="form-control">
                     <select formControlName="country" (change)="differentCountry(countrySelect.value)" #countrySelect>
-                        <option *ngFor="let country of countries">{{ country.name }}
+                        <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}
                             ({{country.code}})
                         </option>
                     </select>
@@ -140,10 +140,14 @@
                     <p>Shipping is only within Poland</p>
                 </div>
                 <div class="form-control">
-                    <select formControlName="country">
+                    <select disabled>
                         <option *ngFor="let country of countries">{{ country.name }}
                             ({{country.code}})
                         </option>
+                    </select>
+                    <select formControlName="country" hidden>
+                        <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}
+                            ({{country.code}})</option>
                     </select>
                     <label for="country">Country</label>
                 </div>

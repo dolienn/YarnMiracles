@@ -35,10 +35,12 @@ public class CheckoutService {
 
         Customer customer = purchase.getCustomer();
 
-        Customer customerFromDB = customerRepository.findByEmail(customer.getEmail());
+        order.setStatus("pending");
 
-        System.out.println(customerFromDB);
-        System.out.println(auth.getPrincipal());
+//        Customer customerFromDB = customerRepository.findByEmail(customer.getEmail());
+//
+//        System.out.println(customerFromDB);
+//        System.out.println(auth.getPrincipal());
 
         customer.add(order);
 
