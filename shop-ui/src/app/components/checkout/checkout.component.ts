@@ -14,6 +14,8 @@ import { Router } from '@angular/router';
 import { Order } from '../../common/order/order';
 import { OrderItem } from '../../common/order-item/order-item';
 import { Purchase } from '../../common/purchase/purchase';
+import { TokenService } from '../../services/token/token.service';
+import { User } from '../../common/user/user';
 
 @Component({
   selector: 'app-checkout',
@@ -22,6 +24,8 @@ import { Purchase } from '../../common/purchase/purchase';
 })
 export class CheckoutComponent implements OnInit {
   checkoutFormGroup!: FormGroup;
+
+  user: User = new User();
 
   totalPrice: number = 0;
   totalQuantity: number = 0;
@@ -39,6 +43,7 @@ export class CheckoutComponent implements OnInit {
     private formService: FormService,
     private cartService: CartService,
     private checkoutService: CheckoutService,
+    private tokenService: TokenService,
     private router: Router
   ) {}
 
@@ -47,19 +52,19 @@ export class CheckoutComponent implements OnInit {
 
     this.checkoutFormGroup = this.formBuilder.group({
       customer: this.formBuilder.group({
-        firstname: new FormControl('', [
+        firstname: new FormControl(this.user.firstname, [
           Validators.required,
           Validators.minLength(2),
           Validators.maxLength(13),
           FormValidators.notOnlyWhitespace,
         ]),
-        lastname: new FormControl('', [
+        lastname: new FormControl(this.user.lastname, [
           Validators.required,
           Validators.minLength(2),
           Validators.maxLength(20),
           FormValidators.notOnlyWhitespace,
         ]),
-        email: new FormControl('', [
+        email: new FormControl(this.user.email, [
           Validators.required,
           Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'),
         ]),
@@ -108,6 +113,17 @@ export class CheckoutComponent implements OnInit {
         expirationMonth: [''],
         expirationYear: [''],
       }),
+    });
+
+    this.tokenService.getUserInfo()?.subscribe((data) => {
+      this.user = data;
+      this.checkoutFormGroup.patchValue({
+        customer: {
+          firstname: this.user.firstname,
+          lastname: this.user.lastname,
+          email: this.user.email,
+        },
+      });
     });
 
     this.checkoutFormGroup

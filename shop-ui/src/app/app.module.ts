@@ -33,6 +33,7 @@ import { LoaderComponent } from './components/loader/loader.component';
 import { AlertComponent } from './components/alert/alert.component';
 import { CartDetailsComponent } from './components/cart-details/cart-details.component';
 import { CheckoutComponent } from './components/checkout/checkout.component';
+import { OrderHistoryComponent } from './components/order-history/order-history.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { CheckoutComponent } from './components/checkout/checkout.component';
     AlertComponent,
     CartDetailsComponent,
     CheckoutComponent,
+    OrderHistoryComponent,
   ],
   imports: [
     BrowserModule,

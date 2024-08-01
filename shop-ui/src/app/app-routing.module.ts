@@ -13,8 +13,14 @@ import { StarRatingModule } from 'angular-star-rating';
 import { CartDetailsComponent } from './components/cart-details/cart-details.component';
 import { CheckoutComponent } from './components/checkout/checkout.component';
 import { checkoutGuard } from './services/guard/checkout.guard';
+import { OrderHistoryComponent } from './components/order-history/order-history.component';
 
 const routes: Routes = [
+  {
+    path: 'order-history',
+    component: OrderHistoryComponent,
+    canActivate: [authGuard],
+  },
   {
     path: 'checkout',
     component: CheckoutComponent,

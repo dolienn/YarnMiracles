@@ -10,6 +10,7 @@ import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import pl.dolien.shop.country.Country;
+import pl.dolien.shop.order.Order;
 import pl.dolien.shop.product.Product;
 import pl.dolien.shop.product.ProductCategory;
 
@@ -35,6 +36,9 @@ public class DataRestConfig implements RepositoryRestConfigurer {
 
         disableHttpMethods(config.getExposureConfiguration()
                 .forDomainType(Country.class), theUnsupportedMethods);
+
+        disableHttpMethods(config.getExposureConfiguration()
+                .forDomainType(Order.class), theUnsupportedMethods);
 
         exposeIds(config);
     }
