@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { Feedback } from '../../common/feedback/feedback';
 import { Observable } from 'rxjs';
 import { FeedbackRequest } from '../../common/feedback-request/feedback-request';
+import { environment } from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FeedbackService {
-  private readonly feedbackUrl = 'http://192.168.1.162:8088/api/v1/feedbacks';
+  private readonly feedbackUrl = `${environment.url}/feedbacks`;
 
   constructor(private httpClient: HttpClient) {}
 

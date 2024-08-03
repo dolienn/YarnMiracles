@@ -3,15 +3,15 @@ import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { Product } from '../../common/product/product';
 import { ProductCategory } from '../../common/product-category/product-category';
+import { environment } from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductService {
-  private readonly productUrl = 'http://192.168.1.162:8088/api/v1/products';
+  private readonly productUrl = `${environment.url}/products`;
 
-  private readonly categoryUrl =
-    'http://192.168.1.162:8088/api/v1/product-category';
+  private readonly categoryUrl = `${environment.url}/product-category`;
 
   constructor(private httpClient: HttpClient) {}
 

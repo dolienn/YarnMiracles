@@ -39,7 +39,13 @@ application:
       expiration: 8640000
   mailing:
     frontend:
-      activation-url: http://localhost:4200/activate-account
+      activation-url: https://localhost:4200/activate-account
 server:
   address: 0.0.0.0
   port: 8088
+  ssl:
+    enabled: true
+    key-alias: dolien
+    key-store: classpath:dolien-keystore.p12
+    key-store-password: YubiI12Re5%5xyzWWI90#GLHF
+    key-store-type: PKCS12

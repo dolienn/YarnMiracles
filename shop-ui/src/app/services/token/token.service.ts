@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { NotificationService } from '../notification/notification.service';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../../common/user/user';
+import { environment } from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
@@ -60,12 +61,9 @@ export class TokenService {
   getUserInfo() {
     const token = localStorage.getItem('token');
     if (token) {
-      return this.httpClient.get<User>(
-        'http://192.168.1.162:8088/api/v1/auth/info',
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      return this.httpClient.get<User>(`${environment.url}/auth/info`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
     }
 
     return null;

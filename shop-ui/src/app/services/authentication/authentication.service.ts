@@ -3,19 +3,17 @@ import { Injectable } from '@angular/core';
 import { AuthenticationRequest } from '../../common/authentication-request/authentication-request';
 import { Observable } from 'rxjs';
 import { RegistrationRequest } from '../../common/registration-request/registration-request';
+import { environment } from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthenticationService {
-  private readonly authenticateUrl =
-    'http://192.168.1.162:8088/api/v1/auth/authenticate';
+  private readonly authenticateUrl = `${environment.url}/auth/authenticate`;
 
-  private readonly registerUrl =
-    'http://192.168.1.162:8088/api/v1/auth/register';
+  private readonly registerUrl = `${environment.url}/auth/register`;
 
-  private readonly confirmUrl =
-    'http://192.168.1.162:8088/api/v1/auth/activate-account';
+  private readonly confirmUrl = `${environment.url}/activate-account`;
 
   constructor(private httpClient: HttpClient) {}
 

@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { Product } from '../../common/product/product';
 import { User } from '../../common/user/user';
+import { environment } from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  private readonly userUrl = 'http://192.168.1.162:8088/api/v1/users';
+  private readonly userUrl = `${environment.url}/users`;
 
   constructor(private httpClient: HttpClient) {}
 
