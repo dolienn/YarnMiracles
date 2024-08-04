@@ -32,6 +32,10 @@ spring:
     rest:
       detection-strategy: ANNOTATED
 
+stripe:
+  key:
+    secret: sk_test_51PNFwp04tQ4vR1MnM2EzAroZuWFhVcwEBaRTxe1tOaKDZA8AMKwm7jO6ZucPPhrrn6FUh0ZZykqUksSQ57LMiacC001UXM20Du
+
 application:
   security:
     jwt:
@@ -47,5 +51,5 @@ server:
     enabled: true
     key-alias: dolien
     key-store: classpath:dolien-keystore.p12
-    key-store-password: YubiI12Re5%5xyzWWI90#GLHF
+    key-store-password: jXRaQtvd1n1KNN3N
     key-store-type: PKCS12

@@ -213,45 +213,13 @@
             </div>
         </div>
 
-        <div formGroupName="creditCard" class="form-group">
+        <div class="form-group">
             <h3>Credit Card</h3>
 
-            <div class="row">
-                <div>Card Type</div>
-                <select formControlName="cardType">
-                    <option>Visa</option>
-                    <option>Mastercard</option>
-                </select>
-            </div>
+            <div id="card-element"></div>
 
-            <div class="row">
-                <div>Name on Card</div>
-                <input formControlName="nameOnCard" type="text">
-            </div>
-
-            <div class="row">
-                <div>Card Number</div>
-                <input formControlName="cardNumber" type="text">
-            </div>
-
-            <div class="row">
-                <div>Security Code</div>
-                <input formControlName="securityCode" type="text">
-            </div>
-
-            <div class="row">
-                <div>Expiration Month</div>
-                <select formControlName="expirationMonth">
-                    <option>TO DO</option>
-                </select>
-            </div>
-
-            <div class="row">
-                <div>Expiration Year</div>
-                <select formControlName="expirationYear">
-                    <option>TO DO</option>
-                </select>
-            </div>
+            <app-alert *ngIf="displayError" [msg]="displayError" backgroundColor="#ff6961"
+                borderColor="#d60b00"></app-alert>
         </div>
 
         <div class="review-order">
@@ -274,7 +242,7 @@
         </div>
 
         <div class="purchase-button">
-            <button type="submit">Purchase</button>
+            <button type="submit" [disabled]="isDisabled">Purchase</button>
         </div>
     </form>
 </div>
