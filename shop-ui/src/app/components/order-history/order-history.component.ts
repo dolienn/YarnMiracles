@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { OrderHistory } from '../../common/order-history/order-history';
 import { User } from '../../common/user/user';
 import { TokenService } from '../../services/token/token.service';
@@ -11,11 +11,17 @@ import { OrderHistoryService } from '../../services/order-history/order-history.
   styleUrl: './order-history.component.scss',
 })
 export class OrderHistoryComponent implements OnInit {
+  @ViewChild('ordersSection') ordersSection!: ElementRef;
+
   isLoading: boolean = true;
 
   user: User = new User();
 
   orderHistoryList: OrderHistory[] = [];
+
+  pageNumber: number = 1;
+  pageSize: number = 10;
+  totalElements: number = 0;
 
   constructor(
     private tokenService: TokenService,
@@ -39,8 +45,23 @@ export class OrderHistoryComponent implements OnInit {
   handleOrderHistory() {
     const email = this.user.email;
 
-    this.orderHistoryService.getOrderHistory(email).subscribe((data) => {
-      this.orderHistoryList = data._embedded.orders;
-    });
+    this.orderHistoryService
+      .getOrderHistory(this.pageNumber - 1, this.pageSize, email)
+      .subscribe((data) => {
+        this.orderHistoryList = data._embedded.orders;
+        this.pageNumber = data.page.number + 1;
+        this.pageSize = data.page.size;
+        this.totalElements = data.page.totalElements;
+        this.isLoading = false;
+      });
+  }
+
+  scrollToOrders() {
+    if (this.ordersSection) {
+      this.handleOrderHistory();
+      this.ordersSection.nativeElement.scrollIntoView({
+        behavior: 'smooth',
+      });
+    }
   }
 }

@@ -1,0 +1,5 @@
+<ngb-pagination *ngIf="(this.totalElements/this.pageSize) > 1 && !isLoading" class="custom-pagination"
+    [(page)]="pageNumber" [pageSize]="pageSize" [maxSize]="2" [collectionSize]="totalElements"
+    (pageChange)="onPageChange()">
+
+</ngb-pagination>

@@ -1,8 +1,8 @@
 <div class="navbox">
 
 </div>
-
-<div class="container">
+<app-loader [isLoading]="isLoading"></app-loader>
+<div class="container" *ngIf="!isLoading" #ordersSection>
     <h2>Your Orders</h2>
     <div *ngIf="orderHistoryList.length > 0" class="order-items">
         <table class="table-bordered">
@@ -29,7 +29,11 @@
             </tr>
         </table>
 
-        <div *ngIf="orderHistoryList.length === 0" class="alert">
-            <app-alert msg="No orders found."></app-alert>
-        </div>
+        <app-pagination [totalElements]="totalElements" [pageSize]="pageSize" [isLoading]="isLoading"
+            [(pageNumber)]="pageNumber" (pageNumberChange)="scrollToOrders()"></app-pagination>
+
     </div>
+    <div *ngIf="orderHistoryList?.length === 0" class="alert">
+        <app-alert msg="No orders found."></app-alert>
+    </div>
+</div>

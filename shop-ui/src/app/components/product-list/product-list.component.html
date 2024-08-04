@@ -39,11 +39,8 @@
         </div>
     </div>
 
-    <ngb-pagination *ngIf="(this.totalElements/this.pageSize) > 1 && !isLoading" class="custom-pagination"
-        [(page)]="pageNumber" [pageSize]="pageSize" [maxSize]="2" [collectionSize]="totalElements"
-        (pageChange)="scrollToProducts()">
-
-    </ngb-pagination>
+    <app-pagination [totalElements]="totalElements" [pageSize]="pageSize" [isLoading]="isLoading"
+        [(pageNumber)]="pageNumber" (pageNumberChange)="scrollToProducts()"></app-pagination>
 
     <div class="page-size-wrapper" *ngIf="products.length && !isLoading">
         <div class="page-size">

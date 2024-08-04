@@ -17,7 +17,6 @@ export class ProductListComponent implements OnInit {
   isLoading: boolean = true;
 
   products: Product[] = [];
-  fakeProducts: Product[] = [];
   currentCategoryId: number = 1;
   previousCategoryId: number = 1;
   currentCategoryName: string = '';
@@ -49,6 +48,9 @@ export class ProductListComponent implements OnInit {
   listProducts() {
     this.isLoading = true;
     this.searchMode = this.route.snapshot.paramMap.has('keyword');
+    console.log(this.pageNumber);
+    console.log(this.pageSize);
+    console.log(this.totalElements);
 
     if (this.searchMode) {
       this.handleSearchProducts();
