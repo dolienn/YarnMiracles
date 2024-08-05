@@ -4,6 +4,7 @@ import { AuthenticationRequest } from '../../common/authentication-request/authe
 import { Observable } from 'rxjs';
 import { RegistrationRequest } from '../../common/registration-request/registration-request';
 import { environment } from '../../../environments/environment.development';
+import { PasswordRequest } from '../../common/password-request/password-request';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,11 @@ export class AuthenticationService {
 
   private readonly registerUrl = `${environment.url}/auth/register`;
 
-  private readonly confirmUrl = `${environment.url}/activate-account`;
+  private readonly confirmUrl = `${environment.url}/auth/activate-account`;
+
+  private readonly changeAccDetailsUrl = `${environment.url}/auth/change-account-details`;
+
+  private readonly changePass = `${environment.url}/auth/change-password`;
 
   constructor(private httpClient: HttpClient) {}
 
@@ -28,6 +33,20 @@ export class AuthenticationService {
     return this.httpClient.post<RegistrationRequest>(
       this.registerUrl,
       registerRequest
+    );
+  }
+
+  changeAccountDetails(registerRequest: RegistrationRequest): Observable<any> {
+    return this.httpClient.post<RegistrationRequest>(
+      this.changeAccDetailsUrl,
+      registerRequest
+    );
+  }
+
+  changePassword(passwordRequest: PasswordRequest): Observable<any> {
+    return this.httpClient.post<PasswordRequest>(
+      this.changePass,
+      passwordRequest
     );
   }
 

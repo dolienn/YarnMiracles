@@ -27,6 +27,26 @@ public class AuthenticationController {
         return ResponseEntity.accepted().build();
     }
 
+    @PostMapping("/change-account-details")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<?> changeAccountDetails(
+            @RequestBody @Valid RegistrationRequest request,
+            Authentication auth
+    ) {
+        service.changeAccountDetails(request, auth);
+        return ResponseEntity.accepted().build();
+    }
+
+    @PostMapping("/change-password")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<?> changePassword(
+            @RequestBody @Valid PasswordRequest request,
+            Authentication auth
+    ) {
+        service.changePassword(request, auth);
+        return ResponseEntity.accepted().build();
+    }
+
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody @Valid AuthenticationRequest request

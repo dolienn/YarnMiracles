@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -58,6 +60,53 @@ public class AuthenticationService {
                 .build();
         userRepository.save(user);
         sendValidationEmail(user);
+    }
+
+    public void changeAccountDetails(RegistrationRequest request, Authentication auth) {
+        assert auth != null;
+
+        User currentUser = (User) auth.getPrincipal();
+        String encodedCurrentPassword = currentUser.getPassword();
+
+        if (!passwordEncoder.matches(request.getPassword(), encodedCurrentPassword)) {
+            throw new IllegalArgumentException("Passwords do not match.");
+        }
+
+        User user = userRepository.findByEmail(request.getEmail()).orElse(null);
+
+        if (user == null || Objects.equals(request.getEmail(), currentUser.getEmail())) {
+            User authUser = userRepository.findByEmail(currentUser.getEmail()).orElse(null);
+            if (authUser != null) {
+                authUser.setFirstname(request.getFirstname());
+                authUser.setLastname(request.getLastname());
+                authUser.setEmail(request.getEmail());
+                userRepository.save(authUser);
+            }
+        } else {
+            throw new IllegalArgumentException("There is a user on the same email.");
+        }
+    }
+
+    public void changePassword(PasswordRequest request, Authentication auth) {
+        assert auth != null;
+
+        User currentUser = (User) auth.getPrincipal();
+        String encodedCurrentPassword = currentUser.getPassword();
+
+        if (!passwordEncoder.matches(request.getYourPassword(), encodedCurrentPassword)) {
+            throw new IllegalArgumentException("The current password does not match the one entered in the form.");
+        }
+
+        if (Objects.equals(request.getYourPassword(), request.getNewPassword())) {
+            throw new IllegalArgumentException("The current password and the new one are the same.");
+        }
+
+        User user = userRepository.findByEmail(currentUser.getEmail()).orElse(null);
+
+        if(user != null) {
+            user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+            userRepository.save(user);
+        }
     }
 
     private void sendValidationEmail(User user) throws MessagingException {

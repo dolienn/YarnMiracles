@@ -37,7 +37,7 @@ public class User implements UserDetails, Principal {
 
     private String lastname;
 
-    private LocalDate dataOfBirth;
+    private LocalDate dateOfBirth;
 
     @Column(unique = true)
     private String email;
