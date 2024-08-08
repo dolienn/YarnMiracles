@@ -12,7 +12,7 @@
                     <label for="firstname">First Name</label>
                 </div>
 
-                <div *ngIf="firstname?.invalid && (firstname?.dirty || firstname?.touched)">
+                <div *ngIf="firstname?.invalid && (firstname?.dirty || firstname?.touched)" #alert>
                     <app-alert msg="First name is required"
                         *ngIf="firstname?.errors!['required'] || firstname?.errors!['notOnlyWhitespace']"
                         backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
@@ -28,7 +28,7 @@
                     <label for="lastname">Last Name</label>
                 </div>
 
-                <div *ngIf="lastname?.invalid && (lastname?.dirty || lastname?.touched)">
+                <div *ngIf="lastname?.invalid && (lastname?.dirty || lastname?.touched)" #alert>
                     <app-alert msg="Last name is required"
                         *ngIf="lastname?.errors!['required'] || lastname?.errors!['notOnlyWhitespace']"
                         backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
@@ -44,7 +44,7 @@
                     <label for="email">Email</label>
                 </div>
 
-                <div *ngIf="email?.invalid && (email?.dirty || email?.touched)">
+                <div *ngIf="email?.invalid && (email?.dirty || email?.touched)" #alert>
                     <app-alert msg="Email is required" *ngIf="email?.errors!['required']" backgroundColor="#ff6961"
                         borderColor="#d60b00"></app-alert>
 
@@ -66,8 +66,8 @@
                     <label for="country">Country</label>
                 </div>
 
-                <div
-                    *ngIf="billingAddressCountry?.invalid && (billingAddressCountry?.dirty || billingAddressCountry?.touched)">
+                <div *ngIf="billingAddressCountry?.invalid && (billingAddressCountry?.dirty || billingAddressCountry?.touched)"
+                    #alert>
                     <app-alert msg="Country is required" *ngIf="billingAddressCountry?.errors!['required']"
                         backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
                 </div>
@@ -79,8 +79,8 @@
                     <label for="street">Street</label>
                 </div>
 
-                <div
-                    *ngIf="billingAddressStreet?.invalid && (billingAddressStreet?.dirty || billingAddressStreet?.touched)">
+                <div *ngIf="billingAddressStreet?.invalid && (billingAddressStreet?.dirty || billingAddressStreet?.touched)"
+                    #alert>
                     <app-alert msg="Street is required"
                         *ngIf="billingAddressStreet?.errors!['required'] || billingAddressStreet?.errors!['notOnlyWhitespace']"
                         backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
@@ -97,7 +97,8 @@
                     <label for="city">City</label>
                 </div>
 
-                <div *ngIf="billingAddressCity?.invalid && (billingAddressCity?.dirty || billingAddressCity?.touched)">
+                <div *ngIf="billingAddressCity?.invalid && (billingAddressCity?.dirty || billingAddressCity?.touched)"
+                    #alert>
                     <app-alert msg="City is required"
                         *ngIf="billingAddressCity?.errors!['required'] || billingAddressCity?.errors!['notOnlyWhitespace']"
                         backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
@@ -113,8 +114,8 @@
                     <label for="zipCode">Zip Code</label>
                 </div>
 
-                <div
-                    *ngIf="billingAddressZipCode?.invalid && (billingAddressZipCode?.dirty || billingAddressZipCode?.touched)">
+                <div *ngIf="billingAddressZipCode?.invalid && (billingAddressZipCode?.dirty || billingAddressZipCode?.touched)"
+                    #alert>
                     <app-alert msg="Zip Code is required"
                         *ngIf="billingAddressZipCode?.errors!['required'] || billingAddressZipCode?.errors!['notOnlyWhitespace']"
                         backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
@@ -151,8 +152,8 @@
                     <label for="country">Country</label>
                 </div>
 
-                <div
-                    *ngIf="shippingAddressCountry?.invalid && (shippingAddressCountry?.dirty || shippingAddressCountry?.touched)">
+                <div *ngIf="shippingAddressCountry?.invalid && (shippingAddressCountry?.dirty || shippingAddressCountry?.touched)"
+                    #alert>
                     <app-alert msg="Country is required" *ngIf="shippingAddressCountry?.errors!['required']"
                         backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
                 </div>
@@ -164,8 +165,8 @@
                     <label for="street">Street</label>
                 </div>
 
-                <div
-                    *ngIf="shippingAddressStreet?.invalid && (shippingAddressStreet?.dirty || shippingAddressStreet?.touched)">
+                <div *ngIf="shippingAddressStreet?.invalid && (shippingAddressStreet?.dirty || shippingAddressStreet?.touched)"
+                    #alert>
                     <app-alert msg="Street is required"
                         *ngIf="shippingAddressStreet?.errors!['required'] || shippingAddressStreet?.errors!['notOnlyWhitespace']"
                         backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
@@ -182,8 +183,8 @@
                     <label for="city">City</label>
                 </div>
 
-                <div
-                    *ngIf="shippingAddressCity?.invalid && (shippingAddressCity?.dirty || shippingAddressCity?.touched)">
+                <div *ngIf="shippingAddressCity?.invalid && (shippingAddressCity?.dirty || shippingAddressCity?.touched)"
+                    #alert>
                     <app-alert msg="City is required"
                         *ngIf="shippingAddressCity?.errors!['required'] || shippingAddressCity?.errors!['notOnlyWhitespace']"
                         backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
@@ -200,8 +201,8 @@
                     <label for="zipCode">Zip Code</label>
                 </div>
 
-                <div
-                    *ngIf="shippingAddressZipCode?.invalid && (shippingAddressZipCode?.dirty || shippingAddressZipCode?.touched)">
+                <div *ngIf="shippingAddressZipCode?.invalid && (shippingAddressZipCode?.dirty || shippingAddressZipCode?.touched)"
+                    #alert>
                     <app-alert msg="Zip Code is required"
                         *ngIf="shippingAddressZipCode?.errors!['required'] || shippingAddressZipCode?.errors!['notOnlyWhitespace']"
                         backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
@@ -218,8 +219,10 @@
 
             <div id="card-element"></div>
 
-            <app-alert *ngIf="displayError" [msg]="displayError" backgroundColor="#ff6961"
-                borderColor="#d60b00"></app-alert>
+            <div *ngIf="displayError" #alert>
+                <app-alert *ngIf="displayError" [msg]="displayError" backgroundColor="#ff6961"
+                    borderColor="#d60b00"></app-alert>
+            </div>
         </div>
 
         <div class="review-order">

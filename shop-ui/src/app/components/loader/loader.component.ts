@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   Input,
+  OnDestroy,
   ViewChild,
 } from '@angular/core';
 
@@ -31,12 +32,14 @@ export class LoaderComponent implements AfterViewInit {
   }
 
   private updateLoaderStyles(): void {
-    const loaderElement = this.loader.nativeElement;
-    loaderElement.style.setProperty(
-      '--loader-max-height',
-      this.maxHeight ? '100vh' : 'auto'
-    );
-    loaderElement.style.setProperty('--loader-width', this.width);
-    loaderElement.style.setProperty('--loader-height', this.height);
+    if (this.loader && this.loader.nativeElement) {
+      const loaderElement = this.loader.nativeElement;
+      loaderElement.style.setProperty(
+        '--loader-max-height',
+        this.maxHeight ? '100vh' : 'auto'
+      );
+      loaderElement.style.setProperty('--loader-width', this.width);
+      loaderElement.style.setProperty('--loader-height', this.height);
+    }
   }
 }

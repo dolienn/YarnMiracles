@@ -18,6 +18,7 @@ import { CartService } from '../../services/cart/cart.service';
 })
 export class ProductDetailsComponent implements OnInit {
   isLoading: boolean = true;
+  isPopup: boolean = false;
 
   product!: Product;
   value = 1;
@@ -72,11 +73,17 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   addToCart(product: Product) {
+    this.togglePopup();
+
     const cartItem = new CartItem(product);
 
     for (let i = 1; i <= this.value; i++) {
       this.cartService.addToCart(cartItem);
     }
+  }
+
+  togglePopup() {
+    this.isPopup = !this.isPopup;
   }
 
   contactUs() {}

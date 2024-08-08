@@ -1,4 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -24,7 +31,9 @@ import { PaymentInfo } from '../../common/payment-info/payment-info';
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.scss',
 })
-export class CheckoutComponent implements OnInit {
+export class CheckoutComponent implements OnInit, AfterViewInit {
+  @ViewChildren('alert') alerts!: QueryList<ElementRef>;
+
   checkoutFormGroup!: FormGroup;
 
   user: User = new User();
@@ -159,6 +168,14 @@ export class CheckoutComponent implements OnInit {
     });
   }
 
+  ngAfterViewInit() {
+    this.alerts.changes.subscribe(() => {
+      if (this.alerts.length) {
+        this.scrollToFirstAlert();
+      }
+    });
+  }
+
   get firstname() {
     return this.checkoutFormGroup.get('customer.firstname');
   }
@@ -281,6 +298,7 @@ export class CheckoutComponent implements OnInit {
   onSubmit() {
     if (this.checkoutFormGroup.invalid) {
       this.checkoutFormGroup.markAllAsTouched();
+      this.scrollToFirstAlert();
       return;
     }
 
@@ -394,12 +412,23 @@ export class CheckoutComponent implements OnInit {
         });
     } else {
       this.checkoutFormGroup.markAllAsTouched();
+      this.scrollToFirstAlert();
       this.purchaseLoading = false;
       return;
     }
   }
 
-  resetCart() {
+  private scrollToFirstAlert() {
+    const firstAlert = this.alerts.first;
+    if (firstAlert) {
+      firstAlert.nativeElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }
+
+  private resetCart() {
     this.cartService.cartItems = [];
     this.cartService.totalPrice.next(0);
     this.cartService.totalQuantity.next(0);

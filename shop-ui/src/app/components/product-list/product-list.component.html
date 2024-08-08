@@ -22,8 +22,8 @@
             <a routerLink="/products/{{product.id}}">
                 <img src='../../../assets{{product.imageUrl}}' alt="Product Name">
             </a>
-            <div class="product-text">
-                <h5>Sale</h5>
+            <div class="product-new" *ngIf="isNewProduct(product.dateCreated)">
+                <h5>New</h5>
             </div>
             <div class="rating-and-favourite">
                 <app-rating [rating]="product.rate || 0"></app-rating>

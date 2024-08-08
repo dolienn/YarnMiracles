@@ -42,5 +42,5 @@
     <app-pagination [totalElements]="totalElements" [pageSize]="pageSize" [(pageNumber)]="pageNumber"
         (pageNumberChange)="scrollToFeedbacks()"></app-pagination>
 
-    <app-alert msg="There is no feedbacks yet." *ngIf="feedbacks?.length == 0 && !isLoadingComments"></app-alert>
+    <app-alert msg="There are no feedbacks yet." *ngIf="feedbacks?.length == 0 && !isLoadingComments"></app-alert>
 </div>

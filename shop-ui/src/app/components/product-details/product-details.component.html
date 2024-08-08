@@ -26,3 +26,32 @@
     </div>
     <app-feedback [product]="product"></app-feedback>
 </div>
+
+<div class="popup" *ngIf="product && !isLoading && isPopup">
+    <div class="overlay"></div>
+    <div class="content">
+        <div class="close-button bx bx-x" (click)="togglePopup()"></div>
+        <table>
+            <tr>
+                <td>
+                    <div class="product-info">
+                        <div class="image">
+                            <img src='../../../assets{{product.imageUrl}}' alt="Product Name">
+                        </div>
+                        <div class="info">
+                            <div class="name">{{product.name}}</div>
+                            <div class="price">{{product.unitPrice | currency: 'PLN'}}</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="subtotal">{{ value * product.unitPrice | currency: 'PLN'}}</div>
+                </td>
+            </tr>
+        </table>
+        <div class="buttons">
+            <button routerLink="/products">Continue Shopping</button>
+            <button routerLink="/cart">Go to Cart</button>
+        </div>
+    </div>
+</div>
