@@ -242,7 +242,13 @@
         </div>
 
         <div class="purchase-button">
-            <button type="submit" [disabled]="isDisabled">Purchase</button>
+            <div *ngIf="!purchaseLoading">
+                <button type="submit" [disabled]="isDisabled">Purchase</button>
+            </div>
+
+            <div *ngIf="purchaseLoading">
+                <button><app-loader width="1rem" height="1rem" [maxHeight]="false"></app-loader></button>
+            </div>
         </div>
     </form>
 </div>

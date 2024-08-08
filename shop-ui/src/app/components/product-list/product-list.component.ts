@@ -25,7 +25,7 @@ export class ProductListComponent implements OnInit {
   user: User = new User();
 
   pageNumber: number = 1;
-  pageSize: number = 6;
+  pageSize: number = 5;
   totalElements: number = 0;
 
   previousKeyword: string = '';
@@ -102,6 +102,14 @@ export class ProductListComponent implements OnInit {
           keyword
         )
         .subscribe(this.processResult());
+    } else if (this.selectedSortOption === 'popularity') {
+      this.productService
+        .searchProductsPaginateOrderBySalesDesc(
+          this.pageNumber - 1,
+          this.pageSize,
+          keyword
+        )
+        .subscribe(this.processResult());
     }
   }
 
@@ -148,6 +156,14 @@ export class ProductListComponent implements OnInit {
     } else if (this.selectedSortOption === 'rating') {
       this.productService
         .getProductListPaginateOrderByRateDesc(
+          this.pageNumber - 1,
+          this.pageSize,
+          this.currentCategoryId
+        )
+        .subscribe(this.processResult());
+    } else if (this.selectedSortOption === 'popularity') {
+      this.productService
+        .getProductListPaginateOrderBySalesDesc(
           this.pageNumber - 1,
           this.pageSize,
           this.currentCategoryId
@@ -212,18 +228,6 @@ export class ProductListComponent implements OnInit {
       this.totalElements = data.page.totalElements;
       this.isLoading = false;
     };
-  }
-
-  isLessThanFiveProducts(): boolean {
-    return this.products.length < 5;
-  }
-
-  isLessThanFourProducts(): boolean {
-    return this.products.length < 4;
-  }
-
-  isLessThanThreeProducts(): boolean {
-    return this.products.length < 3;
   }
 
   onSortOptionChange() {

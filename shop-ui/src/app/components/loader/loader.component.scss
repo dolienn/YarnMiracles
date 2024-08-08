@@ -2,7 +2,7 @@
 
 .loader {
   width: 100%;
-  height: 100vh;
+  height: var(--loader-max-height, 100vh);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -10,8 +10,8 @@
 
 .loader::after {
   content: "";
-  width: 4rem;
-  height: 4rem;
+  width: var(--loader-width, 4rem);
+  height: var(--loader-height, 4rem);
   border: 0.3rem solid $background-color--02;
   border-top-color: $color--01;
   border-radius: 50%;

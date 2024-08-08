@@ -61,6 +61,16 @@ export class ProductService {
     return this.httpClient.get<GetResponseProducts>(searchUrl);
   }
 
+  getProductListPaginateOrderBySalesDesc(
+    page: number,
+    pageSize: number,
+    theCategoryId: number
+  ): Observable<GetResponseProducts> {
+    const searchUrl = `${this.productUrl}/search/findByCategoryIdOrderBySalesDesc?id=${theCategoryId}&page=${page}&size=${pageSize}`;
+
+    return this.httpClient.get<GetResponseProducts>(searchUrl);
+  }
+
   getProductList(theCategoryId: number): Observable<Product[]> {
     const searchUrl = `${this.productUrl}/search/findByCategoryId?id=${theCategoryId}`;
 
@@ -115,6 +125,16 @@ export class ProductService {
     keyword: string
   ): Observable<GetResponseProducts> {
     const searchUrl = `${this.productUrl}/search/findByNameContainingOrderByRateDesc?name=${keyword}&page=${page}&size=${pageSize}`;
+
+    return this.httpClient.get<GetResponseProducts>(searchUrl);
+  }
+
+  searchProductsPaginateOrderBySalesDesc(
+    page: number,
+    pageSize: number,
+    keyword: string
+  ): Observable<GetResponseProducts> {
+    const searchUrl = `${this.productUrl}/search/findByNameContainingOrderBySalesDesc?name=${keyword}&page=${page}&size=${pageSize}`;
 
     return this.httpClient.get<GetResponseProducts>(searchUrl);
   }

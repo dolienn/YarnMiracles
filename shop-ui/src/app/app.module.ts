@@ -35,6 +35,7 @@ import { CartDetailsComponent } from './components/cart-details/cart-details.com
 import { CheckoutComponent } from './components/checkout/checkout.component';
 import { OrderHistoryComponent } from './components/order-history/order-history.component';
 import { PaginationComponent } from './components/pagination/pagination.component';
+import { SuccessfulPurchaseComponent } from './components/successful-purchase/successful-purchase.component';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import { PaginationComponent } from './components/pagination/pagination.componen
     CheckoutComponent,
     OrderHistoryComponent,
     PaginationComponent,
+    SuccessfulPurchaseComponent,
   ],
   imports: [
     BrowserModule,

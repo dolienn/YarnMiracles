@@ -21,6 +21,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Page<Product> findByCategoryIdOrderByRateDesc(@Param("id") Long id, Pageable pageable);
 
+    Page<Product> findByCategoryIdOrderBySalesDesc(@Param("id") Long id, Pageable pageable);
+
     Page<Product> findByNameContaining(@Param("name") String name, Pageable pageable);
 
     Page<Product> findByNameContainingOrderByUnitPriceAsc(@Param("name") String name, Pageable pageable);
@@ -28,4 +30,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> findByNameContainingOrderByUnitPriceDesc(@Param("name") String name, Pageable pageable);
 
     Page<Product> findByNameContainingOrderByRateDesc(@Param("name") String name, Pageable pageable);
+
+    Page<Product> findByNameContainingOrderBySalesDesc(@Param("name") String name, Pageable pageable);
 }

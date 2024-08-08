@@ -13,6 +13,8 @@ import pl.dolien.shop.order.CustomerRepository;
 import pl.dolien.shop.order.Order;
 import pl.dolien.shop.order.OrderItem;
 import pl.dolien.shop.payment.PaymentInfo;
+import pl.dolien.shop.product.Product;
+import pl.dolien.shop.product.ProductRepository;
 import pl.dolien.shop.purchase.Purchase;
 import pl.dolien.shop.purchase.PurchaseResponse;
 import pl.dolien.shop.user.User;
@@ -23,10 +25,12 @@ import java.util.*;
 public class CheckoutService {
 
     private final CustomerRepository customerRepository;
+    private final ProductRepository productRepository;
 
     CheckoutService(CustomerRepository customerRepository,
-                    @Value("${stripe.key.secret}") String secretKey) {
+                    @Value("${stripe.key.secret}") String secretKey, ProductRepository productRepository) {
         this.customerRepository = customerRepository;
+        this.productRepository = productRepository;
         Stripe.apiKey = secretKey;
     }
 
@@ -39,6 +43,16 @@ public class CheckoutService {
 
         Set<OrderItem> orderItems = purchase.getOrderItems();
         orderItems.forEach(order::add);
+        orderItems.forEach(orderItem -> {
+            if(productRepository.findById(orderItem.getProductId()).isPresent()) {
+                Product product = productRepository.findById(orderItem.getProductId()).get();
+                product.addSales(orderItem.getQuantity());
+                if(product.getUnitsInStock() >= orderItem.getQuantity()) {
+                    product.removeUnitsInStock(orderItem.getQuantity());
+                }
+                productRepository.save(product);
+            }
+        });
 
         order.setBillingAddress(purchase.getBillingAddress());
         order.setShippingAddress(purchase.getShippingAddress());

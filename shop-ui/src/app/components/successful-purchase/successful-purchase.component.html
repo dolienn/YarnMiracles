@@ -1,0 +1,84 @@
+<div class="navbox"></div>
+
+<div class="container">
+
+    <h1 class="thanks">Thank you for your purchase!</h1>
+    <p class="order-tracking-number">Order tracking number: {{ orderDetails.orderTrackingNumber }}</p>
+
+    <div class="order-title">
+        <h3>Your Order</h3>
+    </div>
+    <table>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Subtotal</th>
+        </tr>
+        <tr *ngFor="let orderItem of purchase.orderItems">
+            <td>
+                <div class="item-order-info">
+                    <div class="image">
+                        <img src='../../../assets{{orderItem.imageUrl}}' alt="Product Name">
+                    </div>
+                    <div class="info">
+                        <div class="name">{{orderItem.name}}</div>
+                        <div class="price">{{orderItem.unitPrice | currency: 'PLN'}}</div>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="quantity">
+                    {{orderItem.quantity}}
+                </div>
+            </td>
+            <td>
+                <div class="subtotal">{{ orderItem.quantity * orderItem.unitPrice | currency: 'PLN'}}</div>
+            </td>
+        </tr>
+    </table>
+
+    <div class="total-price">
+        <table>
+            <tr>
+                <td>Subtotal</td>
+                <td>{{purchase.order?.totalPrice | currency:'PLN'}}</td>
+            </tr>
+
+            <tr>
+                <td>Shipping</td>
+                <td>{{shipping | currency: 'PLN'}}</td>
+            </tr>
+
+            <tr>
+                <td>Total</td>
+                <td>{{purchase.order?.totalPrice + shipping | currency: 'PLN'}}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="address-group">
+        <h3>Customer</h3>
+        <div class="row">
+            <p>{{ purchase.customer.firstname }} {{ purchase.customer.lastname }}</p>
+        </div>
+        <div class="row">
+            <p>{{ purchase.customer.email }}</p>
+        </div>
+
+        <h3>Shipping Address</h3>
+        <div class="row">
+            <p>{{ purchase.shippingAddress.street }}, {{ purchase.shippingAddress.city }}</p>
+        </div>
+        <div class="row">
+            <p>{{ purchase.shippingAddress.zipCode }}, {{ purchase.shippingAddress.country }}</p>
+        </div>
+
+        <h3>Billing Address</h3>
+        <div class="row">
+            <p>{{ purchase.billingAddress.street }}, {{ purchase.billingAddress.city }}</p>
+        </div>
+        <div class="row">
+            <p>{{ purchase.billingAddress.zipCode }}, {{ purchase.billingAddress.country }}</p>
+        </div>
+    </div>
+</div>

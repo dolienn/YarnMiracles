@@ -41,7 +41,13 @@
       transition: all 0.42s;
     }
 
-    .cart-button {
+    .unavailable {
+      font-weight: 600;
+      color: $error--02;
+    }
+
+    .cart-button,
+    .contact-button {
       display: flex;
       flex-direction: row;
 
@@ -50,6 +56,7 @@
         height: 3rem;
         font-size: 1.3rem;
         padding-left: 0.2rem;
+        margin-right: 1rem;
       }
 
       button {
@@ -60,7 +67,6 @@
         font-size: 500;
         border-radius: $border-radius;
         background-color: $color--01;
-        margin-left: 1rem;
         transition: 0.1s ease;
         border: none;
         outline: none;

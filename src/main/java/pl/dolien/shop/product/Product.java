@@ -50,6 +50,8 @@ public class Product {
 
     private Double rate;
 
+    private Long sales = 0L;
+
     @ManyToMany(mappedBy = "favourites")
     @JsonIgnore
     private List<User> usersWhoFavourited;
@@ -77,6 +79,14 @@ public class Product {
 
             this.rate = Math.round(rate * 10.0) / 10.0;
         }
+    }
+
+    public void addSales(int quantity) {
+        this.sales = this.sales + quantity;
+    }
+
+    public void removeUnitsInStock(int quantity) {
+        this.unitsInStock = this.unitsInStock - quantity;
     }
 
     @PostLoad

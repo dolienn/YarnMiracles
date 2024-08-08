@@ -42,14 +42,14 @@
     <app-pagination [totalElements]="totalElements" [pageSize]="pageSize" [isLoading]="isLoading"
         [(pageNumber)]="pageNumber" (pageNumberChange)="scrollToProducts()"></app-pagination>
 
-    <div class="page-size-wrapper" *ngIf="products.length && !isLoading">
+    <div class="page-size-wrapper" *ngIf="products.length">
         <div class="page-size">
             <span>Page Size</span>
             <select #pageSelect (change)="updatePageSize(pageSelect.value)">
-                <option selected="true">5</option>
-                <option>15</option>
-                <option>25</option>
-                <option>50</option>
+                <option value="5">5</option>
+                <option value="15">15</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
             </select>
         </div>
     </div>

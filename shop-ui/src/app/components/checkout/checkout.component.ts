@@ -34,6 +34,8 @@ export class CheckoutComponent implements OnInit {
 
   countries: Country[] = [];
 
+  purchaseLoading: boolean = false;
+
   isChecked: boolean = true;
   isLoading: boolean = true;
   isCheckboxDisabled: boolean = false;
@@ -282,6 +284,8 @@ export class CheckoutComponent implements OnInit {
       return;
     }
 
+    this.purchaseLoading = true;
+
     const shippingAddressContainer = document.querySelector(
       '.shippingAddressContainer'
     );
@@ -359,20 +363,30 @@ export class CheckoutComponent implements OnInit {
             )
             .then((result: any) => {
               if (result.error) {
-                alert(`There was an error: ${result.error.message}`);
                 this.isDisabled = false;
+                this.purchaseLoading = false;
               } else {
                 this.checkoutService.placeOrder(purchase).subscribe({
                   next: (response: any) => {
-                    alert(`Your order has been received.
-                      nOrder tracking number: ${response.orderTrackingNumber}`);
+                    sessionStorage.setItem(
+                      'orderDetails',
+                      JSON.stringify(response)
+                    );
+                    sessionStorage.setItem(
+                      'purchase',
+                      JSON.stringify(purchase)
+                    );
+
+                    this.router.navigate(['/successful-purchase']);
 
                     this.resetCart();
+
                     this.isDisabled = false;
+                    this.purchaseLoading = false;
                   },
-                  error: (err: any) => {
-                    alert(`There was an error: ${err.message}`);
+                  error: () => {
                     this.isDisabled = false;
+                    this.purchaseLoading = false;
                   },
                 });
               }
@@ -380,6 +394,7 @@ export class CheckoutComponent implements OnInit {
         });
     } else {
       this.checkoutFormGroup.markAllAsTouched();
+      this.purchaseLoading = false;
       return;
     }
   }
@@ -391,7 +406,5 @@ export class CheckoutComponent implements OnInit {
     this.cartService.persistCartItems();
 
     this.checkoutFormGroup.reset();
-
-    this.router.navigateByUrl('/');
   }
 }

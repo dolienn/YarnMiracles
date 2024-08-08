@@ -63,6 +63,14 @@ export class ProductDetailsComponent implements OnInit {
     }
   }
 
+  maxQuantityInput(): number {
+    if (this.product.unitsInStock < 9) {
+      return this.product.unitsInStock;
+    } else {
+      return 9;
+    }
+  }
+
   addToCart(product: Product) {
     const cartItem = new CartItem(product);
 
@@ -70,4 +78,6 @@ export class ProductDetailsComponent implements OnInit {
       this.cartService.addToCart(cartItem);
     }
   }
+
+  contactUs() {}
 }
