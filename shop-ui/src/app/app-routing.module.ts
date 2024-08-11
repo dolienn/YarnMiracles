@@ -15,8 +15,13 @@ import { CheckoutComponent } from './components/checkout/checkout.component';
 import { checkoutGuard } from './services/guard/checkout.guard';
 import { OrderHistoryComponent } from './components/order-history/order-history.component';
 import { SuccessfulPurchaseComponent } from './components/successful-purchase/successful-purchase.component';
+import { ContactUsComponent } from './components/contact-us/contact-us.component';
 
 const routes: Routes = [
+  {
+    path: 'contact-us',
+    component: ContactUsComponent,
+  },
   {
     path: 'successful-purchase',
     component: SuccessfulPurchaseComponent,

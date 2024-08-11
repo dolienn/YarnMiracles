@@ -1,0 +1,133 @@
+@import "../../variables.scss";
+
+.navbox {
+  height: $nav-height;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+  visibility: hidden;
+  opacity: 0;
+
+  .contact-group {
+    width: 80vw;
+    max-width: 28rem;
+    padding: 2rem;
+    margin: 2.5rem 0;
+    border-radius: $border-radius;
+    background-color: $background-color--02;
+    box-shadow: inset 0 0 0 0.15rem $color--01;
+
+    h3 {
+      color: $color--01;
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .contact-control {
+      position: relative;
+      height: 3.2rem;
+      margin-bottom: 1rem;
+
+      input {
+        height: 100%;
+        width: 100%;
+        background-color: $background-color--01;
+        outline: none;
+        border: none;
+        color: $color--01;
+        font-size: 1rem;
+        border-radius: $border-radius;
+        padding-right: 1.3rem;
+        box-shadow: inset 0 0 0 0.15rem $color--01;
+      }
+
+      input:is(:focus, :valid):not(:placeholder-shown) {
+        padding: 1rem 1.3rem 0;
+        background: $background-color--01;
+      }
+
+      label {
+        position: absolute;
+        left: 1.3rem;
+        top: 50%;
+        color: $color--02;
+        pointer-events: none;
+        font-size: 1rem;
+        transform: translateY(-50%);
+        transition: all 0.1s ease;
+      }
+
+      input:is(:focus, :valid):not(:placeholder-shown) ~ label {
+        font-size: 0.75rem;
+        transform: translateY(-130%);
+      }
+    }
+
+    .contact-message {
+      position: relative;
+      height: 20rem;
+      margin-bottom: 1rem;
+
+      textarea {
+        height: 100%;
+        width: 100%;
+        background-color: $background-color--01;
+        outline: none;
+        border: none;
+        color: $color--01;
+        font-size: 1rem;
+        border-radius: $border-radius;
+        padding: 1.3rem;
+        box-shadow: inset 0 0 0 0.15rem $color--01;
+      }
+    }
+
+    .send-button {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 1rem;
+
+      button {
+        height: 2.5rem;
+        width: 9rem;
+        padding: 0.5rem;
+        color: $background-color--01;
+        font-size: 1rem;
+        border-radius: $border-radius;
+        background-color: $color--01;
+        justify-self: center;
+        transition: 0.1s ease;
+        cursor: pointer;
+        border: none;
+        outline: none;
+      }
+    }
+  }
+}
+
+.container.visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+@media (max-width: 600px) {
+  .navbox {
+    height: $nav-height * 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .send-button {
+    justify-content: center !important;
+
+    button {
+      font-size: 0.8rem !important;
+      width: 100% !important;
+    }
+  }
+}

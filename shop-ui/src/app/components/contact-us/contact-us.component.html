@@ -1,0 +1,30 @@
+<div class="navbox"></div>
+
+<app-loader [isLoading]="isLoading"></app-loader>
+
+
+<div class="container" [class.visible]="!isLoading">
+    <div class="contact-group">
+        <h3>Contact</h3>
+        <div class="alerts" *ngFor="let msg of errorMsg">
+            <app-alert backgroundColor="#ff6961" borderColor="#d60b00" msg="{{msg}}"></app-alert>
+        </div>
+        <div class="contact-control">
+            <input [(ngModel)]="contactRequest.email" type="text" id="email" placeholder=" " [value]="user.email">
+            <label for="email">Email</label>
+        </div>
+
+        <div class="contact-control">
+            <input [(ngModel)]="contactRequest.subject" type="text" id="subject" placeholder=" ">
+            <label for="subject">Subject</label>
+        </div>
+
+        <div class="contact-message">
+            <textarea [(ngModel)]="contactRequest.message"></textarea>
+        </div>
+
+        <div class="send-button">
+            <button (click)="sendMessage()">Send</button>
+        </div>
+    </div>
+</div>

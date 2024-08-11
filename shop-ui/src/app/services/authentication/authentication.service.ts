@@ -18,7 +18,7 @@ export class AuthenticationService {
 
   private readonly changeAccDetailsUrl = `${environment.url}/auth/change-account-details`;
 
-  private readonly changePass = `${environment.url}/auth/change-password`;
+  private readonly changePasswordUrl = `${environment.url}/auth/change-password`;
 
   constructor(private httpClient: HttpClient) {}
 
@@ -45,7 +45,7 @@ export class AuthenticationService {
 
   changePassword(passwordRequest: PasswordRequest): Observable<any> {
     return this.httpClient.post<PasswordRequest>(
-      this.changePass,
+      this.changePasswordUrl,
       passwordRequest
     );
   }

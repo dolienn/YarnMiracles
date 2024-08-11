@@ -85,6 +85,4 @@ export class ProductDetailsComponent implements OnInit {
   togglePopup() {
     this.isPopup = !this.isPopup;
   }
-
-  contactUs() {}
 }

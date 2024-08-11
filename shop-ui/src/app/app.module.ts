@@ -36,6 +36,7 @@ import { CheckoutComponent } from './components/checkout/checkout.component';
 import { OrderHistoryComponent } from './components/order-history/order-history.component';
 import { PaginationComponent } from './components/pagination/pagination.component';
 import { SuccessfulPurchaseComponent } from './components/successful-purchase/successful-purchase.component';
+import { ContactUsComponent } from './components/contact-us/contact-us.component';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import { SuccessfulPurchaseComponent } from './components/successful-purchase/su
     OrderHistoryComponent,
     PaginationComponent,
     SuccessfulPurchaseComponent,
+    ContactUsComponent,
   ],
   imports: [
     BrowserModule,

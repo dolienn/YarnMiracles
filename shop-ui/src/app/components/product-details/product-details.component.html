@@ -17,7 +17,7 @@
                 <button (click)="addToCart(product)">Add to Cart</button>
             </div>
             <div *ngIf="product.unitsInStock <= 0" class="contact-button">
-                <button (click)="contactUs()">Contact Us</button>
+                <button routerLink="/contact-us">Contact Us</button>
             </div>
 
             <h3>Product Details</h3>
