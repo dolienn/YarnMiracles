@@ -12,6 +12,10 @@ public class ContactService {
     private final JavaMailSender mailSender;
 
     public void sendMessage(ContactRequest request) {
+        if(request == null) {
+            throw new NullPointerException("Contact request not found");
+        }
+
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo("thedolien@gmail.com");
         message.setSubject(request.getSubject());

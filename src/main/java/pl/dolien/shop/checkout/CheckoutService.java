@@ -36,6 +36,10 @@ public class CheckoutService {
 
     @Transactional
     public PurchaseResponse placeOrder(Purchase purchase, Authentication auth) {
+        if(purchase == null) {
+            throw new NullPointerException("Purchase not found");
+        }
+
         Order order = purchase.getOrder();
 
         String orderTrackingNumber = generateOrderTrackingNumber();
