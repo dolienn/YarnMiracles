@@ -27,7 +27,6 @@ export class LoginComponent {
         this.router.navigate(['']);
       },
       error: (err) => {
-        console.log(err);
         if (err.error.validationErrors) {
           this.errorMsg = err.error.validationErrors;
         } else {

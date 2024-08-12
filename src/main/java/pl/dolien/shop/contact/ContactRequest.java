@@ -17,8 +17,8 @@ public class ContactRequest {
     @NotBlank(message = "Message is mandatory")
     private String email;
 
-    @NotEmpty(message = "Message is mandatory")
-    @NotBlank(message = "Message is mandatory")
+    @NotEmpty(message = "Subject is mandatory")
+    @NotBlank(message = "Subject is mandatory")
     private String subject;
 
     @NotEmpty(message = "Message is mandatory")

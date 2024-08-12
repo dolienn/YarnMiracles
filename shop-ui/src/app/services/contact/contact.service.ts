@@ -3,6 +3,7 @@ import { environment } from '../../../environments/environment.development';
 import { ContactRequest } from '../../common/contact-request/contact-request';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { NotificationService } from '../notification/notification.service';
 
 @Injectable({
   providedIn: 'root',

@@ -37,6 +37,7 @@ import { OrderHistoryComponent } from './components/order-history/order-history.
 import { PaginationComponent } from './components/pagination/pagination.component';
 import { SuccessfulPurchaseComponent } from './components/successful-purchase/successful-purchase.component';
 import { ContactUsComponent } from './components/contact-us/contact-us.component';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import { ContactUsComponent } from './components/contact-us/contact-us.component
     PaginationComponent,
     SuccessfulPurchaseComponent,
     ContactUsComponent,
+    PageNotFoundComponent,
   ],
   imports: [
     BrowserModule,

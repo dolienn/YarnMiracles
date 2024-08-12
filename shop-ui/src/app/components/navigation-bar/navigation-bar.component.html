@@ -14,7 +14,7 @@
         </li>
         <li *ngIf="!isCategoryButtonClicked"><a class="navlink" href="#" routerLink="/products"
                 routerLinkActive="active-link">products</a></li>
-        <li *ngIf="!isCategoryButtonClicked"><a class="navlink" href="#">docs</a></li>
+        <li *ngIf="!isCategoryButtonClicked"><a class="navlink" href="#" routerLink="/contact-us">contact</a></li>
         <li *ngIf="isCategoryButtonClicked">
             <a *ngFor="let productCategory of productCategories"
                 routerLink="/category/{{productCategory.id }}/{{ productCategory.categoryName }}" class="navlink">

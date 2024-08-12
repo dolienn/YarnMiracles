@@ -17,6 +17,9 @@ import { Router } from '@angular/router';
 export class HomeComponent implements OnInit {
   @ViewChild('trendingSection') trendingSection: ElementRef | undefined;
 
+  page: number = 0;
+  pageSize: number = 5;
+
   isLoading: boolean = true;
   isLoadingProducts: boolean = true;
 
@@ -25,7 +28,7 @@ export class HomeComponent implements OnInit {
   constructor(private productService: ProductService, private router: Router) {}
 
   ngOnInit(): void {
-    this.listProducts();
+    this.listProductsOrderBySales();
     if (document.readyState === 'complete') {
       this.onLoad();
     } else {
@@ -33,12 +36,14 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  listProducts() {
+  listProductsOrderBySales() {
     this.isLoadingProducts = true;
-    this.productService.getProductList(1).subscribe((data) => {
-      this.products = data;
-      this.isLoadingProducts = false;
-    });
+    this.productService
+      .getAllProductsOrderBySales(this.page, this.pageSize)
+      .subscribe((data) => {
+        this.products = data._embedded.products;
+        this.isLoadingProducts = false;
+      });
   }
 
   onLoad() {
@@ -53,5 +58,9 @@ export class HomeComponent implements OnInit {
     if (this.trendingSection) {
       this.trendingSection.nativeElement.scrollIntoView({ behavior: 'smooth' });
     }
+  }
+
+  isNewProduct(dateCreated: any): boolean {
+    return this.productService.isNewProduct(dateCreated);
   }
 }

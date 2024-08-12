@@ -215,13 +215,7 @@ export class ProductListComponent implements OnInit {
   }
 
   isNewProduct(dateCreated: any): boolean {
-    const oneWeekInMilliseconds = 7 * 24 * 60 * 60 * 1000;
-    const currentDate = new Date();
-    const productDate = new Date(dateCreated);
-
-    return (
-      currentDate.getTime() - productDate.getTime() < oneWeekInMilliseconds
-    );
+    return this.productService.isNewProduct(dateCreated);
   }
 
   updatePageSize(pageSize: string) {

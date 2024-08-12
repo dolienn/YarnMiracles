@@ -16,6 +16,7 @@ import { checkoutGuard } from './services/guard/checkout.guard';
 import { OrderHistoryComponent } from './components/order-history/order-history.component';
 import { SuccessfulPurchaseComponent } from './components/successful-purchase/successful-purchase.component';
 import { ContactUsComponent } from './components/contact-us/contact-us.component';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
 const routes: Routes = [
   {
@@ -86,6 +87,7 @@ const routes: Routes = [
     component: ActivateAccountComponent,
     canActivate: [loggedInGuard],
   },
+  { path: '**', component: PageNotFoundComponent },
 ];
 
 const routerOptions: ExtraOptions = {

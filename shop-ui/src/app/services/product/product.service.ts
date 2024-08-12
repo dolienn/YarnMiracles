@@ -144,6 +144,24 @@ export class ProductService {
       .get<GetResponseProducts>(searchUrl)
       .pipe(map((response) => response._embedded.products));
   }
+
+  getAllProductsOrderBySales(
+    page: number,
+    pageSize: number
+  ): Observable<GetResponseProducts> {
+    const salesUrl = `${this.productUrl}/search/findAllByOrderBySalesDesc?page=${page}&size=${pageSize}`;
+    return this.httpClient.get<GetResponseProducts>(salesUrl);
+  }
+
+  isNewProduct(dateCreated: any): boolean {
+    const oneWeekInMilliseconds = 7 * 24 * 60 * 60 * 1000;
+    const currentDate = new Date();
+    const productDate = new Date(dateCreated);
+
+    return (
+      currentDate.getTime() - productDate.getTime() < oneWeekInMilliseconds
+    );
+  }
 }
 
 interface GetResponseProducts {
