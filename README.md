@@ -39,8 +39,8 @@ Ensure the following tools are installed on your system:
    Clone the repository and navigate into the project directory:
 
    ```bash
-   git clone <repository-url>
-   cd <repository-directory>
+   git clone [<repository-url>](https://github.com/dolienn/YarnMiracles.git)
+   cd [<repository-directory>](yarn-miracles)
 
 2. **Start Docker Services**
 
