@@ -63,7 +63,7 @@ Ensure the following tools are installed on your system:
      stripePublishableKey: 'YOUR_PUBLISHABLE_KEY',
    };
 
-2. **Create a `.env` File**
+3. **Create a `.env` File**
 
    In the root directory of the Spring Boot project, create a file named `.env` and add the following configuration:
 
@@ -95,12 +95,18 @@ Ensure the following tools are installed on your system:
    
    **Note**: Replace `your_jwt_secret_key` with your chosen JWT secret key. 
 
-5. **Start Docker Services**
+4. **Start Docker Services**
 
    Ensure Docker and Docker Compose are installed and running. Start the services with:
 
    ```bash
    docker-compose up --build
+
+5. **Access the Application**
+
+  Once the Docker services are up and running, you can visit the application at:
+
+  http://localhost:80
 
 ## Interactive Testing
 
