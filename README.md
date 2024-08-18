@@ -104,9 +104,9 @@ Ensure the following tools are installed on your system:
 
 5. **Access the Application**
 
-  Once the Docker services are up and running, you can visit the application at:
+   Once the Docker services are up and running, you can visit the application at:
 
-  http://localhost:80
+   http://localhost:80
 
 ## Interactive Testing
 
