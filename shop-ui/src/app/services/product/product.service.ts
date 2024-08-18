@@ -23,6 +23,51 @@ export class ProductService {
 
   getProductListPaginate(
     page: number,
+    pageSize: number
+  ): Observable<GetResponseProducts> {
+    const searchUrl = `${this.productUrl}?page=${page}&size=${pageSize}`;
+
+    return this.httpClient.get<GetResponseProducts>(searchUrl);
+  }
+
+  getProductListPaginateOrderByUnitPriceAsc(
+    page: number,
+    pageSize: number
+  ): Observable<GetResponseProducts> {
+    const searchUrl = `${this.productUrl}/search/findAllByOrderByUnitPriceAsc?page=${page}&size=${pageSize}`;
+
+    return this.httpClient.get<GetResponseProducts>(searchUrl);
+  }
+
+  getProductListPaginateOrderByUnitPriceDesc(
+    page: number,
+    pageSize: number
+  ): Observable<GetResponseProducts> {
+    const searchUrl = `${this.productUrl}/search/findAllByOrderByUnitPriceDesc?page=${page}&size=${pageSize}`;
+
+    return this.httpClient.get<GetResponseProducts>(searchUrl);
+  }
+
+  getProductListPaginateOrderByRateDesc(
+    page: number,
+    pageSize: number
+  ): Observable<GetResponseProducts> {
+    const searchUrl = `${this.productUrl}/search/findAllByOrderByRateDesc?page=${page}&size=${pageSize}`;
+
+    return this.httpClient.get<GetResponseProducts>(searchUrl);
+  }
+
+  getProductListPaginateOrderBySalesDesc(
+    page: number,
+    pageSize: number
+  ): Observable<GetResponseProducts> {
+    const searchUrl = `${this.productUrl}/search/findAllByOrderBySalesDesc?&page=${page}&size=${pageSize}`;
+
+    return this.httpClient.get<GetResponseProducts>(searchUrl);
+  }
+
+  getProductListPaginateWithCategory(
+    page: number,
     pageSize: number,
     theCategoryId: number
   ): Observable<GetResponseProducts> {
@@ -31,7 +76,7 @@ export class ProductService {
     return this.httpClient.get<GetResponseProducts>(searchUrl);
   }
 
-  getProductListPaginateOrderByUnitPriceAsc(
+  getProductListPaginateOrderByUnitPriceAscWithCategory(
     page: number,
     pageSize: number,
     theCategoryId: number
@@ -41,7 +86,7 @@ export class ProductService {
     return this.httpClient.get<GetResponseProducts>(searchUrl);
   }
 
-  getProductListPaginateOrderByUnitPriceDesc(
+  getProductListPaginateOrderByUnitPriceDescWithCategory(
     page: number,
     pageSize: number,
     theCategoryId: number
@@ -51,7 +96,7 @@ export class ProductService {
     return this.httpClient.get<GetResponseProducts>(searchUrl);
   }
 
-  getProductListPaginateOrderByRateDesc(
+  getProductListPaginateOrderByRateDescWithCategory(
     page: number,
     pageSize: number,
     theCategoryId: number
@@ -61,7 +106,7 @@ export class ProductService {
     return this.httpClient.get<GetResponseProducts>(searchUrl);
   }
 
-  getProductListPaginateOrderBySalesDesc(
+  getProductListPaginateOrderBySalesDescWithCategory(
     page: number,
     pageSize: number,
     theCategoryId: number

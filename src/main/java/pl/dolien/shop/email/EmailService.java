@@ -1,8 +1,13 @@
 package pl.dolien.shop.email;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafProperties;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -24,6 +29,11 @@ public class EmailService {
 
     private final SpringTemplateEngine templateEngine;
 
+    private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
+
+    @Value("${spring.thymeleaf.prefix}")
+    private String thymeleafPrefix;
+
     @Async
     public void sendEmail(
             String to,
@@ -39,6 +49,8 @@ public class EmailService {
         } else {
             templateName = emailTemplate.name();
         }
+
+        logThymeleafConfig();
 
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(
@@ -63,5 +75,10 @@ public class EmailService {
         helper.setText(template, true);
 
         mailSender.send(mimeMessage);
+    }
+
+    @PostConstruct
+    public void logThymeleafConfig() {
+        System.out.println("Thymeleaf Prefix: " + thymeleafPrefix);
     }
 }

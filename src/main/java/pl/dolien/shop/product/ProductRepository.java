@@ -13,6 +13,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Optional<Product> findByName(String name);
 
+    Page<Product> findAllByOrderByUnitPriceAsc(Pageable pageable);
+
+    Page<Product> findAllByOrderByUnitPriceDesc(Pageable pageable);
+
+    Page<Product> findAllByOrderByRateDesc(Pageable pageable);
+
     Page<Product> findAllByOrderBySalesDesc(Pageable pageable);
 
     Page<Product> findByCategoryId(@Param("id") Long id, Pageable pageable);

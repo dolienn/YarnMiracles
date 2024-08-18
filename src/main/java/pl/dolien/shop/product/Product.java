@@ -40,8 +40,6 @@ public class Product {
 
     private BigDecimal unitPrice;
 
-    private BigDecimal lowestPriceWithin30Days;
-
     private String imageUrl;
 
     private boolean active;

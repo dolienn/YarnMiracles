@@ -55,7 +55,7 @@ public class BeansConfig implements RepositoryRestConfigurer {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         final CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(Arrays.asList("https://localhost:4200", "https://192.168.1.162:4200"));
+        config.setAllowedOrigins(Arrays.asList("http://localhost:4200", "http://192.168.1.162:4200", "http://localhost:80", "http://localhost"));
         config.setAllowedHeaders(Arrays.asList(
                 ORIGIN,
                 CONTENT_TYPE,
