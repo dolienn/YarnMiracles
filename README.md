@@ -33,9 +33,9 @@ Ensure the following tools are installed on your system:
 
 To perform interactive testing, use the following payment details:
 
-   **Card Number**: 4242 4242 4242 4242
-   **Expiration Date**: 12/34 (or any valid future date)
-   **CVC**: Any three digits (or four digits for American Express cards)
+- **Card Number**: 4242 4242 4242 4242
+- **Expiration Date**: 12/34 (or any valid future date)
+- **CVC**: Any three digits (or four digits for American Express cards)
 
 Input these details into payment forms or the dashboard to test the application’s payment functionality.
 
