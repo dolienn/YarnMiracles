@@ -1,3 +1,22 @@
+# YarnMiracles
+
+
+![Logo](https://i.ibb.co/DVR4fgg/temporary-logo-02.png)
+
+
+YarnMiracles is a cutting-edge e-commerce platform designed to offer a seamless shopping experience. Built with a robust tech stack including **Spring Boot**, **Spring Security**, **Hibernate**, **PostgreSQL**, **Angular**, **TypeScript**, **HTML**, **SCSS**, **Docker**, and **Stripe**, YarnMiracles combines security, efficiency, and user satisfaction.
+
+## Key Features
+
+- **User Management**: Secure registration and login with email verification. Users can manage their sessions effectively.
+- **Product Interaction**: Browse and interact with products, including rating (1-5 stars) and leaving comments.
+- **Payment Integration**: Secure transactions using Stripe.
+- **Order and Favorites**: Access your order history and manage a list of favorite products.
+- **Navigation**: Efficient product browsing with pagination and sorting options.
+- **Contact Form**: Directly communicate with the site owner via the contact form.
+
+The platform emphasizes security and user experience, leveraging **JUnit** and **Mockito** for testing, **Docker** for containerization, and **JWT** with **Spring Security** for authentication. **Maildev** handles email verification processes.
+
 # Project Setup
 
 ## Prerequisites
