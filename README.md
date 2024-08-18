@@ -42,7 +42,34 @@ Ensure the following tools are installed on your system:
    git clone https://github.com/dolienn/YarnMiracles.git
    cd yarn-miracles
 
-2. **Start Docker Services**
+2. **Create a `.env` File**
+
+   In the root directory of the Spring Boot project, create a file named `.env` and add the following configuration:
+
+   ```dotenv
+   # Database Configuration
+   DATABASE_URL=jdbc:postgresql://localhost:5432/shop
+   DATABASE_USERNAME=username
+   DATABASE_PASSWORD=password
+
+   # Email Configuration
+   MAIL_HOST=localhost
+   MAIL_PORT=1025
+   MAIL_USERNAME=username
+   MAIL_PASSWORD=password
+
+   # Stripe Configuration
+   STRIPE_SECRET_KEY=your_stripe_secret_key
+
+   # JWT Configuration
+   JWT_SECRET_KEY=your_jwt_secret_key
+   JWT_EXPIRATION=8640000
+
+   # Other configurations
+   SERVER_ADDRESS=0.0.0.0
+   SERVER_PORT=8088
+
+3. **Start Docker Services**
 
    Ensure Docker and Docker Compose are installed and running. Start the services with:
 
