@@ -90,7 +90,9 @@ Ensure the following tools are installed on your system:
    SERVER_ADDRESS=0.0.0.0
    SERVER_PORT=8088
    ```
+   
    **Note**: Replace` your_stripe_secret_key` with the secret key from Stripe (`Developers` > `API keys`).
+   
    **Note**: Replace `your_jwt_secret_key` with your chosen JWT secret key. 
 
 5. **Start Docker Services**
