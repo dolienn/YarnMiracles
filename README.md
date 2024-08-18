@@ -4,11 +4,13 @@
 
 Ensure the following tools are installed on your system:
 
-- Docker
-- Docker Compose
-- Maven
-- Node.js and npm (Node Package Manager)
-- Angular CLI (globally installed)
+- **Docker**: [Install Docker](https://docs.docker.com/get-docker/)
+- **Docker Compose**: [Install Docker Compose](https://docs.docker.com/compose/install/)
+- **Maven**: [Install Maven](https://maven.apache.org/install.html)
+- **Node.js and npm**: [Install Node.js and npm](https://nodejs.org/)
+- **Angular CLI** (globally installed): Install using npm:
+  ```bash
+  npm install -g @angular/cli
 
 ## Installation and Setup
 
@@ -25,32 +27,27 @@ Ensure the following tools are installed on your system:
    Ensure Docker and Docker Compose are installed and running. Start the services with:
 
    ```bash
-   docker-compose up
+   docker-compose up --build
 
-3. **Build and Run the Spring Boot Application**
+## Interactive Testing
 
-   In the project directory where mvnw is located, build and run the Spring Boot application:
+To perform interactive testing, use the following payment details:
 
-   ```bash
-   ./mvnw spring-boot:run
+   **Card Number**: 4242 4242 4242 4242
+   **Expiration Date**: 12/34 (or any valid future date)
+   **CVC**: Any three digits (or four digits for American Express cards)
 
-4. **Install Angular CLI**
+Input these details into payment forms or the dashboard to test the application’s payment functionality.
 
-   Ensure Angular CLI is installed globally. If not, install it using npm:
+## Troubleshooting
 
-   ```bash
-   npm install -g @angular/cli
+If you encounter issues, try the following:
 
-5. **Install Angular Dependencies**
+1. Verify that Docker and Docker Compose are properly installed and running
 
-   Navigate to the Angular project directory (where package.json is located) and install dependencies:
-
-   ```bash
-   npm install
-
-6. **Start the Angular Application**
-
-   Start the Angular development server with:
+2. Check the logs for any errors:
 
    ```bash
-   npm start
+   docker-compose logs
+
+3. Refer to the project's documentation or reach out to the support team for further assistance.
