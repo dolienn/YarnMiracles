@@ -42,6 +42,27 @@ Ensure the following tools are installed on your system:
    git clone https://github.com/dolienn/YarnMiracles.git
    cd yarn-miracles
 
+2. **Configure Stripe Publishable Key in Angular**
+
+   To configure Stripe in the Angular project, you need to update the `stripePublishableKey` in the Angular environment file.
+
+   **Steps:**
+
+   -- Log in to the [Stripe Dashboard](https://dashboard.stripe.com).
+   -- Navigate to `Developers` > `API keys`.
+   -- Copy the publishable key (`Publishable Key`), which is labeled as `pk_test_...` or `pk_live_...` depending on the environment.
+
+   Open the file `src/environments/environment.development.ts` in your Angular project and update the Stripe publishable key in this file.
+
+   **Example `src/environments/environment.development.ts` file:**
+
+   ```typescript
+   export const environment = {
+     production: false,
+     url: 'http://localhost:8088/api/v1',
+     stripePublishableKey: 'YOUR_PUBLISHABLE_KEY',
+   };
+
 2. **Create a `.env` File**
 
    In the root directory of the Spring Boot project, create a file named `.env` and add the following configuration:
@@ -68,8 +89,11 @@ Ensure the following tools are installed on your system:
    # Other configurations
    SERVER_ADDRESS=0.0.0.0
    SERVER_PORT=8088
+   ```
+   **Note**: Replace` your_stripe_secret_key` with the secret key from Stripe (`Developers` > `API keys`).
+   **Note**: Replace `your_jwt_secret_key` with your chosen JWT secret key. 
 
-3. **Start Docker Services**
+5. **Start Docker Services**
 
    Ensure Docker and Docker Compose are installed and running. Start the services with:
 
