@@ -48,9 +48,9 @@ Ensure the following tools are installed on your system:
 
    **Steps:**
 
-   -- Log in to the [Stripe Dashboard](https://dashboard.stripe.com).
-   -- Navigate to `Developers` > `API keys`.
-   -- Copy the publishable key (`Publishable Key`), which is labeled as `pk_test_...` or `pk_live_...` depending on the environment.
+   - Log in to the [Stripe Dashboard](https://dashboard.stripe.com).
+   - Navigate to `Developers` > `API keys`.
+   - Copy the publishable key (`Publishable Key`), which is labeled as `pk_test_...` or `pk_live_...` depending on the environment.
 
    Open the file `src/environments/environment.development.ts` in your Angular project and update the Stripe publishable key in this file.
 
