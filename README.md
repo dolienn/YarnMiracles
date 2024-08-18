@@ -9,6 +9,7 @@ Ensure the following tools are installed on your system:
 - **Maven**: [Install Maven](https://maven.apache.org/install.html)
 - **Node.js and npm**: [Install Node.js and npm](https://nodejs.org/)
 - **Angular CLI** (globally installed): Install using npm:
+  
   ```bash
   npm install -g @angular/cli
 
