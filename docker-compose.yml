@@ -28,6 +28,8 @@ services:
   spring-boot-app:
     build: .
     container_name: spring-boot-app
+    env_file:
+      - .env
     ports:
       - 8088:8088
     networks:
