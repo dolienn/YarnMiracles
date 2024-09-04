@@ -201,7 +201,7 @@ class UserServiceTest {
         user.getFavourites().add(product);
 
         when(repository.findById(userId)).thenReturn(Optional.of(user));
-        when(productRepository.findById(productId)).thenReturn(Optional.ofNullable(product));
+        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
 
         service.removeFavouriteProduct(userId, productId);
 

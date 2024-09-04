@@ -29,11 +29,6 @@ public class EmailService {
 
     private final SpringTemplateEngine templateEngine;
 
-    private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
-
-    @Value("${spring.thymeleaf.prefix}")
-    private String thymeleafPrefix;
-
     @Async
     public void sendEmail(
             String to,
@@ -49,8 +44,6 @@ public class EmailService {
         } else {
             templateName = emailTemplate.name();
         }
-
-        logThymeleafConfig();
 
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(
@@ -75,10 +68,5 @@ public class EmailService {
         helper.setText(template, true);
 
         mailSender.send(mimeMessage);
-    }
-
-    @PostConstruct
-    public void logThymeleafConfig() {
-        System.out.println("Thymeleaf Prefix: " + thymeleafPrefix);
     }
 }

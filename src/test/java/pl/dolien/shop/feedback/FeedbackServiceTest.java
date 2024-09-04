@@ -11,11 +11,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import pl.dolien.shop.common.PageResponse;
 import pl.dolien.shop.product.Product;
-import pl.dolien.shop.product.ProductCategory;
 import pl.dolien.shop.product.ProductRepository;
 import pl.dolien.shop.user.User;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -83,8 +81,6 @@ class FeedbackServiceTest {
 
     @Test
     public void shouldThrowExceptionWhenRequestIsNull() {
-        FeedbackRequest request = null;
-
         Feedback feedback = new Feedback(
                 1,
                 5D,
@@ -99,11 +95,11 @@ class FeedbackServiceTest {
         User user = new User();
         user.setId(1);
 
-        when(mapper.toFeedback(request)).thenReturn(feedback);
+        when(mapper.toFeedback(null)).thenReturn(feedback);
         when(repository.save(feedback)).thenReturn(feedback);
         when(authentication.getPrincipal()).thenReturn(user);
 
-        var exp = assertThrows(NullPointerException.class, () -> service.save(request, authentication));
+        var exp = assertThrows(NullPointerException.class, () -> service.save(null, authentication));
         assertEquals("Feedback request should not be null", exp.getMessage());
     }
 
@@ -219,7 +215,7 @@ class FeedbackServiceTest {
         Feedback feedback2 = new Feedback(
                 2,
                 3D,
-                "Nahh. It's not bad but.. you know, should be better",
+                "Nah. It's not bad but.. you know, should be better",
                 Product.builder().id(4L).build(),
                 LocalDateTime.now(),
                 null,
@@ -290,7 +286,7 @@ class FeedbackServiceTest {
         Feedback feedback2 = new Feedback(
                 2,
                 3D,
-                "Nahh. It's not bad but.. you know, should be better",
+                "Nah. It's not bad but.. you know, should be better",
                 Product.builder().id(4L).build(),
                 LocalDateTime.now(),
                 null,
@@ -352,7 +348,7 @@ class FeedbackServiceTest {
         Feedback feedback2 = new Feedback(
                 2,
                 3D,
-                "Nahh. It's not bad but.. you know, should be better",
+                "Nah. It's not bad but.. you know, should be better",
                 Product.builder().id(4L).build(),
                 LocalDateTime.now(),
                 null,

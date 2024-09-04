@@ -46,7 +46,7 @@ class FeedbackMapperTest {
         Feedback feedback = new Feedback(
                 1,
                 3D,
-                "Nahh. It's not bad but.. you know, should be better",
+                "Nah. It's not bad but.. you know, should be better",
                 Product.builder().id(4L).build(),
                 LocalDateTime.now(),
                 null,

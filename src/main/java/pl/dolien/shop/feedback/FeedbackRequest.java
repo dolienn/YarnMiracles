@@ -1,7 +1,9 @@
 package pl.dolien.shop.feedback;
 
 import jakarta.validation.constraints.*;
+import lombok.Builder;
 
+@Builder
 public record FeedbackRequest(
         @Positive(message = "200")
                 @Min(value = 1,message = "201")

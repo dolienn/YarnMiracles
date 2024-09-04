@@ -48,14 +48,12 @@ public class CheckoutService {
         Set<OrderItem> orderItems = purchase.getOrderItems();
         orderItems.forEach(order::add);
         orderItems.forEach(orderItem -> {
-            if(productRepository.findById(orderItem.getProductId()).isPresent()) {
-                Product product = productRepository.findById(orderItem.getProductId()).get();
-                product.addSales(orderItem.getQuantity());
-                if(product.getUnitsInStock() >= orderItem.getQuantity()) {
-                    product.removeUnitsInStock(orderItem.getQuantity());
-                }
-                productRepository.save(product);
+            Product product = productRepository.findById(orderItem.getProductId()).orElseThrow(() -> new IllegalArgumentException("Product not found"));
+            product.addSales(orderItem.getQuantity());
+            if(product.getUnitsInStock() >= orderItem.getQuantity()) {
+                product.removeUnitsInStock(orderItem.getQuantity());
             }
+            productRepository.save(product);
         });
 
         order.setBillingAddress(purchase.getBillingAddress());
