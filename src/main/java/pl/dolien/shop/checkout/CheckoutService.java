@@ -18,6 +18,7 @@ import pl.dolien.shop.product.ProductRepository;
 import pl.dolien.shop.purchase.Purchase;
 import pl.dolien.shop.purchase.PurchaseResponse;
 import pl.dolien.shop.user.User;
+import pl.dolien.shop.user.UserRepository;
 
 import java.util.*;
 
@@ -26,11 +27,13 @@ public class CheckoutService {
 
     private final CustomerRepository customerRepository;
     private final ProductRepository productRepository;
+    private final UserRepository userRepository;
 
     CheckoutService(CustomerRepository customerRepository,
-                    @Value("${stripe.key.secret}") String secretKey, ProductRepository productRepository) {
+                    @Value("${stripe.key.secret}") String secretKey, ProductRepository productRepository, UserRepository userRepository) {
         this.customerRepository = customerRepository;
         this.productRepository = productRepository;
+        this.userRepository = userRepository;
         Stripe.apiKey = secretKey;
     }
 
@@ -80,7 +83,17 @@ public class CheckoutService {
             customer.add(order);
         }
 
-
+        Optional<User> user = userRepository.findByEmail(customer.getEmail());
+        if(user.isPresent()) {
+            User userFromDB = user.get();
+            orderItems.forEach(orderItem -> {
+                Optional<Product> productFromDB = productRepository.findById(orderItem.getProductId());
+                productFromDB.ifPresent(userFromDB::addPurchasedProduct);
+                productFromDB.ifPresent(product -> product.addUserWhoPurchased(userFromDB));
+                productRepository.save(productFromDB.orElseThrow(() -> new IllegalArgumentException("Product not found")));
+            });
+            userRepository.save(userFromDB);
+        }
 
         customerRepository.save(customer);
 

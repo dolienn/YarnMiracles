@@ -25,7 +25,7 @@ export class ProductListComponent implements OnInit {
   user: User = new User();
 
   pageNumber: number = 1;
-  pageSize: number = 5;
+  pageSize: number = 15;
   totalElements: number = 0;
 
   previousKeyword: string = '';
@@ -48,7 +48,6 @@ export class ProductListComponent implements OnInit {
   listProducts() {
     this.isLoading = true;
     this.searchMode = this.route.snapshot.paramMap.has('keyword');
-    console.log(this.searchMode);
 
     if (this.searchMode) {
       this.handleSearchProducts();
@@ -116,7 +115,6 @@ export class ProductListComponent implements OnInit {
 
   handleListProducts() {
     const hasCategoryId: boolean = this.route.snapshot.paramMap.has('id');
-    console.log(hasCategoryId);
 
     if (hasCategoryId) {
       this.currentCategoryId = +this.route.snapshot.paramMap.get('id')!;
@@ -273,7 +271,6 @@ export class ProductListComponent implements OnInit {
       this.pageSize = data.page.size;
       this.totalElements = data.page.totalElements;
       this.isLoading = false;
-      console.log(this.products);
     };
   }
 

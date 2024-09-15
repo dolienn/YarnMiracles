@@ -15,7 +15,9 @@ import pl.dolien.shop.role.Role;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,6 +60,14 @@ public class User implements UserDetails, Principal {
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
     private List<Product> favourites;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "purchased_products",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    private List<Product> purchasedProducts;
 
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Feedback> feedbacks;
@@ -115,5 +125,14 @@ public class User implements UserDetails, Principal {
 
     public String fullName() {
         return firstname + " " + lastname;
+    }
+
+    public void addPurchasedProduct(Product product) {
+        if (product != null) {
+            if (purchasedProducts == null) {
+                purchasedProducts = new ArrayList<>();
+            }
+            purchasedProducts.add(product);
+        }
     }
 }

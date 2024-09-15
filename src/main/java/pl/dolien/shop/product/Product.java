@@ -10,6 +10,7 @@ import pl.dolien.shop.feedback.Feedback;
 import pl.dolien.shop.user.User;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -54,6 +55,10 @@ public class Product {
     @JsonIgnore
     private List<User> usersWhoFavourited;
 
+    @ManyToMany(mappedBy = "purchasedProducts")
+    @JsonIgnore
+    private List<User> usersWhoPurchased;
+
     @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
     private List<Feedback> feedbacks;
 
@@ -92,5 +97,12 @@ public class Product {
     @PostUpdate
     public void calculateRateOnLoad() {
         calculateRate();
+    }
+
+    public void addUserWhoPurchased(User user) {
+        if (usersWhoPurchased == null) {
+            usersWhoPurchased = new ArrayList<>();
+        }
+        usersWhoPurchased.add(user);
     }
 }

@@ -47,8 +47,28 @@ export class FeedbackComponent implements OnInit {
     });
   }
 
+  hasAlreadySentFeedback(): boolean {
+    if (!this.user) {
+      return false;
+    }
+
+    return this.feedbacks.some(
+      (feedback) => feedback.createdBy == this.user.id
+    );
+  }
+
   ratingChange(event: RatingChangeEvent): void {
     this.feedback.note = event.rating;
+  }
+
+  hasPurchasedProduct(): boolean {
+    if (!this.product) {
+      return false;
+    }
+
+    return this.user.purchasedProducts.some(
+      (purchasedProduct) => purchasedProduct.id == this.product.id
+    );
   }
 
   listFeedbacks() {
@@ -110,7 +130,6 @@ export class FeedbackComponent implements OnInit {
       this.feedback.productId = this.product.id;
       this.feedbackService.saveFeedback(this.feedback).subscribe({
         next: (response) => {
-          console.log('Feedback saved with id:', response);
           this.listFeedbacks();
         },
         error: (err) => console.error('Error saving feedback:', err.error),

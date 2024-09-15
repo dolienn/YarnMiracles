@@ -6,7 +6,19 @@
             Log In
         </button>
     </div>
-    <form *ngIf="product" #feedbackForm="ngForm" id="feedback-form" [ngClass]="{'not-logged-in': isNotLoggedIn}">
+
+    <div *ngIf="!isNotLoggedIn && !hasPurchasedProduct()" class="overlay">
+        <i class='bx bxs-lock-alt'></i>
+        <h2>You need to buy this product first</h2>
+    </div>
+
+    <div *ngIf="!isNotLoggedIn && hasPurchasedProduct() && hasAlreadySentFeedback()" class="overlay">
+        <i class='bx bxs-lock-alt'></i>
+        <h2>You already sent feedback</h2>
+    </div>
+
+    <form *ngIf="product" #feedbackForm="ngForm" id="feedback-form"
+        [ngClass]="{'blur--overlay': isNotLoggedIn, 'already-sent-feedback': hasAlreadySentFeedback(), 'has-not-purchased-product': !hasPurchasedProduct()}">
         <h2>Feedback</h2>
 
         <textarea type="text" id="comment" maxlength="255" [(ngModel)]="feedback.comment" name="comment"

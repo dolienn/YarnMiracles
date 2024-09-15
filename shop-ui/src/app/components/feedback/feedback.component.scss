@@ -78,6 +78,7 @@
       justify-self: center;
       transition: 0.1s ease;
       margin-bottom: 4rem;
+      cursor: pointer;
     }
 
     button:hover {
@@ -86,6 +87,18 @@
   }
 
   .not-logged-in {
+    filter: blur(5px);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .already-sent-feedback {
+    filter: blur(5px);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .has-not-purchased-product {
     filter: blur(5px);
     pointer-events: none;
     z-index: 1;
