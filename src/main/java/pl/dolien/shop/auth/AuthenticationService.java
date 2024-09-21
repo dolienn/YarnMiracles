@@ -46,6 +46,7 @@ public class AuthenticationService {
     private String activationUrl;
 
     public void register(RegistrationRequest request) throws MessagingException {
+        System.out.println(request.getDateOfBirth());
         var userRole =  roleRepository.findByName("USER")
                 .orElseThrow(() -> new IllegalStateException("ROLE USER was not initialized"));
 
@@ -53,6 +54,7 @@ public class AuthenticationService {
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
                 .email(request.getEmail())
+                .dateOfBirth(request.getDateOfBirth())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .accountLocked(false)
                 .enabled(false)
@@ -80,6 +82,7 @@ public class AuthenticationService {
                 authUser.setFirstname(request.getFirstname());
                 authUser.setLastname(request.getLastname());
                 authUser.setEmail(request.getEmail());
+                authUser.setDateOfBirth(request.getDateOfBirth());
                 userRepository.save(authUser);
             }
         } else {

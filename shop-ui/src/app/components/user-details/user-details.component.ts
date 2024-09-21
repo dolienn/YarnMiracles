@@ -23,6 +23,7 @@ export class UserDetailsComponent implements OnInit {
     email: '',
     firstname: '',
     lastname: '',
+    dateOfBirth: new Date(),
     password: '',
   };
 

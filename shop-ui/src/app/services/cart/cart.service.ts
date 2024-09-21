@@ -36,7 +36,8 @@ export class CartService {
     }
 
     if (alreadyExistsInCart) {
-      if (existingCartItem.quantity < 9) existingCartItem.quantity++;
+      if (existingCartItem.quantity < this.maxQuantityInput(existingCartItem))
+        existingCartItem.quantity++;
     } else {
       this.cartItems.push(cartItem);
     }
@@ -82,6 +83,14 @@ export class CartService {
       this.cartItems.splice(itemIndex, 1);
 
       this.computeCartTotals();
+    }
+  }
+
+  maxQuantityInput(cartItem: CartItem): number {
+    if (cartItem.unitsInStock < 9) {
+      return cartItem.unitsInStock;
+    } else {
+      return 9;
     }
   }
 }

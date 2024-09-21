@@ -1,12 +1,11 @@
 package pl.dolien.shop.auth;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDate;
 
 
 @Getter
@@ -26,6 +25,9 @@ public class RegistrationRequest {
     @NotEmpty(message = "Email is mandatory")
     @NotBlank(message = "Email is mandatory")
     private String email;
+
+    @NotNull(message = "Date of birth is mandatory")
+    private LocalDate dateOfBirth;
 
     @NotEmpty(message = "Password is mandatory")
     @NotBlank(message = "Password is mandatory")
