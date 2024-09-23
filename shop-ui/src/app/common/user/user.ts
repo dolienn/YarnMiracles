@@ -1,5 +1,6 @@
 import { Feedback } from '../feedback/feedback';
 import { Product } from '../product/product';
+import { Role } from '../role/role';
 
 export class User {
   public id: number = 0;
@@ -9,4 +10,5 @@ export class User {
   public dateOfBirth: Date = new Date();
   public feedbacks: Feedback[] = [];
   public purchasedProducts: Product[] = [];
+  public roles: Role[] = [];
 }

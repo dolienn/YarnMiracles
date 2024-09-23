@@ -29,7 +29,7 @@ export class RegisterComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.maxDate = this.calculateDate(
+    this.maxDate = this.authService.calculateDate(
       this.today,
       this.maxAgeForOnlinePurchases
     );
@@ -48,20 +48,16 @@ export class RegisterComponent implements OnInit {
         this.router.navigate(['activate-account']);
       },
       error: (err) => {
-        this.errorMsg = err.error.validationErrors;
+        if (err.error.validationErrors) {
+          this.errorMsg = err.error.validationErrors;
+        } else if (err.error.error) {
+          this.errorMsg = [err.error.error];
+        }
       },
     });
   }
 
   login() {
     this.router.navigate(['login']);
-  }
-
-  calculateDate(date: Date, yearAgo: number) {
-    const year = date.getFullYear() - yearAgo;
-    const month = ('0' + (date.getMonth() + 1)).slice(-2);
-    const day = ('0' + date.getDate()).slice(-2);
-
-    return `${year}-${month}-${day}`;
   }
 }

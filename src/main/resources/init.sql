@@ -11,6 +11,12 @@ WHERE NOT EXISTS (
     SELECT 1 FROM role WHERE id = 1
 );
 
+INSERT INTO role(id, name, created_date, last_modified_date)
+SELECT 2, 'ADMIN', NOW(), NOW()
+WHERE NOT EXISTS (
+    SELECT 1 FROM role WHERE id = 2
+);
+
 CREATE TABLE IF NOT EXISTS country (
     id INT NOT NULL PRIMARY KEY,
     code VARCHAR(10),

@@ -46,7 +46,12 @@ public class AuthenticationService {
     private String activationUrl;
 
     public void register(RegistrationRequest request) throws MessagingException {
-        System.out.println(request.getDateOfBirth());
+        var userFromDB = userRepository.findByEmail(request.getEmail()).orElse(null);
+
+        if (userFromDB != null) {
+            throw new IllegalStateException("User with email " + request.getEmail() + " already exists");
+        }
+
         var userRole =  roleRepository.findByName("USER")
                 .orElseThrow(() -> new IllegalStateException("ROLE USER was not initialized"));
 

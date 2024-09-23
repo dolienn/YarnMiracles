@@ -19,6 +19,7 @@ import pl.dolien.shop.user.TokenRepository;
 import pl.dolien.shop.user.User;
 import pl.dolien.shop.user.UserRepository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -64,7 +65,7 @@ public class AuthenticationServiceTest {
 
     @Test
     public void shouldRegister() throws MessagingException {
-        var request = new RegistrationRequest("John", "Doe", "john.doe@example.com", "password123");
+        var request = new RegistrationRequest("John", "Doe", "john.doe@example.com", LocalDate.of(1990, 1, 1), "password123");
         var role = new Role(1, "USER", List.of(), LocalDateTime.now(), LocalDateTime.now());
 
         when(roleRepository.findByName("USER")).thenReturn(Optional.of(role));
@@ -77,7 +78,7 @@ public class AuthenticationServiceTest {
 
     @Test
     public void shouldThrowExceptionWhenRoleUserNotFound() {
-        var request = new RegistrationRequest("John", "Doe", "john.doe@example.com", "password123");
+        var request = new RegistrationRequest("John", "Doe", "john.doe@example.com", LocalDate.of(1990, 1, 1), "password123");
 
         when(roleRepository.findByName("USER")).thenReturn(Optional.empty());
         when(passwordEncoder.encode(request.getPassword())).thenReturn("encodedPassword");
@@ -90,7 +91,7 @@ public class AuthenticationServiceTest {
 
     @Test
     public void shouldChangeAccountDetails() {
-        var request = new RegistrationRequest("John", "Doe", "john.doe@example.com", "password123");
+        var request = new RegistrationRequest("John", "Doe", "john.doe@example.com", LocalDate.of(1990, 1, 1), "password123");
         Authentication auth = mock(Authentication.class);
 
         User user = User.builder()
@@ -114,7 +115,7 @@ public class AuthenticationServiceTest {
 
     @Test
     public void shouldThrowExceptionWhenPasswordsDoNotMatch() {
-        var request = new RegistrationRequest("John", "Doe", "john.doe@example.com", "password123");
+        var request = new RegistrationRequest("John", "Doe", "john.doe@example.com", LocalDate.of(1990, 1, 1), "password123");
         Authentication auth = mock(Authentication.class);
 
         User user = User.builder()
@@ -139,7 +140,7 @@ public class AuthenticationServiceTest {
 
     @Test
     public void shouldThrowExceptionWhenThereIsAUserWithTheSameEmail() {
-        var request = new RegistrationRequest("John", "Doe", "john.doe@example.com", "password123");
+        var request = new RegistrationRequest("John", "Doe", "john.doe@example.com", LocalDate.of(1990, 1, 1), "password123");
         Authentication auth = mock(Authentication.class);
 
         User currentUser = User.builder()

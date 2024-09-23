@@ -135,4 +135,13 @@ public class User implements UserDetails, Principal {
             purchasedProducts.add(product);
         }
     }
+
+    public void addRole(Role role) {
+        if (role != null) {
+            if (roles == null) {
+                roles = new ArrayList<>();
+            }
+            roles.add(role);
+        }
+    }
 }

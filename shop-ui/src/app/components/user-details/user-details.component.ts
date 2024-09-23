@@ -23,7 +23,7 @@ export class UserDetailsComponent implements OnInit {
     email: '',
     firstname: '',
     lastname: '',
-    dateOfBirth: new Date(),
+    dateOfBirth: null,
     password: '',
   };
 
@@ -40,6 +40,11 @@ export class UserDetailsComponent implements OnInit {
 
   user: User = new User();
 
+  maxDate: string = '';
+
+  today: Date = new Date();
+  maxAgeForOnlinePurchases: number = 13;
+
   constructor(
     private tokenService: TokenService,
     private authService: AuthenticationService,
@@ -47,6 +52,11 @@ export class UserDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.maxDate = this.authService.calculateDate(
+      this.today,
+      this.maxAgeForOnlinePurchases
+    );
+
     this.tokenService.getUserInfo()?.subscribe((data) => {
       this.user = data;
       this.isLoading = false;
@@ -59,6 +69,12 @@ export class UserDetailsComponent implements OnInit {
 
   changeAccountDetails() {
     this.errorMsg = [];
+
+    if (this.registerRequest.dateOfBirth != null) {
+      const formattedDate = new Date(this.registerRequest.dateOfBirth as any);
+      this.registerRequest.dateOfBirth = formattedDate;
+    }
+
     this.authService.changeAccountDetails(this.registerRequest).subscribe({
       next: () => {
         this.router.navigate(['']);

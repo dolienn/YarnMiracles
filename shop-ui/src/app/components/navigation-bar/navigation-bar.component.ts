@@ -18,6 +18,7 @@ export class NavigationBarComponent implements OnInit {
   isMobile: boolean = false;
   isCategoryButtonClicked: boolean = false;
   isDifferentSearchMode: boolean = false;
+  isAdmin: boolean = false;
 
   constructor(
     private tokenService: TokenService,
@@ -27,6 +28,10 @@ export class NavigationBarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.tokenService.getUserInfo()?.subscribe((userInfo) => {
+      this.isAdmin =
+        userInfo?.roles.some((role) => role.name === 'ADMIN') || false;
+    });
     this.tokenService.isLoggedIn.subscribe((loggedIn) => {
       this.isUserLoggedIn = loggedIn;
     });
@@ -93,6 +98,7 @@ export class NavigationBarComponent implements OnInit {
         this.isMobile = true;
       } else {
         this.isMobile = false;
+        this.isCategoryButtonClicked = false;
       }
     }
 

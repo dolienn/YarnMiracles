@@ -17,8 +17,15 @@ import { OrderHistoryComponent } from './components/order-history/order-history.
 import { SuccessfulPurchaseComponent } from './components/successful-purchase/successful-purchase.component';
 import { ContactUsComponent } from './components/contact-us/contact-us.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
+import { adminPanelGuard } from './services/guard/admin-panel.guard';
 
 const routes: Routes = [
+  {
+    path: 'admin-panel',
+    component: AdminPanelComponent,
+    canActivate: [adminPanelGuard],
+  },
   {
     path: 'contact-us',
     component: ContactUsComponent,

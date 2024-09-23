@@ -54,4 +54,12 @@ export class AuthenticationService {
     const params = new HttpParams().set('token', token);
     return this.httpClient.get<void>(this.confirmUrl, { params });
   }
+
+  calculateDate(date: Date, yearAgo: number) {
+    const year = date.getFullYear() - yearAgo;
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+
+    return `${year}-${month}-${day}`;
+  }
 }

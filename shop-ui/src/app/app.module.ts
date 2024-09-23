@@ -38,6 +38,8 @@ import { PaginationComponent } from './components/pagination/pagination.componen
 import { SuccessfulPurchaseComponent } from './components/successful-purchase/successful-purchase.component';
 import { ContactUsComponent } from './components/contact-us/contact-us.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
+import { AddProductComponent } from './components/admin-panel/add-product/add-product.component';
 
 @NgModule({
   declarations: [
@@ -66,6 +68,8 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
     SuccessfulPurchaseComponent,
     ContactUsComponent,
     PageNotFoundComponent,
+    AdminPanelComponent,
+    AddProductComponent,
   ],
   imports: [
     BrowserModule,
