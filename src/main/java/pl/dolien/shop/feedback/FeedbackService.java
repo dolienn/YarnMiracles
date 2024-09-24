@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import pl.dolien.shop.common.PageResponse;
-import pl.dolien.shop.product.Product;
+import pl.dolien.shop.dashboard.DashboardDataRepository;
 import pl.dolien.shop.product.ProductRepository;
 import pl.dolien.shop.user.User;
 
@@ -23,6 +23,8 @@ public class FeedbackService {
 
     private final ProductRepository productRepository;
 
+    private final DashboardDataRepository dashboardDataRepository;
+
     public Integer save(FeedbackRequest request, Authentication connectedUser) {
         if(request == null) {
             throw new NullPointerException("Feedback request should not be null");
@@ -30,6 +32,10 @@ public class FeedbackService {
         Feedback feedback = feedbackMapper.toFeedback(request);
         User user = ((User) connectedUser.getPrincipal());
         feedback.setCreatedBy(user.getId());
+        dashboardDataRepository.findById(1L).ifPresent(dashboardData -> {
+            dashboardData.setTotalCustomerFeedback(dashboardData.getTotalCustomerFeedback() + 1);
+            dashboardDataRepository.save(dashboardData);
+        });
         return feedbackRepository.save(feedback).getId();
     }
 

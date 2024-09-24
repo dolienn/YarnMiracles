@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.dolien.shop.dashboard.DashboardDataRepository;
 import pl.dolien.shop.order.Customer;
 import pl.dolien.shop.order.CustomerRepository;
 import pl.dolien.shop.order.Order;
@@ -28,12 +29,15 @@ public class CheckoutService {
     private final CustomerRepository customerRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final DashboardDataRepository dashboardDataRepository;
 
     CheckoutService(CustomerRepository customerRepository,
-                    @Value("${stripe.key.secret}") String secretKey, ProductRepository productRepository, UserRepository userRepository) {
+                    @Value("${stripe.key.secret}") String secretKey, ProductRepository productRepository,
+                    UserRepository userRepository, DashboardDataRepository dashboardDataRepository) {
         this.customerRepository = customerRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
+        this.dashboardDataRepository = dashboardDataRepository;
         Stripe.apiKey = secretKey;
     }
 
@@ -56,6 +60,12 @@ public class CheckoutService {
             if(product.getUnitsInStock() >= orderItem.getQuantity()) {
                 product.removeUnitsInStock(orderItem.getQuantity());
             }
+
+            dashboardDataRepository.findById(1L).ifPresent(dashboardData -> {
+                dashboardData.setProductsSell(dashboardData.getProductsSell() + orderItem.getQuantity());
+                dashboardDataRepository.save(dashboardData);
+            });
+
             productRepository.save(product);
         });
 
@@ -96,6 +106,12 @@ public class CheckoutService {
         }
 
         customerRepository.save(customer);
+
+        dashboardDataRepository.findById(1L).ifPresent(dashboardData -> {
+            dashboardData.setTotalOrders(dashboardData.getTotalOrders() + 1);
+            dashboardData.setThisMonthRevenue(dashboardData.getThisMonthRevenue().add(order.getTotalPrice()));
+            dashboardDataRepository.save(dashboardData);
+        });
 
         return new PurchaseResponse(orderTrackingNumber);
     }

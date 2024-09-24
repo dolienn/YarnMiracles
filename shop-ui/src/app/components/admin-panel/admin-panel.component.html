@@ -2,7 +2,9 @@
 
 </div>
 
-<div class="container">
+<app-loader [isLoading]="isLoading"></app-loader>
+
+<div class="container" *ngIf="!isLoading">
     <h3 class="title">
         Dashboard
     </h3>
@@ -10,35 +12,35 @@
         <div class="val-box">
             <i class='bx bxs-user'></i>
             <div>
-                <h3>{{adminPanelRequest.totalUsers| number:'1.0-0'}}</h3>
+                <h3>{{dashboardData.totalUsers| number:'1.0-0'}}</h3>
                 <span>Total Users</span>
             </div>
         </div>
         <div class="val-box">
             <i class='bx bxs-cart'></i>
             <div>
-                <h3>{{adminPanelRequest.totalOrders | number:'1.0-0'}}</h3>
+                <h3>{{dashboardData.totalOrders | number:'1.0-0'}}</h3>
                 <span>Total Orders</span>
             </div>
         </div>
         <div class="val-box">
             <i class='bx bxs-receipt'></i>
             <div>
-                <h3>{{adminPanelRequest.totalCustomerFeedback | number:'1.0-0'}}</h3>
+                <h3>{{dashboardData.totalCustomerFeedback | number:'1.0-0'}}</h3>
                 <span>Total Feedback</span>
             </div>
         </div>
         <div class="val-box">
             <i class='bx bxs-t-shirt'></i>
             <div>
-                <h3>{{adminPanelRequest.productsSell| number:'1.0-0'}}</h3>
+                <h3>{{dashboardData.productsSell| number:'1.0-0'}}</h3>
                 <span>Product Sell</span>
             </div>
         </div>
         <div class="val-box">
             <i class='bx bxs-wallet'></i>
             <div>
-                <h3>{{adminPanelRequest.thisMonthRevenue| currency:'PLN'}}</h3>
+                <h3>{{dashboardData.thisMonthRevenue| currency:'PLN'}}</h3>
                 <span>This Month</span>
             </div>
         </div>
@@ -63,168 +65,21 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
+                <tr *ngFor="let user of users">
                     <td class="people">
-                        <h5>John Doe</h5>
-                        <p>johnexample.com</p>
+                        <h5>{{user.firstname + ' ' + user.lastname}}</h5>
+                        <p>{{user.email}}</p>
                     </td>
                     <td class="date">
-                        <h5>01/01/2000</h5>
+                        <h5>{{user.dateOfBirth}}</h5>
                     </td>
 
                     <td class="purchases">
-                        <h5>7</h5>
+                        <h5>{{getPurchasedProductsSize(user)}}</h5>
                     </td>
 
                     <td class="role">
-                        <h5>Admin</h5>
-                    </td>
-
-                    <td class="edit">
-                        <a>Edit</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="people">
-                        <h5>John Doe</h5>
-                        <p>johnexample.com</p>
-                    </td>
-                    <td class="date">
-                        <h5>01/01/2000</h5>
-                    </td>
-
-                    <td class="purchases">
-                        <h5>7</h5>
-                    </td>
-
-                    <td class="role">
-                        <h5>Admin</h5>
-                    </td>
-
-                    <td class="edit">
-                        <a>Edit</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="people">
-                        <h5>John Doe</h5>
-                        <p>johnexample.com</p>
-                    </td>
-                    <td class="date">
-                        <h5>01/01/2000</h5>
-                    </td>
-
-                    <td class="purchases">
-                        <h5>7</h5>
-                    </td>
-
-                    <td class="role">
-                        <h5>Admin</h5>
-                    </td>
-
-                    <td class="edit">
-                        <a>Edit</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="people">
-                        <h5>John Doe</h5>
-                        <p>johnexample.com</p>
-                    </td>
-                    <td class="date">
-                        <h5>01/01/2000</h5>
-                    </td>
-
-                    <td class="purchases">
-                        <h5>7</h5>
-                    </td>
-
-                    <td class="role">
-                        <h5>Admin</h5>
-                    </td>
-
-                    <td class="edit">
-                        <a>Edit</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="people">
-                        <h5>John Doe</h5>
-                        <p>johnexample.com</p>
-                    </td>
-                    <td class="date">
-                        <h5>01/01/2000</h5>
-                    </td>
-
-                    <td class="purchases">
-                        <h5>7</h5>
-                    </td>
-
-                    <td class="role">
-                        <h5>Admin</h5>
-                    </td>
-
-                    <td class="edit">
-                        <a>Edit</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="people">
-                        <h5>John Doe</h5>
-                        <p>johnexample.com</p>
-                    </td>
-                    <td class="date">
-                        <h5>01/01/2000</h5>
-                    </td>
-
-                    <td class="purchases">
-                        <h5>7</h5>
-                    </td>
-
-                    <td class="role">
-                        <h5>Admin</h5>
-                    </td>
-
-                    <td class="edit">
-                        <a>Edit</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="people">
-                        <h5>John Doe</h5>
-                        <p>johnexample.com</p>
-                    </td>
-                    <td class="date">
-                        <h5>01/01/2000</h5>
-                    </td>
-
-                    <td class="purchases">
-                        <h5>7</h5>
-                    </td>
-
-                    <td class="role">
-                        <h5>Admin</h5>
-                    </td>
-
-                    <td class="edit">
-                        <a>Edit</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="people">
-                        <h5>John Doe</h5>
-                        <p>johnexample.com</p>
-                    </td>
-                    <td class="date">
-                        <h5>01/01/2000</h5>
-                    </td>
-
-                    <td class="purchases">
-                        <h5>7</h5>
-                    </td>
-
-                    <td class="role">
-                        <h5>Admin</h5>
+                        <h5>{{getRole(user)}}</h5>
                     </td>
 
                     <td class="edit">
@@ -234,4 +89,7 @@
             </tbody>
         </table>
     </div>
+
+    <app-pagination [totalElements]="totalElements" [pageSize]="pageSize" [isLoading]="isLoading"
+        [(pageNumber)]="pageNumber" (pageNumberChange)="getUsers()"></app-pagination>
 </div>

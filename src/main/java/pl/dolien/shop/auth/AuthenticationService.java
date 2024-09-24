@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.dolien.shop.dashboard.DashboardDataRepository;
 import pl.dolien.shop.email.EmailService;
 import pl.dolien.shop.email.EmailTemplateName;
 import pl.dolien.shop.role.RoleRepository;
@@ -41,6 +42,8 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     private final JwtService jwtService;
+
+    private final DashboardDataRepository dashboardDataRepository;
 
     @Value("${application.mailing.frontend.activation-url}")
     private String activationUrl;
@@ -185,5 +188,10 @@ public class AuthenticationService {
         userRepository.save(user);
         savedToken.setValidatedAt(LocalDateTime.now());
         tokenRepository.save(savedToken);
+
+        dashboardDataRepository.findById(1L).ifPresent(dashboardData -> {
+            dashboardData.setTotalUsers(dashboardData.getTotalUsers() + 1);
+            dashboardDataRepository.save(dashboardData);
+        });
     }
 }

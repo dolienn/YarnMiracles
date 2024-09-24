@@ -28,6 +28,7 @@
       background-color: $background-color--01;
       width: 17rem;
       padding: 1.2rem 1.4rem;
+      margin: 1rem;
       border-radius: 0.5rem;
 
       i {
@@ -74,7 +75,7 @@
     }
 
     .val-box:nth-child(6) {
-      transition: all 0.42s ease;
+      transition: all 0.1s ease;
       background-color: $color--01;
       color: $background-color--01;
       cursor: pointer;
@@ -102,6 +103,7 @@
   .board {
     width: 96.8%;
     margin: 2rem 0 0 2rem;
+    padding-bottom: 2rem;
     overflow: auto;
     background-color: $background-color--01;
     border-radius: 0.7rem;
@@ -164,8 +166,40 @@
   }
 }
 
+.visible {
+  display: block;
+}
+
 @media (max-width: 600px) {
   .navbox {
     height: $nav-height * 2;
+  }
+}
+
+@media (max-width: 689px) {
+  .val-box {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .values {
+    justify-content: flex-start !important;
+
+    .val-box {
+      padding: 1rem 1.2rem !important;
+      margin: 0.5rem, 1.2rem, 0.5rem, 0 !important;
+    }
+  }
+
+  .board {
+    width: 92% !important;
+    padding: 0;
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
   }
 }
