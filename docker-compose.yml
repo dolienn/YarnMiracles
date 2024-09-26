@@ -45,6 +45,8 @@ services:
       SPRING_MAIL_PORT: 1025
       SPRING_MAIL_USERNAME: dolien
       SPRING_MAIL_PASSWORD: dolien
+    volumes:
+      - ./shop-ui/src/assets/images/products:/app/shop-ui/src/assets/images/products
     restart: unless-stopped
 
   angular-app:

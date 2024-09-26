@@ -85,7 +85,11 @@ public class Product {
     }
 
     public void addSales(int quantity) {
-        this.sales = this.sales + quantity;
+        if(this.sales == null || this.sales == 0) {
+            this.sales = (long) quantity;
+        } else {
+            this.sales = this.sales + quantity;
+        }
     }
 
     public void removeUnitsInStock(int quantity) {

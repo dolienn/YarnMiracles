@@ -20,7 +20,7 @@
     <div class="products" *ngIf="!isLoading">
         <div class="product" *ngFor="let product of products">
             <a routerLink="/products/{{product.id}}">
-                <img src='../../../assets{{product.imageUrl}}' alt="Product Name">
+                <img src='{{product.imageUrl}}' alt="Product Name">
             </a>
             <div class="product-new" *ngIf="isNewProduct(product.dateCreated)">
                 <h5>New</h5>

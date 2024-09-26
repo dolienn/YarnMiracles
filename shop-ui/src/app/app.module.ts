@@ -40,6 +40,7 @@ import { ContactUsComponent } from './components/contact-us/contact-us.component
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
 import { AddProductComponent } from './components/admin-panel/add-product/add-product.component';
+import { NavboxComponent } from './components/navbox/navbox.component';
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ import { AddProductComponent } from './components/admin-panel/add-product/add-pr
     PageNotFoundComponent,
     AdminPanelComponent,
     AddProductComponent,
+    NavboxComponent,
   ],
   imports: [
     BrowserModule,

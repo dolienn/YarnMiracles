@@ -3,7 +3,7 @@
 <div class="container" *ngIf="product && !isLoading">
     <div class="product-wrapper">
         <div class="product-image">
-            <img src="../../../assets{{product.imageUrl}}" alt="">
+            <img src="{{product.imageUrl}}" alt="">
         </div>
         <div class="product-details">
             <p>Home / Shirts</p>
@@ -36,7 +36,7 @@
                 <td>
                     <div class="product-info">
                         <div class="image">
-                            <img src='../../../assets{{product.imageUrl}}' alt="Product Name">
+                            <img src="{{product.imageUrl}}" alt="Product Name">
                         </div>
                         <div class="info">
                             <div class="name">{{product.name}}</div>

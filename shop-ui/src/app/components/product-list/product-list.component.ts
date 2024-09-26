@@ -46,7 +46,6 @@ export class ProductListComponent implements OnInit {
   }
 
   listProducts() {
-    console.log(this.pageNumber);
     this.isLoading = true;
     this.searchMode = this.route.snapshot.paramMap.has('keyword');
 

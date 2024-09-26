@@ -19,8 +19,14 @@ import { ContactUsComponent } from './components/contact-us/contact-us.component
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
 import { adminPanelGuard } from './services/guard/admin-panel.guard';
+import { AddProductComponent } from './components/admin-panel/add-product/add-product.component';
 
 const routes: Routes = [
+  {
+    path: 'admin-panel/add-product',
+    component: AddProductComponent,
+    canActivate: [adminPanelGuard],
+  },
   {
     path: 'admin-panel',
     component: AdminPanelComponent,
