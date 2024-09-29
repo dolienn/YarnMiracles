@@ -133,8 +133,6 @@ To perform interactive testing, use the following payment details:
 
 Input these details into payment forms or the dashboard to test the applicationâ€™s payment functionality.
 
-## Troubleshooting
-
 ## Functionality Testing
 
 1. **User Registration and Activation Flow**
@@ -157,6 +155,8 @@ Input these details into payment forms or the dashboard to test the applicationâ
      - **User Management**: View all registered users and their details.
      - **Order Statistics**: : View the number of orders, sell products and feedbacks.
      - **User and Product Management**: Edit user information, block users, and create or modify products.
+
+## Troubleshooting
 
 If you encounter issues, try the following:
 
