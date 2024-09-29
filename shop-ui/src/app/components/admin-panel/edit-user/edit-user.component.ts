@@ -20,6 +20,7 @@ export class EditUserComponent implements OnInit {
     email: '',
     password: '',
     dateOfBirth: new Date(),
+    accountLocked: false,
   };
 
   errorMsg: Array<string> = [];
@@ -51,6 +52,7 @@ export class EditUserComponent implements OnInit {
           email: '',
           password: '',
           dateOfBirth: new Date(),
+          accountLocked: false,
         };
         this.notificationService.showMessage('User edited successfully!');
         this.router.navigateByUrl('/admin-panel');
@@ -80,6 +82,7 @@ export class EditUserComponent implements OnInit {
         this.user.lastname = data.lastname;
         this.user.email = data.email;
         this.user.dateOfBirth = data.dateOfBirth;
+        this.user.accountLocked = data.accountLocked;
         this.isLoading = false;
       });
     } else {

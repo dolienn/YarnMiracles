@@ -158,6 +158,18 @@
             padding: 0.7rem 1rem;
           }
 
+          .locked {
+            p {
+              font-weight: 600;
+              text-transform: capitalize;
+              background-color: $success--01;
+              padding: 0.2rem 1rem;
+              display: inline-block;
+              border-radius: 40px;
+              color: $success--02;
+            }
+          }
+
           .edit {
             a {
               text-decoration: none;

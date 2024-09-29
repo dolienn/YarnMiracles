@@ -35,6 +35,7 @@ public class AdminService {
         if(user.getPassword() != null) {
             userFromDB.setPassword(passwordEncoder.encode(user.getPassword()));
         }
+        userFromDB.setAccountLocked(user.isAccountLocked());
         userFromDB.setDateOfBirth(user.getDateOfBirth());
         userRepository.save(userFromDB);
     }

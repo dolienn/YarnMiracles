@@ -62,6 +62,17 @@
   gap: 0.3125rem;
 }
 
+.checkbox {
+  align-items: center !important;
+  justify-content: space-around;
+  flex-direction: row !important;
+
+  input {
+    width: 1.1rem;
+    margin-left: 1rem;
+  }
+}
+
 .icon {
   width: 1.25rem;
   position: absolute;

@@ -75,7 +75,7 @@ public class UserService {
                 .dateOfBirth(LocalDate.now())
                 .password(passwordEncoder.encode("testadmin123"))
                 .accountLocked(false)
-                .enabled(false)
+                .enabled(true)
                 .roles(List.of(adminRole))
                 .build();
         userRepository.save(user);

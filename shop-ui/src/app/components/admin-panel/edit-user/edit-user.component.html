@@ -40,6 +40,12 @@
             <input name="input-name" type="date" class="input_field" [(ngModel)]="user.dateOfBirth" id="dateOfBirth">
         </div>
 
+        <div class="input_container checkbox">
+            <label class="input_label" for="accountLocked">Locked</label>
+            <input name="input-name" type="checkbox" class="input_field" [(ngModel)]="user.accountLocked"
+                id="accountLocked">
+        </div>
+
 
         <div *ngIf="!editUserLoading">
             <button (click)="editUser()" class="edit_btn">

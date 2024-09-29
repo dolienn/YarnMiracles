@@ -8,6 +8,7 @@ export class User {
   public lastname: string = '';
   public email: string = '';
   public dateOfBirth: Date = new Date();
+  public accountLocked: boolean = false;
   public feedbacks: Feedback[] = [];
   public purchasedProducts: Product[] = [];
   public roles: Role[] = [];

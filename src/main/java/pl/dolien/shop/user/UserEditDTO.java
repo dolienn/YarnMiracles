@@ -31,6 +31,8 @@ public class UserEditDTO {
 
     private String password;
 
+    private boolean accountLocked;
+
     @NotNull(message = "Date of birth is mandatory")
     private LocalDate dateOfBirth;
 }

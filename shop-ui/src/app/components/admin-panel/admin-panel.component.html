@@ -59,7 +59,7 @@
                 <thead>
                     <tr>
                         <td>Name</td>
-                        <td>Date of birth</td>
+                        <td>Locked</td>
                         <td>Total Purchases</td>
                         <td>Role</td>
                         <td></td>
@@ -71,16 +71,16 @@
                             <h5>{{user.firstname + ' ' + user.lastname}}</h5>
                             <p>{{user.email}}</p>
                         </td>
-                        <td class="date">
-                            <h5>{{user.dateOfBirth}}</h5>
+                        <td class="locked">
+                            <p>{{user.accountLocked}}</p>
                         </td>
 
                         <td class="purchases">
-                            <h5>{{getPurchasedProductsSize(user)}}</h5>
+                            <p>{{getPurchasedProductsSize(user)}}</p>
                         </td>
 
                         <td class="role">
-                            <h5>{{getRole(user)}}</h5>
+                            <p>{{getRole(user)}}</p>
                         </td>
 
                         <td class="edit">

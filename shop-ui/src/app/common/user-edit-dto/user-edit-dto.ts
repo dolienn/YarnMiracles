@@ -5,4 +5,5 @@ export class UserEditDTO {
   public email: string = '';
   public password: string = '';
   public dateOfBirth: Date = new Date();
+  public accountLocked: boolean = false;
 }
