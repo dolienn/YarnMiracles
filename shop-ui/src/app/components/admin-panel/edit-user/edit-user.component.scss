@@ -62,24 +62,6 @@
   gap: 0.3125rem;
 }
 
-.file-info {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-
-  button {
-    width: fit-content;
-    padding: 0.5rem 1.25rem;
-    background: $color--01;
-    border-radius: 0.4375rem;
-    outline: none;
-    color: $background-color--01;
-    border: 0.0625rem solid $background-color--02;
-    filter: drop-shadow(0px 0.0625rem 0px $background-color--02);
-  }
-}
-
 .icon {
   width: 1.25rem;
   position: absolute;
@@ -111,17 +93,11 @@
   box-shadow: 0px 0px 0px 0.125rem $color--01;
 }
 
-textarea {
-  height: 5rem !important;
-  resize: none !important;
-  padding-top: 1rem !important;
-}
-
-.add_btn {
+.edit_btn {
   width: 10rem;
   height: 2.5rem;
   border: 0;
-  background: $primary--02;
+  background: $success--02;
   border-radius: 0.4375rem;
   outline: none;
   color: $background-color--01;
@@ -167,33 +143,7 @@ textarea {
   background-color: $color--02;
 }
 
-.custum-file-upload {
-  height: 12.5rem;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.25rem;
-  cursor: pointer;
-  justify-content: center;
-  border: 0.125rem dashed $color--02;
-  background-color: $background-color--01;
-  padding: 1.5rem;
-  border-radius: 0.625rem;
-  box-shadow: 0px 3rem 2.1875rem -3rem rgba(0, 0, 0, 0.1);
-}
-
-.custum-file-upload .text {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.custum-file-upload .text span {
-  font-weight: 400;
-  color: $color--02;
-}
-
-.custum-file-upload input {
-  display: none;
+.unvisible {
+  visibility: hidden;
+  opacity: 0;
 }

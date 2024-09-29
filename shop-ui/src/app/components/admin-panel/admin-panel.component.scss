@@ -100,9 +100,16 @@
     }
   }
 
+  .board-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 2rem;
+  }
+
   .board {
-    width: 96.8%;
-    margin: 2rem 0 0 2rem;
+    width: 100%;
     padding-bottom: 2rem;
     overflow: auto;
     background-color: $background-color--01;
@@ -192,8 +199,11 @@
     }
   }
 
+  .board-wrapper {
+    padding: 2rem 1rem 0 1rem !important;
+  }
+
   .board {
-    width: 92% !important;
     padding: 0;
     overflow-x: auto;
   }

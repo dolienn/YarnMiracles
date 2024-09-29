@@ -53,41 +53,43 @@
         </div>
     </div>
 
-    <div class="board">
-        <table width="100%">
-            <thead>
-                <tr>
-                    <td>Name</td>
-                    <td>Date of birth</td>
-                    <td>Total Purchases</td>
-                    <td>Role</td>
-                    <td></td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let user of users">
-                    <td class="people">
-                        <h5>{{user.firstname + ' ' + user.lastname}}</h5>
-                        <p>{{user.email}}</p>
-                    </td>
-                    <td class="date">
-                        <h5>{{user.dateOfBirth}}</h5>
-                    </td>
+    <div class="board-wrapper">
+        <div class="board">
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Date of birth</td>
+                        <td>Total Purchases</td>
+                        <td>Role</td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let user of users">
+                        <td class="people">
+                            <h5>{{user.firstname + ' ' + user.lastname}}</h5>
+                            <p>{{user.email}}</p>
+                        </td>
+                        <td class="date">
+                            <h5>{{user.dateOfBirth}}</h5>
+                        </td>
 
-                    <td class="purchases">
-                        <h5>{{getPurchasedProductsSize(user)}}</h5>
-                    </td>
+                        <td class="purchases">
+                            <h5>{{getPurchasedProductsSize(user)}}</h5>
+                        </td>
 
-                    <td class="role">
-                        <h5>{{getRole(user)}}</h5>
-                    </td>
+                        <td class="role">
+                            <h5>{{getRole(user)}}</h5>
+                        </td>
 
-                    <td class="edit">
-                        <a>Edit</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                        <td class="edit">
+                            <a routerLink="/admin-panel/edit-user/{{user.id}}">Edit</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <app-pagination [totalElements]="totalElements" [pageSize]="pageSize" [isLoading]="isLoading"

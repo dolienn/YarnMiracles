@@ -14,6 +14,8 @@ import pl.dolien.shop.dashboard.DashboardData;
 import pl.dolien.shop.dashboard.DashboardService;
 import pl.dolien.shop.image.ImageService;
 import pl.dolien.shop.product.*;
+import pl.dolien.shop.user.User;
+import pl.dolien.shop.user.UserEditDTO;
 
 import java.io.File;
 import java.io.IOException;
@@ -77,6 +79,12 @@ public class AdminController {
         savedProduct.setSku(sku);
         productRepository.save(savedProduct);
 
+        return ResponseEntity.accepted().build();
+    }
+
+    @PostMapping("/edit-user")
+    public ResponseEntity<?> editUser(@RequestBody @Valid UserEditDTO user) {
+        adminService.editUser(user);
         return ResponseEntity.accepted().build();
     }
 }

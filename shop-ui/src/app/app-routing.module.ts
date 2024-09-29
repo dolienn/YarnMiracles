@@ -20,8 +20,14 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
 import { adminPanelGuard } from './services/guard/admin-panel.guard';
 import { AddProductComponent } from './components/admin-panel/add-product/add-product.component';
+import { EditUserComponent } from './components/admin-panel/edit-user/edit-user.component';
 
 const routes: Routes = [
+  {
+    path: 'admin-panel/edit-user/:id',
+    component: EditUserComponent,
+    canActivate: [adminPanelGuard],
+  },
   {
     path: 'admin-panel/add-product',
     component: AddProductComponent,

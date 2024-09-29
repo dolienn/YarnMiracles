@@ -41,6 +41,7 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
 import { AddProductComponent } from './components/admin-panel/add-product/add-product.component';
 import { NavboxComponent } from './components/navbox/navbox.component';
+import { EditUserComponent } from './components/admin-panel/edit-user/edit-user.component';
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import { NavboxComponent } from './components/navbox/navbox.component';
     AdminPanelComponent,
     AddProductComponent,
     NavboxComponent,
+    EditUserComponent,
   ],
   imports: [
     BrowserModule,

@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment.development';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../../common/user/user';
 import { ProductRequest } from '../../common/product-request/product-request';
+import { UserEditDTO } from '../../common/user-edit-dto/user-edit-dto';
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +36,13 @@ export class AdminService {
     return this.httpClient.post<any>(
       `${this.adminUrl}/add-product`,
       productRequest
+    );
+  }
+
+  editUser(user: UserEditDTO): Observable<UserEditDTO> {
+    return this.httpClient.post<UserEditDTO>(
+      `${this.adminUrl}/edit-user`,
+      user
     );
   }
 }

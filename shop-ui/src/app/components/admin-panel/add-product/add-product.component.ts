@@ -70,7 +70,7 @@ export class AddProductComponent implements OnInit {
   }
 
   shortenFileName(fileName: string): string {
-    return fileName.length > 15 ? fileName.substring(0, 15) + '...' : fileName;
+    return fileName.length > 10 ? fileName.substring(0, 10) + '...' : fileName;
   }
 
   changeFile() {
