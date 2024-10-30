@@ -17,8 +17,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Getter
@@ -36,41 +36,16 @@ public class User implements UserDetails, Principal {
     private Integer id;
 
     private String firstname;
-
     private String lastname;
-
-    private LocalDate dateOfBirth;
 
     @Column(unique = true)
     private String email;
 
     private String password;
+    private LocalDate dateOfBirth;
 
     private boolean accountLocked;
-
     private boolean enabled;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<Role> roles;
-
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "favourite_products",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private List<Product> favourites;
-
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "purchased_products",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private List<Product> purchasedProducts;
-
-    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Feedback> feedbacks;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -80,32 +55,33 @@ public class User implements UserDetails, Principal {
     @Column(insertable = false)
     private LocalDateTime lastModifiedDate;
 
-    @Override
-    public String getName() {
-        return email;
-    }
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Role> roles = new ArrayList<>();
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "favourite_products",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    private List<Product> favourites = new ArrayList<>();
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "purchased_products",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    private List<Product> purchasedProducts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Feedback> feedbacks = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles
-                .stream()
-                .map(r -> new SimpleGrantedAuthority(r.getName()))
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
     }
 
     @Override
@@ -114,34 +90,37 @@ public class User implements UserDetails, Principal {
     }
 
     @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
     public boolean isEnabled() {
         return enabled;
     }
 
-    public String fullName() {
-        return firstname + " " + lastname;
+    @Override
+    public String getName() {
+        return email;
     }
 
-    public void addPurchasedProduct(Product product) {
-        if (product != null) {
-            if (purchasedProducts == null) {
-                purchasedProducts = new ArrayList<>();
-            }
-            purchasedProducts.add(product);
-        }
+    @Override
+    public String getUsername() {
+        return email;
     }
 
-    public void addRole(Role role) {
-        if (role != null) {
-            if (roles == null) {
-                roles = new ArrayList<>();
-            }
-            roles.add(role);
+    public Optional<String> getFullName() {
+        return (firstname != null && lastname != null) ?
+                Optional.of(firstname + " " + lastname) :
+                Optional.empty();
+    }
+
+    public void addToPurchasedProducts(Product product) {
+        if (product == null) {
+            return;
         }
+        purchasedProducts.add(product);
+    }
+
+    public void addToRoles(Role role) {
+        if (role == null) {
+            return;
+        }
+        roles.add(role);
     }
 }

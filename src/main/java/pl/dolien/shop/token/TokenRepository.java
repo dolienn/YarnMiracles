@@ -1,4 +1,4 @@
-package pl.dolien.shop.user;
+package pl.dolien.shop.token;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;

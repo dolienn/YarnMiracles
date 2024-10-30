@@ -98,7 +98,7 @@ public class CheckoutService {
             User userFromDB = user.get();
             orderItems.forEach(orderItem -> {
                 Optional<Product> productFromDB = productRepository.findById(orderItem.getProductId());
-                productFromDB.ifPresent(userFromDB::addPurchasedProduct);
+                productFromDB.ifPresent(userFromDB::addToPurchasedProducts);
                 productFromDB.ifPresent(product -> product.addUserWhoPurchased(userFromDB));
                 productRepository.save(productFromDB.orElseThrow(() -> new IllegalArgumentException("Product not found")));
             });

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import pl.dolien.shop.favourites.FavouritesService;
 import pl.dolien.shop.product.Product;
 import pl.dolien.shop.product.ProductRepository;
 
@@ -19,6 +20,9 @@ class UserServiceTest {
 
     @InjectMocks
     private UserService service;
+
+    @InjectMocks
+    private FavouritesService favouritesService;
 
     @Mock
     private UserRepository repository;
@@ -54,7 +58,7 @@ class UserServiceTest {
         when(productRepository.findById(productId)).thenReturn(Optional.ofNullable(product));
 
 
-        service.addFavouriteProduct(userId, productId);
+        favouritesService.addFavouriteProduct(userId, productId);
 
 
         verify(repository, times(1)).findById(userId);
@@ -87,7 +91,7 @@ class UserServiceTest {
         when(productRepository.findById(productId)).thenReturn(Optional.ofNullable(product));
 
 
-        var exp = assertThrows(IllegalArgumentException.class, () -> service.addFavouriteProduct(userId, productId));
+        var exp = assertThrows(IllegalArgumentException.class, () -> favouritesService.addFavouriteProduct(userId, productId));
         assertEquals("User id should not be zero", exp.getMessage());
     }
 
@@ -112,7 +116,7 @@ class UserServiceTest {
         when(productRepository.findById(productId)).thenReturn(Optional.ofNullable(product));
 
 
-        var exp = assertThrows(IllegalArgumentException.class, () -> service.addFavouriteProduct(userId, productId));
+        var exp = assertThrows(IllegalArgumentException.class, () -> favouritesService.addFavouriteProduct(userId, productId));
         assertEquals("Product id should not be zero", exp.getMessage());
     }
 
@@ -130,7 +134,7 @@ class UserServiceTest {
         when(productRepository.findById(productId)).thenReturn(Optional.ofNullable(product));
 
 
-        var exp = assertThrows(IllegalArgumentException.class, () -> service.addFavouriteProduct(userId, productId));
+        var exp = assertThrows(IllegalArgumentException.class, () -> favouritesService.addFavouriteProduct(userId, productId));
         assertEquals("User not found", exp.getMessage());
     }
 
@@ -150,7 +154,7 @@ class UserServiceTest {
         when(productRepository.findById(productId)).thenReturn(Optional.empty());
 
 
-        var exp = assertThrows(IllegalArgumentException.class, () -> service.addFavouriteProduct(userId, productId));
+        var exp = assertThrows(IllegalArgumentException.class, () -> favouritesService.addFavouriteProduct(userId, productId));
         assertEquals("Product not found", exp.getMessage());
     }
 
@@ -175,7 +179,7 @@ class UserServiceTest {
         when(productRepository.findById(productId)).thenReturn(Optional.ofNullable(product));
 
 
-        var exp = assertThrows(IllegalArgumentException.class, () -> service.addFavouriteProduct(userId, productId));
+        var exp = assertThrows(IllegalArgumentException.class, () -> favouritesService.addFavouriteProduct(userId, productId));
         assertEquals("Product is a favourite of the user", exp.getMessage());
     }
 
@@ -203,7 +207,7 @@ class UserServiceTest {
         when(repository.findById(userId)).thenReturn(Optional.of(user));
         when(productRepository.findById(productId)).thenReturn(Optional.of(product));
 
-        service.removeFavouriteProduct(userId, productId);
+        favouritesService.removeFavouriteProduct(userId, productId);
 
         verify(repository, times(1)).findById(userId);
         verify(productRepository, times(1)).findById(productId);
@@ -235,7 +239,7 @@ class UserServiceTest {
         when(repository.findById(userId)).thenReturn(Optional.of(user));
         when(productRepository.findById(productId)).thenReturn(Optional.ofNullable(product));
 
-        var exp = assertThrows(IllegalArgumentException.class, () -> service.removeFavouriteProduct(userId, productId));
+        var exp = assertThrows(IllegalArgumentException.class, () -> favouritesService.removeFavouriteProduct(userId, productId));
         assertEquals("User id should not be zero", exp.getMessage());
     }
 
@@ -261,7 +265,7 @@ class UserServiceTest {
         when(repository.findById(userId)).thenReturn(Optional.of(user));
         when(productRepository.findById(productId)).thenReturn(Optional.ofNullable(product));
 
-        var exp = assertThrows(IllegalArgumentException.class, () -> service.removeFavouriteProduct(userId, productId));
+        var exp = assertThrows(IllegalArgumentException.class, () -> favouritesService.removeFavouriteProduct(userId, productId));
         assertEquals("Product id should not be zero", exp.getMessage());
     }
 
@@ -287,7 +291,7 @@ class UserServiceTest {
         when(repository.findById(userId)).thenReturn(Optional.empty());
         when(productRepository.findById(productId)).thenReturn(Optional.ofNullable(product));
 
-        var exp = assertThrows(IllegalArgumentException.class, () -> service.removeFavouriteProduct(userId, productId));
+        var exp = assertThrows(IllegalArgumentException.class, () -> favouritesService.removeFavouriteProduct(userId, productId));
         assertEquals("User not found", exp.getMessage());
     }
 
@@ -313,7 +317,7 @@ class UserServiceTest {
         when(repository.findById(userId)).thenReturn(Optional.of(user));
         when(productRepository.findById(productId)).thenReturn(Optional.empty());
 
-        var exp = assertThrows(IllegalArgumentException.class, () -> service.removeFavouriteProduct(userId, productId));
+        var exp = assertThrows(IllegalArgumentException.class, () -> favouritesService.removeFavouriteProduct(userId, productId));
         assertEquals("Product not found", exp.getMessage());
     }
 
@@ -338,7 +342,7 @@ class UserServiceTest {
         when(productRepository.findById(productId)).thenReturn(Optional.ofNullable(product));
 
 
-        var exp = assertThrows(IllegalArgumentException.class, () -> service.removeFavouriteProduct(userId, productId));
+        var exp = assertThrows(IllegalArgumentException.class, () -> favouritesService.removeFavouriteProduct(userId, productId));
         assertEquals("Product is not a favourite of the user", exp.getMessage());
     }
 }

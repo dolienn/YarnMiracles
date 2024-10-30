@@ -14,8 +14,8 @@ import pl.dolien.shop.email.EmailService;
 import pl.dolien.shop.role.Role;
 import pl.dolien.shop.role.RoleRepository;
 import pl.dolien.shop.security.JwtService;
-import pl.dolien.shop.user.Token;
-import pl.dolien.shop.user.TokenRepository;
+import pl.dolien.shop.token.Token;
+import pl.dolien.shop.token.TokenRepository;
 import pl.dolien.shop.user.User;
 import pl.dolien.shop.user.UserRepository;
 
@@ -23,7 +23,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -14,8 +14,8 @@ import pl.dolien.shop.email.EmailService;
 import pl.dolien.shop.email.EmailTemplateName;
 import pl.dolien.shop.role.RoleRepository;
 import pl.dolien.shop.security.JwtService;
-import pl.dolien.shop.user.Token;
-import pl.dolien.shop.user.TokenRepository;
+import pl.dolien.shop.token.Token;
+import pl.dolien.shop.token.TokenRepository;
 import pl.dolien.shop.user.User;
 import pl.dolien.shop.user.UserRepository;
 
@@ -125,7 +125,7 @@ public class AuthenticationService {
 
         emailService.sendEmail(
                 user.getEmail(),
-                user.fullName(),
+                user.getFullName().orElseThrow(() -> new UsernameNotFoundException("User not found")),
                 EmailTemplateName.ACTIVATE_ACCOUNT,
                 activationUrl,
                 newToken,
@@ -167,7 +167,7 @@ public class AuthenticationService {
 
         var claims = new HashMap<String, Object>();
         var user = ((User)auth.getPrincipal());
-        claims.put("fullName", user.fullName());
+        claims.put("fullName", user.getFullName());
         var jwtToken = jwtService.generateToken(claims, user);
 
         return AuthenticationResponse.builder()

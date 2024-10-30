@@ -1,0 +1,18 @@
+package pl.dolien.shop.role;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import javax.management.relation.RoleNotFoundException;
+
+@Service
+@RequiredArgsConstructor
+public class RoleService {
+
+    private final RoleRepository roleRepository;
+
+    public Role findByName(String name) throws RoleNotFoundException {
+        return roleRepository.findByName(name)
+                .orElseThrow(() -> new RoleNotFoundException("ROLE " + name + " was not initialized."));
+    }
+}

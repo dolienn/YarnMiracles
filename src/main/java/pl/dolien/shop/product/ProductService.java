@@ -3,7 +3,11 @@ package pl.dolien.shop.product;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import pl.dolien.shop.exception.ProductNotFoundException;
 import pl.dolien.shop.settings.AppSettings;
 import pl.dolien.shop.settings.AppSettingsRepository;
 
@@ -68,5 +72,9 @@ public class ProductService {
         String namePart = productName.substring(0, Math.min(3, productName.length())).toUpperCase();
         String idPart = String.format("%04d", productId);
         return namePart + "-" + idPart;
+    }
+
+    public Product getProductById(Long productId) {
+        return productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Product not found"));
     }
 }

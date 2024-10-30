@@ -19,7 +19,7 @@ public class AdminService {
     public void addAdmin(String email) {
         var user = userRepository.findByEmail(email).orElse(null);
         assert user != null;
-        roleRepository.findByName("ADMIN").ifPresent(user::addRole);
+        roleRepository.findByName("ADMIN").ifPresent(user::addToRoles);
         userRepository.save(user);
     }
 
