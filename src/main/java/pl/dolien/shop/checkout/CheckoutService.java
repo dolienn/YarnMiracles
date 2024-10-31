@@ -56,7 +56,7 @@ public class CheckoutService {
         orderItems.forEach(order::add);
         orderItems.forEach(orderItem -> {
             Product product = productRepository.findById(orderItem.getProductId()).orElseThrow(() -> new IllegalArgumentException("Product not found"));
-            product.addSales(orderItem.getQuantity());
+            product.incrementSales(orderItem.getQuantity());
             if(product.getUnitsInStock() >= orderItem.getQuantity()) {
                 product.removeUnitsInStock(orderItem.getQuantity());
             }

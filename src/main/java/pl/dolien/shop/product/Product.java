@@ -6,6 +6,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import pl.dolien.shop.exception.NotEnoughStockException;
 import pl.dolien.shop.feedback.Feedback;
 import pl.dolien.shop.user.User;
 
@@ -72,28 +73,19 @@ public class Product {
 
     @Transient
     public void calculateRate() {
-        if (feedbacks == null || feedbacks.isEmpty()) {
-            this.rate = 0.0;
-        } else {
-            var rate = this.feedbacks.stream()
-                    .mapToDouble(Feedback::getNote)
-                    .average()
-                    .orElse(0.0);
-
-            this.rate = Math.round(rate * 10.0) / 10.0;
-        }
+        this.rate = RatingCalculator.calculateRate(this.feedbacks);
     }
 
-    public void addSales(int quantity) {
-        if(this.sales == null || this.sales == 0) {
-            this.sales = (long) quantity;
-        } else {
-            this.sales = this.sales + quantity;
-        }
+    public void incrementSales(int quantity) {
+        this.sales = (this.sales == null ? 0L : this.sales) + quantity;
     }
 
     public void removeUnitsInStock(int quantity) {
-        this.unitsInStock = this.unitsInStock - quantity;
+        if (this.unitsInStock >= quantity) {
+            this.unitsInStock -= quantity;
+        } else {
+            throw new NotEnoughStockException("Not enough units in stock");
+        }
     }
 
     @PostLoad

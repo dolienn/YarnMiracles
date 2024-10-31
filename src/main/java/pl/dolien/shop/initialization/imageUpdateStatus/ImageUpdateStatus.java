@@ -1,4 +1,4 @@
-package pl.dolien.shop.settings;
+package pl.dolien.shop.initialization.imageUpdateStatus;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,7 +10,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class AppSettings {
+public class ImageUpdateStatus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

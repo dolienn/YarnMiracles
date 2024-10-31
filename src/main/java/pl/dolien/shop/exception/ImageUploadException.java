@@ -1,0 +1,7 @@
+package pl.dolien.shop.exception;
+
+public class ImageUploadException extends RuntimeException {
+    public ImageUploadException(String message) {
+        super(message);
+    }
+}

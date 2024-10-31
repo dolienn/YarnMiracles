@@ -25,7 +25,7 @@ public class FavouritesService {
     private final FavouritesRepository favouritesRepository;
 
     public Page<Product> getSortedFavourites(FavouritesDTO favouritesDTO) {
-        Sort sort = sortService.determineSortOrder(favouritesDTO.getSortOrderType());
+        Sort sort = sortService.generateSort(favouritesDTO.getSortOrderType());
 
         Pageable pageable = paginationService.createPageRequest(
                 favouritesDTO.getPage(), favouritesDTO.getSize(), sort

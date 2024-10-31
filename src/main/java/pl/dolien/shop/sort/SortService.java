@@ -6,8 +6,8 @@ import pl.dolien.shop.exception.InvalidSortOrderException;
 
 @Service
 public class SortService {
-    public Sort determineSortOrder(String sortOrderType) {
-        if (isNullSortOrderType(sortOrderType)) {
+    public Sort generateSort(String sortOrderType) {
+        if (isSortOrderTypeNull(sortOrderType)) {
             return Sort.unsorted();
         }
 
@@ -15,7 +15,7 @@ public class SortService {
         return createSort(validatedSortOrder);
     }
 
-    private boolean isNullSortOrderType(String sortOrderType) {
+    private boolean isSortOrderTypeNull(String sortOrderType) {
         return sortOrderType == null;
     }
 

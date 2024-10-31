@@ -20,45 +20,64 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
+    private static final String[] PUBLIC_ENDPOINTS = {
+            "/admin/**",
+            "/contact/**",
+            "/orders/**",
+            "/customers/**",
+            "/checkout/**",
+            "/countries/**",
+            "/feedbacks/**",
+            "/users/**",
+            "/products/**",
+            "/product-category/**",
+            "/auth/**",
+            "/v2/api-docs",
+            "/v3/api-docs",
+            "/v3/api-docs/**",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui/**",
+            "/webjars/**",
+            "/swagger-ui.html"
+    };
+
     private final JwtFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .cors(withDefaults())
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(req ->
-                            req.requestMatchers(
-                                            "/admin/**",
-                                            "/contact/**",
-                                            "/orders/**",
-                                             "/customers/**",
-                                             "/checkout/**",
-                                             "/countries/**",
-                                             "/feedbacks/**",
-                                             "/users/**",
-                                             "/products/**",
-                                             "/product-category/**",
-                                             "/auth/**",
-                                             "/v2/api-docs",
-                                             "/v3/api-docs",
-                                             "/v3/api-docs/**",
-                                             "/swagger-resources",
-                                             "/swagger-resources/**",
-                                             "/configuration/ui",
-                                             "/configuration/security",
-                                             "/swagger-ui/**",
-                                             "/webjars/**",
-                                             "/swagger-ui.html"
-                            ).permitAll()
-                                    .anyRequest()
-                                    .authenticated()
-                        )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        configureCors(http);
+        disableCsrf(http);
+        configureAuthorization(http);
+        configureSessionManagement(http);
+        addJwtFilter(http);
 
         return http.build();
+    }
+
+    private void configureCors(HttpSecurity http) throws Exception {
+        http.cors(withDefaults());
+    }
+
+    private void disableCsrf(HttpSecurity http) throws Exception {
+        http.csrf(AbstractHttpConfigurer::disable);
+    }
+
+    private void configureAuthorization(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(req -> req
+                .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                .anyRequest().authenticated());
+    }
+
+    private void configureSessionManagement(HttpSecurity http) throws Exception {
+        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+    }
+
+    private void addJwtFilter(HttpSecurity http) {
+        http.authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

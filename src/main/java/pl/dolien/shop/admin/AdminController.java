@@ -12,9 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.dolien.shop.dashboard.DashboardData;
 import pl.dolien.shop.dashboard.DashboardService;
-import pl.dolien.shop.image.ImageService;
+import pl.dolien.shop.image.ImageUploader;
 import pl.dolien.shop.product.*;
-import pl.dolien.shop.user.User;
 import pl.dolien.shop.user.UserEditDTO;
 
 import java.io.File;
@@ -28,7 +27,7 @@ public class AdminController {
 
     private final AdminService adminService;
     private final DashboardService dashboardService;
-    private final ImageService imageService;
+    private final ImageUploader imageUploader;
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
     private final ProductService productService;
@@ -65,12 +64,7 @@ public class AdminController {
         }
 
         String imageUrl;
-        try {
-            imageUrl = imageService.uploadImage(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Could not save file: " + e.getMessage());
-        }
+        imageUrl = imageUploader.uploadImage(file);
 
         Product product = productMapper.toProduct(productRequest, imageUrl);
         var savedProduct = productRepository.save(product);
