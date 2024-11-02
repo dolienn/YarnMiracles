@@ -10,7 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import pl.dolien.shop.email.EmailService;
+import pl.dolien.shop.email.activationAccount.AccountActivationEmailService;
 import pl.dolien.shop.role.Role;
 import pl.dolien.shop.role.RoleRepository;
 import pl.dolien.shop.security.JwtService;
@@ -49,7 +49,7 @@ public class AuthenticationServiceTest {
     private TokenRepository tokenRepository;
 
     @Mock
-    private EmailService emailService;
+    private AccountActivationEmailService accountActivationEmailService;
 
     @Mock
     private AuthenticationManager authenticationManager;

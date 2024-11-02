@@ -1,4 +1,4 @@
-package pl.dolien.shop.contact;
+package pl.dolien.shop.email.support;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
@@ -7,21 +7,21 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ContactService {
+public class SupportEmailService {
 
     private final JavaMailSender mailSender;
 
-    public void sendMessage(ContactRequest request) {
-        if(request == null) {
-            throw new NullPointerException("Contact request not found");
-        }
+    public void sendSupportEmail(SupportMessageDTO request) {
+        SimpleMailMessage message = buildSupportEmailMessage(request);
+        mailSender.send(message);
+    }
 
+    private SimpleMailMessage buildSupportEmailMessage(SupportMessageDTO request) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo("thedolien@gmail.com");
+        message.setFrom(request.getFrom());
         message.setSubject(request.getSubject());
-        message.setText(request.getMessage());
-        message.setFrom(request.getEmail());
-
-        mailSender.send(message);
+        message.setText(request.getText());
+        return message;
     }
 }

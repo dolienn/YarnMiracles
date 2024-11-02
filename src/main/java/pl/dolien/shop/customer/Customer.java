@@ -1,7 +1,8 @@
-package pl.dolien.shop.order;
+package pl.dolien.shop.customer;
 
 import jakarta.persistence.*;
 import lombok.*;
+import pl.dolien.shop.order.Order;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,13 +17,8 @@ public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
     private Long id;
-
-    @Column
     private String firstname;
-
-    @Column
     private String lastname;
 
     @Column(unique = true)
@@ -32,13 +28,7 @@ public class Customer {
     private Set<Order> orders = new HashSet<>();
 
     public void add(Order order) {
-        if(order != null) {
-            if(orders == null) {
-                orders = new HashSet<>();
-            }
-
-            orders.add(order);
-            order.setCustomer(this);
-        }
+        orders.add(order);
+        order.setCustomer(this);
     }
 }

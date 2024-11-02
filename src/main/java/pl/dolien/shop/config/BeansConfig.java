@@ -16,8 +16,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.List;
 
 import static org.springframework.http.HttpHeaders.*;
 
@@ -29,10 +28,7 @@ public class BeansConfig implements RepositoryRestConfigurer {
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
+        return createAuthenticationProvider();
     }
 
     @Bean
@@ -52,24 +48,46 @@ public class BeansConfig implements RepositoryRestConfigurer {
 
     @Bean
     public CorsFilter corsFilter() {
+        return new CorsFilter(corsConfigurationSource());
+    }
+
+    private AuthenticationProvider createAuthenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
+
+    private UrlBasedCorsConfigurationSource corsConfigurationSource() {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        final CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.setAllowedOrigins(Arrays.asList("http://localhost:4200", "http://192.168.1.162:4200", "http://localhost:80", "http://localhost"));
-        config.setAllowedHeaders(Arrays.asList(
-                ORIGIN,
-                CONTENT_TYPE,
-                ACCEPT,
-                AUTHORIZATION
-        ));
-        config.setAllowedMethods(Arrays.asList(
-                "GET",
-                "POST",
-                "DELETE",
-                "PUT",
-                "PATCH"
-        ));
+        final CorsConfiguration config = createCorsConfiguration();
         source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
+        return source;
+    }
+
+    private CorsConfiguration createCorsConfiguration() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.setAllowedOrigins(getAllowedOrigins());
+        config.setAllowedHeaders(getAllowedHeaders());
+        config.setAllowedMethods(getAllowedMethods());
+        return config;
+    }
+
+    private List<String> getAllowedOrigins() {
+        return List.of(
+                "http://localhost:4200",
+                "http://192.168.1.162:4200",
+                "http://localhost:80",
+                "http://localhost"
+        );
+    }
+
+    private List<String> getAllowedHeaders() {
+        return List.of(ORIGIN, CONTENT_TYPE, ACCEPT, AUTHORIZATION);
+    }
+
+    private List<String> getAllowedMethods() {
+        return List.of("GET", "POST", "DELETE", "PUT", "PATCH");
     }
 }

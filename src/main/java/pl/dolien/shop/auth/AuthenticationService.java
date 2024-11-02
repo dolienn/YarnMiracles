@@ -10,7 +10,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.dolien.shop.dashboard.DashboardDataRepository;
-import pl.dolien.shop.email.EmailService;
+import pl.dolien.shop.email.activationAccount.AccountActivationMessageDTO;
+import pl.dolien.shop.email.activationAccount.AccountActivationEmailService;
 import pl.dolien.shop.email.EmailTemplateName;
 import pl.dolien.shop.role.RoleRepository;
 import pl.dolien.shop.security.JwtService;
@@ -37,7 +38,7 @@ public class AuthenticationService {
 
     private final TokenRepository tokenRepository;
 
-    private final EmailService emailService;
+    private final AccountActivationEmailService accountActivationEmailService;
 
     private final AuthenticationManager authenticationManager;
 
@@ -123,13 +124,15 @@ public class AuthenticationService {
     private void sendValidationEmail(User user) throws MessagingException {
         var newToken = generateAndSaveActivationToken(user);
 
-        emailService.sendEmail(
-                user.getEmail(),
-                user.getFullName().orElseThrow(() -> new UsernameNotFoundException("User not found")),
-                EmailTemplateName.ACTIVATE_ACCOUNT,
-                activationUrl,
-                newToken,
-                "Account activation"
+        accountActivationEmailService.sendActivationEmail(
+                AccountActivationMessageDTO.builder()
+                        .to(user.getEmail())
+                        .username(user.getFullName())
+                        .subject("Account activation")
+                        .emailTemplate(EmailTemplateName.ACTIVATE_ACCOUNT)
+                        .confirmationUrl(activationUrl + newToken)
+                        .activationCode(newToken)
+                        .build()
         );
     }
 

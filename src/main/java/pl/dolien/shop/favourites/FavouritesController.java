@@ -13,10 +13,10 @@ public class FavouritesController {
     private final FavouritesService favouritesService;
 
     @GetMapping("/{userId}/favourites")
-    public Page<Product> getSortedFavourites(@PathVariable Integer userId,
-                                             @ModelAttribute FavouritesDTO favouritesDTO) {
+    public Page<Product> getFavourites(@PathVariable Integer userId,
+                                       @ModelAttribute FavouritesDTO favouritesDTO) {
         favouritesDTO.setUserId(userId);
-        return favouritesService.getSortedFavourites(favouritesDTO);
+        return favouritesService.getFavourites(favouritesDTO);
     }
 
     @PostMapping("/{userId}/favourites/{productId}")

@@ -17,20 +17,20 @@ public class FeedbackController {
     private final FeedbackService service;
 
     @PostMapping
-    public ResponseEntity<Integer> saveFeedback(
+    public Integer saveFeedback(
             @Valid @RequestBody FeedbackRequest request,
             Authentication connectedUser
     ) {
-        return ResponseEntity.ok(service.save(request, connectedUser));
+        return service.save(request, connectedUser);
     }
 
     @GetMapping("/product/{product-id}")
-    public ResponseEntity<PageResponse<FeedbackResponse>> findAllFeedbacksByProduct(
+    public PageResponse<FeedbackResponse> findAllFeedbacksByProduct(
             @PathVariable("product-id") Long productId,
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "5", required = false) int size,
             Authentication connectedUser
     ) {
-        return ResponseEntity.ok(service.findAllFeedbacksByProduct(productId, page, size, connectedUser));
+        return service.findAllFeedbacksByProduct(productId, page, size, connectedUser);
     }
 }

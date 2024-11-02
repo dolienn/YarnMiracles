@@ -28,9 +28,7 @@ public class Feedback {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     private Double note;
-
     private String comment;
 
     @ManyToOne

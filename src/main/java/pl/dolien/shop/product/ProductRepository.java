@@ -1,8 +1,10 @@
 package pl.dolien.shop.product;
 
+import jakarta.annotation.Nonnull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
@@ -13,31 +15,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Optional<Product> findByName(String name);
 
-    Page<Product> findAllByOrderByUnitPriceAsc(Pageable pageable);
+    @Nonnull
+    @Query("SELECT p FROM Product p")
+    Page<Product> findAll(@Nonnull Pageable pageable);
 
-    Page<Product> findAllByOrderByUnitPriceDesc(Pageable pageable);
-
-    Page<Product> findAllByOrderByRateDesc(Pageable pageable);
-
-    Page<Product> findAllByOrderBySalesDesc(Pageable pageable);
-
+    @Query("SELECT p FROM Product p WHERE p.category.id = :id")
     Page<Product> findByCategoryId(@Param("id") Long id, Pageable pageable);
 
-    Page<Product> findByCategoryIdOrderByUnitPriceAsc(@Param("id") Long id, Pageable pageable);
-
-    Page<Product> findByCategoryIdOrderByUnitPriceDesc(@Param("id") Long id, Pageable pageable);
-
-    Page<Product> findByCategoryIdOrderByRateDesc(@Param("id") Long id, Pageable pageable);
-
-    Page<Product> findByCategoryIdOrderBySalesDesc(@Param("id") Long id, Pageable pageable);
-
+    @Query("SELECT p FROM Product p WHERE p.name LIKE %:name%")
     Page<Product> findByNameContaining(@Param("name") String name, Pageable pageable);
-
-    Page<Product> findByNameContainingOrderByUnitPriceAsc(@Param("name") String name, Pageable pageable);
-
-    Page<Product> findByNameContainingOrderByUnitPriceDesc(@Param("name") String name, Pageable pageable);
-
-    Page<Product> findByNameContainingOrderByRateDesc(@Param("name") String name, Pageable pageable);
-
-    Page<Product> findByNameContainingOrderBySalesDesc(@Param("name") String name, Pageable pageable);
 }

@@ -34,7 +34,7 @@ public class FeedbackControllerTest {
 
     @Test
     public void shouldSaveFeedback() {
-        ResponseEntity<Integer> response = controller.saveFeedback(
+        Integer response = controller.saveFeedback(
                 FeedbackRequest.builder()
                         .note(5D)
                         .comment("comment")
@@ -42,15 +42,13 @@ public class FeedbackControllerTest {
                         .build(),
                 authentication);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
         verify(service, times(1)).save(any(FeedbackRequest.class), any());
     }
 
     @Test
     public void shouldFindAllFeedbacksByProduct() {
-        ResponseEntity<PageResponse<FeedbackResponse>> response = controller.findAllFeedbacksByProduct(1L, 0, 5, authentication);
+        PageResponse<FeedbackResponse> response = controller.findAllFeedbacksByProduct(1L, 0, 5, authentication);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
         verify(service, times(1)).findAllFeedbacksByProduct(1L, 0, 5, authentication);
     }
 }

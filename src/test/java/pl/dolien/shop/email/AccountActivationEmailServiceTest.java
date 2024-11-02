@@ -10,15 +10,17 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
+import pl.dolien.shop.email.activationAccount.AccountActivationEmailService;
+import pl.dolien.shop.email.activationAccount.AccountActivationMessageDTO;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-public class EmailServiceTest {
+public class AccountActivationEmailServiceTest {
 
     @InjectMocks
-    private EmailService emailService;
+    private AccountActivationEmailService accountActivationEmailService;
 
     @Mock
     private JavaMailSender mailSender;
@@ -33,12 +35,12 @@ public class EmailServiceTest {
 
     @Test
     public void sendEmail_ShouldSendEmailWithCorrectTemplate() throws MessagingException {
-        String to = "test@example.com";
-        String username = "user";
-        EmailTemplateName templateName = EmailTemplateName.ACTIVATE_ACCOUNT;
-        String confirmationUrl = "http://example.com";
-        String activationCode = "123456";
-        String subject = "Test Subject";
+        AccountActivationMessageDTO accountActivationMessageDTO = AccountActivationMessageDTO.builder()
+                .emailTemplate(EmailTemplateName.ACTIVATE_ACCOUNT)
+                .username("John Doe")
+                .confirmationUrl("https://example.com/confirm")
+                .activationCode("123456")
+                .build();
         String emailContent = "<html><body>Test Email</body></html>";
         when(templateEngine.process(eq("ACTIVATE_ACCOUNT"), any(Context.class))).thenReturn(emailContent);
 
@@ -46,7 +48,7 @@ public class EmailServiceTest {
         MimeMessage mimeMessage = mock(MimeMessage.class);
         when(mailSender.createMimeMessage()).thenReturn(mimeMessage);
 
-        emailService.sendEmail(to, username, templateName, confirmationUrl, activationCode, subject);
+        accountActivationEmailService.sendActivationEmail(accountActivationMessageDTO);
 
         verify(templateEngine).process(eq("ACTIVATE_ACCOUNT"), any(Context.class));
         verify(mailSender).send(mimeMessage);

@@ -102,10 +102,8 @@ public class User implements UserDetails, Principal {
         return email;
     }
 
-    public Optional<String> getFullName() {
-        return (firstname != null && lastname != null) ?
-                Optional.of(firstname + " " + lastname) :
-                Optional.empty();
+    public String getFullName() {
+        return firstname + " " + lastname;
     }
 
     public void addToPurchasedProducts(Product product) {

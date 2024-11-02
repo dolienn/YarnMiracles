@@ -1,25 +1,26 @@
-package pl.dolien.shop.contact;
+package pl.dolien.shop.support;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import pl.dolien.shop.email.support.SupportEmailController;
+import pl.dolien.shop.email.support.SupportMessageDTO;
+import pl.dolien.shop.email.support.SupportEmailService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class ContactControllerTest {
+public class SupportEmailControllerTest {
 
     @InjectMocks
-    private ContactController controller;
+    private SupportEmailController controller;
 
     @Mock
-    private ContactService service;
+    private SupportEmailService service;
 
     @BeforeEach
     void setUp() {
@@ -28,9 +29,8 @@ public class ContactControllerTest {
 
     @Test
     public void shouldSendMessage() {
-        ResponseEntity<?> response = controller.sendMessage(ContactRequest.builder().build());
+        controller.sendMessage(SupportMessageDTO.builder().build());
 
-        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
-        verify(service, times(1)).sendMessage(any(ContactRequest.class));
+        verify(service, times(1)).sendSupportEmail(any(SupportMessageDTO.class));
     }
 }

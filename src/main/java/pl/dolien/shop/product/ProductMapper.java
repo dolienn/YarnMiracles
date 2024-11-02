@@ -1,8 +1,6 @@
 package pl.dolien.shop.product;
 
 import org.springframework.stereotype.Service;
-import pl.dolien.shop.feedback.Feedback;
-import pl.dolien.shop.feedback.FeedbackRequest;
 
 @Service
 public class ProductMapper {

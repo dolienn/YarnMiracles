@@ -1,8 +1,8 @@
 package pl.dolien.shop.purchase;
 
 import lombok.*;
-import pl.dolien.shop.order.Address;
-import pl.dolien.shop.order.Customer;
+import pl.dolien.shop.address.Address;
+import pl.dolien.shop.customer.Customer;
 import pl.dolien.shop.order.Order;
 import pl.dolien.shop.order.OrderItem;
 
@@ -18,5 +18,4 @@ public class Purchase {
     private Address billingAddress;
     private Order order;
     private Set<OrderItem> orderItems;
-
 }
