@@ -1,19 +1,16 @@
 package pl.dolien.shop.product;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class ProductMapper {
-    public Product toProduct(ProductRequest request, String imageUrl) {
-        if(request == null) {
-            throw new NullPointerException("The feedback request should not be null");
-        }
+    public Product toProduct(ProductDTO productDTO, String imageUrl) {
         return Product.builder()
-                .category(request.getCategory())
-                .name(request.getName())
-                .description(request.getDescription())
-                .unitPrice(request.getUnitPrice())
-                .unitsInStock(request.getUnitsInStock())
+                .category(productDTO.getCategory())
+                .name(productDTO.getName())
+                .description(productDTO.getDescription())
+                .unitPrice(productDTO.getUnitPrice())
+                .unitsInStock(productDTO.getUnitsInStock())
                 .active(true)
                 .imageUrl(imageUrl)
                 .sales(0L)

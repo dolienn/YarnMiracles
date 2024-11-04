@@ -59,6 +59,4 @@ public class DataRestConfig implements RepositoryRestConfigurer {
         config.exposeIdsFor(domainTypes);
 
     }
-
-
 }

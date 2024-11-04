@@ -5,6 +5,8 @@ import pl.dolien.shop.purchase.Purchase;
 
 import java.util.UUID;
 
+import static pl.dolien.shop.order.OrderStatus.PENDING;
+
 @Service
 public class OrderSetupService {
 
@@ -13,7 +15,7 @@ public class OrderSetupService {
         order.setOrderTrackingNumber(generateOrderTrackingNumber());
         order.setBillingAddress(purchase.getBillingAddress());
         order.setShippingAddress(purchase.getShippingAddress());
-        order.setStatus("pending");
+        order.setStatus(PENDING);
         return order;
     }
 

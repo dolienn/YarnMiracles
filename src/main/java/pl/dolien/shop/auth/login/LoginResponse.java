@@ -1,4 +1,4 @@
-package pl.dolien.shop.auth;
+package pl.dolien.shop.auth.login;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -7,8 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class AuthenticationResponse {
+public class LoginResponse {
 
     private String token;
-
 }

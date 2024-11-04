@@ -10,7 +10,15 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import pl.dolien.shop.auth.activation.ActivationService;
+import pl.dolien.shop.auth.login.LoginService;
+import pl.dolien.shop.auth.password.PasswordChanger;
+import pl.dolien.shop.auth.registration.RegistrationService;
+import pl.dolien.shop.auth.userInfo.UserInfoUpdater;
 import pl.dolien.shop.email.activationAccount.AccountActivationEmailService;
+import pl.dolien.shop.auth.login.LoginRequest;
+import pl.dolien.shop.auth.password.ChangePasswordDTO;
+import pl.dolien.shop.auth.registration.RegistrationDTO;
 import pl.dolien.shop.role.Role;
 import pl.dolien.shop.role.RoleRepository;
 import pl.dolien.shop.security.JwtService;
@@ -19,6 +27,7 @@ import pl.dolien.shop.token.TokenRepository;
 import pl.dolien.shop.user.User;
 import pl.dolien.shop.user.UserRepository;
 
+import javax.management.relation.RoleNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -34,7 +43,19 @@ import static org.mockito.Mockito.*;
 public class AuthenticationServiceTest {
 
     @InjectMocks
-    private AuthenticationService authenticationService;
+    private UserInfoUpdater userInfoUpdater;
+
+    @InjectMocks
+    private RegistrationService registrationService;
+
+    @InjectMocks
+    private PasswordChanger passwordChanger;
+
+    @InjectMocks
+    private ActivationService activationService;
+
+    @InjectMocks
+    private LoginService loginService;
 
     @Mock
     private RoleRepository roleRepository;
@@ -63,26 +84,30 @@ public class AuthenticationServiceTest {
     }
 
     @Test
-    public void shouldRegister() throws MessagingException {
-        var request = new RegistrationRequest("John", "Doe", "john.doe@example.com", LocalDate.of(1990, 1, 1), "password123");
+    public void shouldRegister() throws MessagingException, RoleNotFoundException {
+        RegistrationDTO request = RegistrationDTO.builder()
+                .email("john.doe@example.com")
+                .build();
         var role = new Role(1, "USER", List.of(), LocalDateTime.now(), LocalDateTime.now());
 
         when(roleRepository.findByName("USER")).thenReturn(Optional.of(role));
         when(passwordEncoder.encode(request.getPassword())).thenReturn("encodedPassword");
 
-        authenticationService.register(request);
+        registrationService.registerUser(request);
 
         verify(userRepository).save(any(User.class));
     }
 
     @Test
     public void shouldThrowExceptionWhenRoleUserNotFound() {
-        var request = new RegistrationRequest("John", "Doe", "john.doe@example.com", LocalDate.of(1990, 1, 1), "password123");
+        RegistrationDTO request = RegistrationDTO.builder()
+                .email("john.doe@example.com")
+                .build();
 
         when(roleRepository.findByName("USER")).thenReturn(Optional.empty());
         when(passwordEncoder.encode(request.getPassword())).thenReturn("encodedPassword");
 
-        var exp = assertThrows(IllegalStateException.class, () -> authenticationService.register(request));
+        var exp = assertThrows(IllegalStateException.class, () -> registrationService.registerUser(request));
 
         verify(userRepository, never()).save(any(User.class));
         assertEquals("ROLE USER was not initialized", exp.getMessage());
@@ -90,7 +115,10 @@ public class AuthenticationServiceTest {
 
     @Test
     public void shouldChangeAccountDetails() {
-        var request = new RegistrationRequest("John", "Doe", "john.doe@example.com", LocalDate.of(1990, 1, 1), "password123");
+        RegistrationDTO request = RegistrationDTO.builder()
+                .email("john.doe@example.com")
+                .build();
+
         Authentication auth = mock(Authentication.class);
 
         User user = User.builder()
@@ -107,14 +135,17 @@ public class AuthenticationServiceTest {
 
         when(userRepository.save(user)).thenReturn(user);
 
-        authenticationService.changeAccountDetails(request, auth);
+        userInfoUpdater.updateUserInformation(request, auth);
 
         verify(userRepository).save(any(User.class));
     }
 
     @Test
     public void shouldThrowExceptionWhenPasswordsDoNotMatch() {
-        var request = new RegistrationRequest("John", "Doe", "john.doe@example.com", LocalDate.of(1990, 1, 1), "password123");
+        RegistrationDTO request = RegistrationDTO.builder()
+                .email("john.doe@example.com")
+                .build();
+
         Authentication auth = mock(Authentication.class);
 
         User user = User.builder()
@@ -131,7 +162,7 @@ public class AuthenticationServiceTest {
 
         when(userRepository.save(user)).thenReturn(user);
 
-        var exp = assertThrows(IllegalArgumentException.class, () -> authenticationService.changeAccountDetails(request, auth));
+        var exp = assertThrows(IllegalArgumentException.class, () -> userInfoUpdater.updateUserInformation(request, auth));
 
         verify(userRepository, never()).save(any(User.class));
         assertEquals("Passwords do not match.", exp.getMessage());
@@ -139,7 +170,10 @@ public class AuthenticationServiceTest {
 
     @Test
     public void shouldThrowExceptionWhenThereIsAUserWithTheSameEmail() {
-        var request = new RegistrationRequest("John", "Doe", "john.doe@example.com", LocalDate.of(1990, 1, 1), "password123");
+        RegistrationDTO request = RegistrationDTO.builder()
+                .email("john.doe@example.com")
+                .build();
+
         Authentication auth = mock(Authentication.class);
 
         User currentUser = User.builder()
@@ -160,7 +194,7 @@ public class AuthenticationServiceTest {
 
         when(userRepository.findByEmail("john.doe@example.com")).thenReturn(Optional.of(existingUser));
 
-        var exp = assertThrows(IllegalArgumentException.class, () -> authenticationService.changeAccountDetails(request, auth));
+        var exp = assertThrows(IllegalArgumentException.class, () -> userInfoUpdater.updateUserInformation(request, auth));
 
         verify(userRepository, never()).save(any(User.class));
         assertEquals("There is a user on the same email.", exp.getMessage());
@@ -168,7 +202,7 @@ public class AuthenticationServiceTest {
 
     @Test
     public void shouldChangePassword() {
-        var request = new PasswordRequest("password123", "newPassword123");
+        var request = ChangePasswordDTO.builder().build();
         Authentication auth = mock(Authentication.class);
 
         User user = User.builder()
@@ -182,14 +216,14 @@ public class AuthenticationServiceTest {
         when(userRepository.findByEmail("john.doe@example.com")).thenReturn(Optional.of(user));
         when(userRepository.save(user)).thenReturn(user);
 
-        authenticationService.changePassword(request, auth);
+        passwordChanger.changePassword(request, auth);
 
         verify(userRepository).save(any(User.class));
     }
 
     @Test
     public void shouldThrowExceptionWhenCurrentPasswordDoesNotMatch() {
-        var request = new PasswordRequest("password123", "newPassword123");
+        var request = ChangePasswordDTO.builder().build();
         Authentication auth = mock(Authentication.class);
 
         User user = User.builder()
@@ -202,7 +236,7 @@ public class AuthenticationServiceTest {
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
         when(userRepository.findByEmail("john.doe@example.com")).thenReturn(Optional.of(user));
 
-        var exp = assertThrows(IllegalArgumentException.class, () -> authenticationService.changePassword(request, auth));
+        var exp = assertThrows(IllegalArgumentException.class, () -> passwordChanger.changePassword(request, auth));
 
         verify(userRepository, never()).save(any(User.class));
         assertEquals("The current password does not match the one entered in the form.", exp.getMessage());
@@ -210,7 +244,7 @@ public class AuthenticationServiceTest {
 
     @Test
     public void shouldThrowExceptionWhenNewPasswordIsTheSame() {
-        var request = new PasswordRequest("password123", "password123");
+        var request = ChangePasswordDTO.builder().build();
         Authentication auth = mock(Authentication.class);
 
         User user = User.builder()
@@ -223,7 +257,7 @@ public class AuthenticationServiceTest {
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
         when(userRepository.findByEmail("john.doe@example.com")).thenReturn(Optional.of(user));
 
-        var exp = assertThrows(IllegalArgumentException.class, () -> authenticationService.changePassword(request, auth));
+        var exp = assertThrows(IllegalArgumentException.class, () -> passwordChanger.changePassword(request, auth));
 
         verify(userRepository, never()).save(any(User.class));
         assertEquals("The current password and the new one are the same.", exp.getMessage());
@@ -231,7 +265,9 @@ public class AuthenticationServiceTest {
 
     @Test
     public void shouldAuthenticateUser() {
-        var request = new AuthenticationRequest("john.doe@example.com", "password123");
+        var request = LoginRequest.builder()
+                        .email("john.doe@example.com")
+                        .build();
         Authentication auth = mock(Authentication.class);
 
         User user = User.builder()
@@ -246,11 +282,11 @@ public class AuthenticationServiceTest {
         var claims = new HashMap<String, Object>();
         claims.put("fullName", "John Doe");
         when(jwtService.generateToken(claims, user)).thenReturn("token123");
-        authenticationService.authenticate(request);
+        loginService.login(request);
     }
 
     @Test
-    public void shouldActivateAccount() throws MessagingException {
+    public void shouldActivateAccount() {
         var token = Token.builder()
                 .id(1)
                 .token("token123")
@@ -266,7 +302,7 @@ public class AuthenticationServiceTest {
         when(userRepository.save(any(User.class))).thenReturn(token.getUser());
         when(tokenRepository.save(any(Token.class))).thenReturn(token);
 
-        authenticationService.activateAccount(token.getToken());
+        activationService.activateUser(token.getToken());
 
         verify(userRepository).save(any(User.class));
         verify(tokenRepository).save(any(Token.class));
@@ -286,7 +322,7 @@ public class AuthenticationServiceTest {
 
         when(tokenRepository.findByToken(anyString())).thenReturn(Optional.empty());
 
-        var exp = assertThrows(RuntimeException.class, () -> authenticationService.activateAccount(token.getToken()));
+        var exp = assertThrows(RuntimeException.class, () -> activationService.activateUser(token.getToken()));
 
         verify(userRepository, never()).save(any(User.class));
         verify(tokenRepository, never()).save(any(Token.class));
@@ -307,7 +343,7 @@ public class AuthenticationServiceTest {
 
         when(tokenRepository.findByToken(anyString())).thenReturn(Optional.of(token));
 
-        var exp = assertThrows(RuntimeException.class, () -> authenticationService.activateAccount(token.getToken()));
+        var exp = assertThrows(RuntimeException.class, () -> activationService.activateUser(token.getToken()));
 
         verify(userRepository, never()).save(any(User.class));
         assertEquals("Activation token has expired. " +
@@ -329,7 +365,7 @@ public class AuthenticationServiceTest {
         when(tokenRepository.findByToken(anyString())).thenReturn(Optional.of(token));
         when(userRepository.findById(anyInt())).thenReturn(Optional.empty());
 
-        var exp = assertThrows(UsernameNotFoundException.class, () -> authenticationService.activateAccount(token.getToken()));
+        var exp = assertThrows(UsernameNotFoundException.class, () -> activationService.activateUser(token.getToken()));
 
         verify(userRepository, never()).save(any(User.class));
         verify(tokenRepository, never()).save(any(Token.class));

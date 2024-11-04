@@ -29,7 +29,7 @@ public class Order {
     private String orderTrackingNumber;
     private int totalQuantity;
     private BigDecimal totalPrice;
-    private String status;
+    private OrderStatus status;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

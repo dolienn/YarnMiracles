@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserEditDTO {
+public class UserDTO {
     private Integer id;
 
     @NotEmpty(message = "First name is mandatory")

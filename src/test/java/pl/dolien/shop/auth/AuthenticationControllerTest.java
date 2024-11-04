@@ -6,12 +6,25 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import pl.dolien.shop.auth.activation.ActivationController;
+import pl.dolien.shop.auth.activation.ActivationService;
+import pl.dolien.shop.auth.login.LoginRequest;
+import pl.dolien.shop.auth.login.LoginController;
+import pl.dolien.shop.auth.login.LoginService;
+import pl.dolien.shop.auth.password.ChangePasswordDTO;
+import pl.dolien.shop.auth.password.PasswordChanger;
+import pl.dolien.shop.auth.password.PasswordController;
+import pl.dolien.shop.auth.registration.RegistrationDTO;
+import pl.dolien.shop.auth.registration.RegistrationController;
+import pl.dolien.shop.auth.registration.RegistrationService;
+import pl.dolien.shop.auth.userInfo.UserInfoController;
+import pl.dolien.shop.auth.userInfo.UserInfoUpdater;
 import pl.dolien.shop.user.User;
+import pl.dolien.shop.user.UserController;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import javax.management.relation.RoleNotFoundException;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -19,10 +32,37 @@ import static org.mockito.Mockito.verify;
 public class AuthenticationControllerTest {
 
     @InjectMocks
-    private AuthenticationController controller;
+    private PasswordController passwordController;
+
+    @InjectMocks
+    private ActivationController activationController;
+
+    @InjectMocks
+    private LoginController loginController;
+
+    @InjectMocks
+    private RegistrationController registrationController;
+
+    @InjectMocks
+    private UserInfoController userInfoController;
+
+    @InjectMocks
+    private UserController userController;
 
     @Mock
-    private AuthenticationService service;
+    private RegistrationService registrationService;
+
+    @Mock
+    private PasswordChanger passwordChanger;
+
+    @Mock
+    private UserInfoUpdater userInfoUpdater;
+
+    @Mock
+    private LoginService loginService;
+
+    @Mock
+    private ActivationService activationService;
 
     @Mock
     private Authentication auth;
@@ -33,24 +73,23 @@ public class AuthenticationControllerTest {
     }
 
     @Test
-    public void shouldRegister() throws MessagingException {
-        ResponseEntity<?> response = controller.register(
-                RegistrationRequest.builder()
+    public void shouldRegister() throws MessagingException, RoleNotFoundException {
+        registrationController.register(
+                RegistrationDTO.builder()
                         .firstname("John")
                         .lastname("Doe")
                         .email("john.doe@example.com")
                         .password("password123")
                         .build()
         );
-        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
 
-        verify(service, times(1)).register(any(RegistrationRequest.class));
+        verify(registrationService, times(1)).registerUser(any(RegistrationDTO.class));
     }
 
     @Test
     public void shouldChangeAccountDetails() {
-        ResponseEntity<?> response = controller.changeAccountDetails(
-                RegistrationRequest.builder()
+        userInfoController.updateUserInfo(
+                RegistrationDTO.builder()
                         .firstname("John")
                         .lastname("Doe")
                         .email("john.doe@example.com")
@@ -58,50 +97,46 @@ public class AuthenticationControllerTest {
                         .build(),
                 auth
         );
-        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
 
-        verify(service, times(1)).changeAccountDetails(any(RegistrationRequest.class), any(Authentication.class));
+        verify(userInfoUpdater, times(1)).updateUserInformation(any(RegistrationDTO.class), any(Authentication.class));
     }
 
     @Test
     public void shouldChangePassword() {
-        ResponseEntity<?> response = controller.changePassword(
-                PasswordRequest.builder()
+        passwordController.changePassword(
+                ChangePasswordDTO.builder()
                         .yourPassword("password123")
                         .newPassword("newPassword123")
                         .build(),
                 auth
         );
-        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
 
-        verify(service, times(1)).changePassword(any(PasswordRequest.class), any(Authentication.class));
+        verify(passwordChanger, times(1)).changePassword(any(ChangePasswordDTO.class), any(Authentication.class));
     }
 
     @Test
     public void shouldAuthenticate() {
-        ResponseEntity<AuthenticationResponse> response = controller.authenticate(
-                AuthenticationRequest.builder()
+        loginController.login(
+                LoginRequest.builder()
                         .email("john.doe@example.com")
                         .password("password123")
                         .build()
         );
-        assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        verify(service, times(1)).authenticate(any(AuthenticationRequest.class));
+        verify(loginService, times(1)).login(any(LoginRequest.class));
     }
 
     @Test
-    public void shouldActivateAccount() throws MessagingException {
-        controller.confirm(
+    public void shouldActivateAccount() {
+        activationController.activateUser(
                 "token");
 
-        verify(service, times(1)).activateAccount(any(String.class));
+        verify(activationService, times(1)).activateUser(any(String.class));
     }
 
     @Test
     public void shouldGetUserInfo() {
-        ResponseEntity<User> response = controller.getUserInfo(auth);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        User response = userController.getUserByAuth(auth);
 
         verify(auth, times(1)).getPrincipal();
     }

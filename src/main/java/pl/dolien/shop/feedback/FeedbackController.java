@@ -3,10 +3,10 @@ package pl.dolien.shop.feedback;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import pl.dolien.shop.common.PageResponse;
+import pl.dolien.shop.pagination.PageRequestParams;
 
 @RestController
 @RequestMapping("feedbacks")
@@ -24,13 +24,12 @@ public class FeedbackController {
         return service.save(request, connectedUser);
     }
 
-    @GetMapping("/product/{product-id}")
-    public PageResponse<FeedbackResponse> findAllFeedbacksByProduct(
-            @PathVariable("product-id") Long productId,
-            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
-            @RequestParam(name = "size", defaultValue = "5", required = false) int size,
+    @GetMapping("/products/{productId}")
+    public Page<FeedbackResponse> getAllFeedbacksByProduct(
+            @PathVariable Long productId,
+            @ModelAttribute PageRequestParams pageRequestParams,
             Authentication connectedUser
     ) {
-        return service.findAllFeedbacksByProduct(productId, page, size, connectedUser);
+        return service.getAllFeedbacksByProduct(productId, pageRequestParams, connectedUser);
     }
 }

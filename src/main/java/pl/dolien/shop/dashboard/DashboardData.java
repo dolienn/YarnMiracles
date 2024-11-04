@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Entity
 public class DashboardData {
+
     @Id
     private Long id;
     private int totalUsers;

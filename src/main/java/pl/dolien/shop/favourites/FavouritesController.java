@@ -3,6 +3,7 @@ package pl.dolien.shop.favourites;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+import pl.dolien.shop.pagination.PageRequestParams;
 import pl.dolien.shop.product.Product;
 
 @RestController
@@ -14,9 +15,8 @@ public class FavouritesController {
 
     @GetMapping("/{userId}/favourites")
     public Page<Product> getFavourites(@PathVariable Integer userId,
-                                       @ModelAttribute FavouritesDTO favouritesDTO) {
-        favouritesDTO.setUserId(userId);
-        return favouritesService.getFavourites(favouritesDTO);
+                                       @ModelAttribute PageRequestParams pageRequestParams) {
+        return favouritesService.getFavourites(userId, pageRequestParams);
     }
 
     @PostMapping("/{userId}/favourites/{productId}")

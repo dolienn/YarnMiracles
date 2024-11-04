@@ -1,9 +1,11 @@
 package pl.dolien.shop.product;
 
+import org.springframework.stereotype.Component;
 import pl.dolien.shop.feedback.Feedback;
 
 import java.util.List;
 
+@Component
 public class RatingCalculator {
     public static double calculateRate(List<Feedback> feedbacks) {
         if (feedbacks == null || feedbacks.isEmpty()) {

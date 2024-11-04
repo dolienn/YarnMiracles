@@ -22,8 +22,8 @@ public class AdminUserInitializer {
     private static final String ADMIN_PASSWORD = "testadmin123";
 
     private final UserService userService;
-    private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
+    private final RoleService roleService;
 
     public void initializeAdminUser() throws RoleNotFoundException {
         if (isAdminUserNotExists()) {
@@ -37,7 +37,6 @@ public class AdminUserInitializer {
     }
 
     private User createAdminUser() throws RoleNotFoundException {
-        var adminRole = getAdminRole();
         return User.builder()
                 .firstname(ADMIN_FIRST_NAME)
                 .lastname(ADMIN_LAST_NAME)
@@ -46,12 +45,12 @@ public class AdminUserInitializer {
                 .password(encodeAdminPassword())
                 .accountLocked(false)
                 .enabled(true)
-                .roles(List.of(adminRole))
+                .roles(List.of(getAdminRole()))
                 .build();
     }
 
     private Role getAdminRole() throws RoleNotFoundException {
-        return roleService.findByName("ADMIN");
+        return roleService.getByName("ADMIN");
     }
 
     private String encodeAdminPassword() {

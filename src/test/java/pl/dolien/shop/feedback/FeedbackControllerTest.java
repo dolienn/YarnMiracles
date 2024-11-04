@@ -5,13 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
-import pl.dolien.shop.common.PageResponse;
+import pl.dolien.shop.pagination.PageRequestParams;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -47,8 +44,10 @@ public class FeedbackControllerTest {
 
     @Test
     public void shouldFindAllFeedbacksByProduct() {
-        PageResponse<FeedbackResponse> response = controller.findAllFeedbacksByProduct(1L, 0, 5, authentication);
+        PageRequestParams pageRequestParams = new PageRequestParams();
 
-        verify(service, times(1)).findAllFeedbacksByProduct(1L, 0, 5, authentication);
+        Page<FeedbackResponse> response = controller.getAllFeedbacksByProduct(1L, pageRequestParams, authentication);
+
+        verify(service, times(1)).getAllFeedbacksByProduct(1L, pageRequestParams, authentication);
     }
 }

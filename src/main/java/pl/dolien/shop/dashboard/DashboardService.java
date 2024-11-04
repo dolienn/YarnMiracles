@@ -33,4 +33,10 @@ public class DashboardService {
     private void saveDashboardData(DashboardData data) {
         dashboardDataRepository.save(data);
     }
+
+    public void incrementUserCount() {
+        DashboardData dashboardData = getDashboardData();
+        dashboardData.setTotalUsers(dashboardData.getTotalUsers() + 1);
+        saveDashboardData(dashboardData);
+    }
 }

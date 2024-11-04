@@ -10,22 +10,22 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Builder
-public class ProductRequest {
-    @NotNull(message = "Category is mandatory")
+public class ProductDTO {
+    @NotNull(message = "Enter a valid category")
     private ProductCategory category;
 
-    @NotEmpty(message = "Name is mandatory")
-    @NotBlank(message = "Name is mandatory")
+    @NotEmpty(message = "Enter a valid name")
+    @NotBlank(message = "Enter a valid name")
     private String name;
 
-    @NotEmpty(message = "Description is mandatory")
-    @NotBlank(message = "Description is mandatory")
+    @NotEmpty(message = "Enter a valid description")
+    @NotBlank(message = "Enter a valid description")
     private String description;
 
-    @NotNull(message = "Price is mandatory")
+    @NotNull(message = "Enter a valid price")
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than zero")
     private BigDecimal unitPrice;
 
-    @NotNull(message = "Units in stock is mandatory")
+    @NotNull(message = "Enter a valid units in stock")
     private int unitsInStock;
 }

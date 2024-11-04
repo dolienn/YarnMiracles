@@ -39,29 +39,23 @@ public class Product {
     private String name;
 
     private String description;
-
     private BigDecimal unitPrice;
-
     private String imageUrl;
-
     private boolean active;
-
     private int unitsInStock;
-
     private Double rate;
-
     private Long sales = 0L;
 
     @ManyToMany(mappedBy = "favourites")
     @JsonIgnore
-    private List<User> usersWhoFavourited;
+    private List<User> favouritedByUsers = new ArrayList<>();
 
     @ManyToMany(mappedBy = "purchasedProducts")
     @JsonIgnore
-    private List<User> usersWhoPurchased;
+    private List<User> buyers = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
-    private List<Feedback> feedbacks;
+    private List<Feedback> feedbacks = new ArrayList<>();
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -96,9 +90,7 @@ public class Product {
     }
 
     public void addUserWhoPurchased(User user) {
-        if (usersWhoPurchased == null) {
-            usersWhoPurchased = new ArrayList<>();
-        }
-        usersWhoPurchased.add(user);
+        user.addToPurchasedProducts(this);
+        buyers.add(user);
     }
 }

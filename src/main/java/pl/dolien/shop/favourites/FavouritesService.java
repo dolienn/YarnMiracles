@@ -22,12 +22,10 @@ public class FavouritesService {
     private final PageableBuilder pageableBuilder;
     private final FavouritesRepository favouritesRepository;
 
-    public Page<Product> getFavourites(FavouritesDTO favouritesDTO) {
-        PageRequestParams pageRequestParams = favouritesDTO.getPageRequestParams();
-
+    public Page<Product> getFavourites(Integer userId, PageRequestParams pageRequestParams) {
         Pageable pageable = pageableBuilder.buildPageable(pageRequestParams);
 
-        return favouritesRepository.findFavouritesByUserId(favouritesDTO.getUserId(), pageable);
+        return favouritesRepository.findFavouritesByUserId(userId, pageable);
     }
 
     public void addFavouriteProduct(Integer userId, Long productId) {
@@ -67,7 +65,7 @@ public class FavouritesService {
 
     private void addProductToFavourites(User user, Product product) {
         user.getFavourites().add(product);
-        product.getUsersWhoFavourited().add(user);
+        product.getFavouritedByUsers().add(user);
     }
 
     private void validateProductIsFavourite(User user, Product product) {
@@ -78,6 +76,6 @@ public class FavouritesService {
 
     private void removeProductFromFavourites(User user, Product product) {
         user.getFavourites().remove(product);
-        product.getUsersWhoFavourited().remove(user);
+        product.getFavouritedByUsers().remove(user);
     }
 }

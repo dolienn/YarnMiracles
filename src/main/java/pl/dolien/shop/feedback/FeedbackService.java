@@ -2,14 +2,15 @@ package pl.dolien.shop.feedback;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import pl.dolien.shop.common.PageResponse;
 import pl.dolien.shop.dashboard.DashboardDataRepository;
-import pl.dolien.shop.product.ProductRepository;
+import pl.dolien.shop.pagination.PageRequestParams;
+import pl.dolien.shop.pagination.PageableBuilder;
 import pl.dolien.shop.user.User;
+import pl.dolien.shop.user.UserService;
 
 import java.util.List;
 
@@ -21,9 +22,11 @@ public class FeedbackService {
 
     private final FeedbackRepository feedbackRepository;
 
-    private final ProductRepository productRepository;
+    private final PageableBuilder pageableBuilder;
 
     private final DashboardDataRepository dashboardDataRepository;
+
+    private final UserService userService;
 
     public Integer save(FeedbackRequest request, Authentication connectedUser) {
         if(request == null) {
@@ -39,42 +42,17 @@ public class FeedbackService {
         return feedbackRepository.save(feedback).getId();
     }
 
-    public PageResponse<FeedbackResponse> findAllFeedbacksByProduct(Long productId, int page, int size, Authentication connectedUser) {
+    public Page<FeedbackResponse> getAllFeedbacksByProduct(Long productId,
+                                                           PageRequestParams pageRequestParams,
+                                                           Authentication connectedUser) {
+        Pageable pageable = pageableBuilder.buildPageable(pageRequestParams);
 
-        if(productId == 0) {
-            throw new IllegalArgumentException("Invalid product ID");
-        }
-
-        if(productRepository.findById(productId).isEmpty()) {
-            throw new NullPointerException("Can't find a product with the id");
-        }
-
-        Pageable pageable = PageRequest.of(page, size);
-        Integer userId;
-
-        if (connectedUser != null) {
-            User user = ((User) connectedUser.getPrincipal());
-            if (user != null) {
-                userId = user.getId();
-            } else {
-                userId = null;
-            }
-        } else {
-            userId = null;
-        }
+        Integer userId = userService.getUserByAuth(connectedUser).getId();
 
         Page<Feedback> feedbacks = feedbackRepository.findAllByProductId(productId, pageable);
         List<FeedbackResponse> feedbackResponses = feedbacks.stream()
                 .map(f -> feedbackMapper.toFeedbackResponse(f, userId != null ? userId : 0))
                 .toList();
-        return new PageResponse<>(
-                feedbackResponses,
-                feedbacks.getNumber(),
-                feedbacks.getSize(),
-                feedbacks.getTotalElements(),
-                feedbacks.getTotalPages(),
-                feedbacks.isFirst(),
-                feedbacks.isLast()
-        );
+        return new PageImpl<>(feedbackResponses, pageable, feedbacks.getTotalElements());
     }
 }
