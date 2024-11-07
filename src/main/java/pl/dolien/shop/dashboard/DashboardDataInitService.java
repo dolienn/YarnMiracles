@@ -21,7 +21,7 @@ public class DashboardDataInitService {
                     .totalOrders(0)
                     .totalCustomerFeedback(0)
                     .productsSell(0)
-                    .thisMonthRevenue(BigDecimal.ZERO)
+                    .revenue(BigDecimal.ZERO)
                     .build();
             repository.save(dashboardData);
         }
