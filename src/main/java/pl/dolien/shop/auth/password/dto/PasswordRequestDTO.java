@@ -1,4 +1,4 @@
-package pl.dolien.shop.auth.password;
+package pl.dolien.shop.auth.password.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class ChangePasswordDTO {
+public class PasswordRequestDTO {
 
     @NotEmpty(message = "Your password is mandatory")
     @NotBlank(message = "Your password is mandatory")

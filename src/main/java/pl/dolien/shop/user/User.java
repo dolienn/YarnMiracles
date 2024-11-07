@@ -54,9 +54,9 @@ public class User implements UserDetails, Principal {
     private LocalDateTime lastModifiedDate;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<Role> roles = new ArrayList<>();
+    private Set<Role> roles = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
             name = "favourite_products",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -64,7 +64,7 @@ public class User implements UserDetails, Principal {
     )
     private List<Product> favourites = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
             name = "purchased_products",
             joinColumns = @JoinColumn(name = "user_id"),

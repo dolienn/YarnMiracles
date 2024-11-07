@@ -1,6 +1,5 @@
 package pl.dolien.shop.feedback;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +11,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import pl.dolien.shop.product.Product;
 
 import java.time.LocalDateTime;
 
@@ -31,10 +29,8 @@ public class Feedback {
     private Double note;
     private String comment;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    @JsonIgnore
-    private Product product;
+    @Column(nullable = false, updatable = false)
+    private Long productId;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

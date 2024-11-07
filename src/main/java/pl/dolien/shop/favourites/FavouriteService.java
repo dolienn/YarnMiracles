@@ -3,6 +3,7 @@ package pl.dolien.shop.favourites;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import pl.dolien.shop.exception.ProductAlreadyFavouriteException;
 import pl.dolien.shop.exception.ProductNotFavouriteException;
@@ -15,25 +16,37 @@ import pl.dolien.shop.user.UserService;
 
 @Service
 @RequiredArgsConstructor
-public class FavouritesService {
+public class FavouriteService {
 
     private final ProductService productService;
     private final UserService userService;
     private final PageableBuilder pageableBuilder;
-    private final FavouritesRepository favouritesRepository;
+    private final FavouriteRepository favouriteRepository;
 
-    public Page<Product> getFavourites(Integer userId, PageRequestParams pageRequestParams) {
+    public Page<Product> getFavourites(Integer userId,
+                                       PageRequestParams pageRequestParams,
+                                       Authentication connectedUser) {
+        userService.verifyUserIsAuthenticatedUser(userId, connectedUser);
+
         Pageable pageable = pageableBuilder.buildPageable(pageRequestParams);
 
-        return favouritesRepository.findFavouritesByUserId(userId, pageable);
+        return favouriteRepository.findFavouritesByUserId(userId, pageable);
     }
 
-    public void addFavouriteProduct(Integer userId, Long productId) {
+    public void addFavouriteProduct(Integer userId,
+                                    Long productId,
+                                    Authentication connectedUser) {
+        userService.verifyUserIsAuthenticatedUser(userId, connectedUser);
+
         UserProductTuple<User, Product> userProduct = getUserAndProduct(userId, productId);
         modifyFavouriteProduct(userProduct, true);
     }
 
-    public void removeFavouriteProduct(Integer userId, Long productId) {
+    public void removeFavouriteProduct(Integer userId,
+                                       Long productId,
+                                       Authentication connectedUser) {
+        userService.verifyUserIsAuthenticatedUser(userId, connectedUser);
+
         UserProductTuple<User, Product> userProduct = getUserAndProduct(userId, productId);
         modifyFavouriteProduct(userProduct, false);
     }

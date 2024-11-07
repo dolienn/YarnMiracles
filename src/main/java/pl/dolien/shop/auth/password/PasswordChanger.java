@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.dolien.shop.auth.password.dto.PasswordRequestDTO;
 import pl.dolien.shop.exception.IncorrectPasswordException;
 import pl.dolien.shop.exception.SamePasswordException;
 import pl.dolien.shop.user.User;
@@ -18,13 +19,13 @@ public class PasswordChanger {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
-    public void changePassword(ChangePasswordDTO dto, Authentication connectedUser) {
+    public User changePassword(PasswordRequestDTO dto, Authentication connectedUser) {
         User currentUser = userService.getUserByAuth(connectedUser);
 
         verifyPasswordMatch(dto.getYourPassword(), currentUser.getPassword());
         validateDifferentPasswords(dto.getYourPassword(), dto.getNewPassword());
 
-        updateUserPassword(dto.getNewPassword(), currentUser);
+        return updateUserPassword(dto.getNewPassword(), currentUser);
     }
 
     public void verifyPasswordMatch(String inputPassword, String currentPassword) {
@@ -39,9 +40,9 @@ public class PasswordChanger {
         }
     }
 
-    private void updateUserPassword(String newPassword, User currentUser) {
+    private User updateUserPassword(String newPassword, User currentUser) {
         currentUser.setPassword(passwordEncoder.encode(newPassword));
-        userService.saveUser(currentUser);
+        return userService.saveUser(currentUser);
     }
 }
 

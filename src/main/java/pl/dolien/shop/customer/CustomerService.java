@@ -22,7 +22,7 @@ public class CustomerService {
     private final ProductService productService;
 
     @Transactional
-    public Customer processCustomer(Order order, Customer customer, Authentication auth) {
+    public Customer processCustomer(Order order, Customer customer, Authentication connectedUser) {
         Customer existingCustomer = getCustomerByEmail(customer.getEmail());
 
         if (existingCustomer == null) {
@@ -30,7 +30,7 @@ public class CustomerService {
             return customer;
         }
 
-        if (isAuthenticatedCustomer(auth, customer)) {
+        if (isAuthenticatedCustomer(connectedUser, customer)) {
             updateCustomerInfo(existingCustomer, customer);
         }
 

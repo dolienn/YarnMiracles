@@ -1,6 +1,5 @@
 package pl.dolien.shop.product;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -11,9 +10,7 @@ import pl.dolien.shop.feedback.Feedback;
 import pl.dolien.shop.user.User;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Getter
 @Setter
@@ -28,10 +25,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    @JsonIgnore
-    private ProductCategory category;
+    private Integer categoryId;
 
     private String sku;
 
@@ -46,15 +40,14 @@ public class Product {
     private Double rate;
     private Long sales = 0L;
 
-    @ManyToMany(mappedBy = "favourites")
-    @JsonIgnore
-    private List<User> favouritedByUsers = new ArrayList<>();
+    @ManyToMany(mappedBy = "favourites", fetch = FetchType.LAZY)
+    private Set<User> favouritedByUsers = new HashSet<>();
 
-    @ManyToMany(mappedBy = "purchasedProducts")
-    @JsonIgnore
-    private List<User> buyers = new ArrayList<>();
+    @ManyToMany(mappedBy = "purchasedProducts", fetch = FetchType.LAZY)
+    private Set<User> buyers = new HashSet<>();
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
+    @OneToMany
+    @JoinColumn(name = "productId", updatable = false, insertable = false)
     private List<Feedback> feedbacks = new ArrayList<>();
 
     @CreatedDate

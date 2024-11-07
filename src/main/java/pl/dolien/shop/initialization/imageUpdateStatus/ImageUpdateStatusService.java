@@ -16,13 +16,12 @@ public class ImageUpdateStatusService {
         return statusList.isEmpty() ? new ImageUpdateStatus() : statusList.get(0);
     }
 
-    public void setImagesUpdated(boolean status) {
-        ImageUpdateStatus imageUpdateStatus = getImageUpdateStatus();
+    public void updateImageStatus(ImageUpdateStatus imageUpdateStatus, boolean status) {
         imageUpdateStatus.setImagesUpdated(status);
-        imageUpdateStatusRepository.save(imageUpdateStatus);
+        saveImageUpdateStatus(imageUpdateStatus);
     }
 
-    public void saveImageUpdateStatus(ImageUpdateStatus imageUpdateStatus) {
+    private void saveImageUpdateStatus(ImageUpdateStatus imageUpdateStatus) {
         imageUpdateStatusRepository.save(imageUpdateStatus);
     }
 }

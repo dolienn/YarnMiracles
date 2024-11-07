@@ -16,7 +16,7 @@ import pl.dolien.shop.user.User;
 import pl.dolien.shop.user.UserService;
 
 import javax.management.relation.RoleNotFoundException;
-import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -56,7 +56,7 @@ public class RegistrationService {
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .accountLocked(false)
                 .enabled(false)
-                .roles(List.of(userRole))
+                .roles(Set.of(userRole))
                 .build();
     }
 

@@ -1,4 +1,4 @@
-package pl.dolien.shop.feedback;
+package pl.dolien.shop.feedback.dto;
 
 import lombok.*;
 
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FeedbackResponse {
+public class FeedbackResponseDTO {
 
     private Double note;
     private String comment;

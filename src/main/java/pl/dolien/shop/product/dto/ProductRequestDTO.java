@@ -1,16 +1,17 @@
-package pl.dolien.shop.product;
+package pl.dolien.shop.product.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import pl.dolien.shop.productCategory.ProductCategory;
 
 import java.math.BigDecimal;
 
 @Getter
 @Setter
 @Builder
-public class ProductDTO {
+public class ProductRequestDTO {
     @NotNull(message = "Enter a valid category")
     private ProductCategory category;
 

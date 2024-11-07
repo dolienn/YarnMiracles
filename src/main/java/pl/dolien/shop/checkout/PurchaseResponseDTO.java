@@ -1,4 +1,4 @@
-package pl.dolien.shop.purchase;
+package pl.dolien.shop.checkout;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PurchaseResponse {
+public class PurchaseResponseDTO {
 
     private String orderTrackingNumber;
 }

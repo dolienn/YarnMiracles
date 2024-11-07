@@ -16,31 +16,27 @@ public class UserInfoUpdater {
     private final UserService userService;
     private final PasswordChanger passwordChanger;
 
-    public void updateUserInformation(RegistrationDTO request, Authentication connectedUser) {
+    public User updateUserInformation(RegistrationDTO request, Authentication connectedUser) {
         User currentUser = userService.getUserByAuth(connectedUser);
 
         passwordChanger.verifyPasswordMatch(request.getPassword(), currentUser.getPassword());
         validateEmailUniqueness(request.getEmail(), currentUser.getEmail());
 
-        applyProfileUpdates(request, currentUser);
+        return applyProfileUpdates(request, currentUser);
     }
 
     private void validateEmailUniqueness(String newEmail, String currentEmail) {
-        if(isEmailTakenByAnotherUser(newEmail, currentEmail)) {
+        if(userService.isEmailTaken(newEmail, currentEmail)) {
             throw new EmailAlreadyExistsException("There is a user with the same email");
         }
     }
 
-    private void applyProfileUpdates(RegistrationDTO request, User currentUser) {
+    private User applyProfileUpdates(RegistrationDTO request, User currentUser) {
         currentUser.setFirstname(request.getFirstname());
         currentUser.setLastname(request.getLastname());
         currentUser.setEmail(request.getEmail());
         currentUser.setDateOfBirth(request.getDateOfBirth());
-        userService.saveUser(currentUser);
-    }
-
-    private boolean isEmailTakenByAnotherUser(String newEmail, String currentEmail) {
-        return userService.isUserExists(newEmail) && !newEmail.equals(currentEmail);
+        return userService.saveUser(currentUser);
     }
 }
 

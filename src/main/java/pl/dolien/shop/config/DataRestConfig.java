@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import pl.dolien.shop.country.Country;
 import pl.dolien.shop.order.Order;
 import pl.dolien.shop.product.Product;
-import pl.dolien.shop.product.ProductCategory;
+import pl.dolien.shop.productCategory.ProductCategory;
 
 import java.util.ArrayList;
 import java.util.List;

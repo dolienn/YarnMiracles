@@ -9,7 +9,7 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class OrderService {
-    private final ProductInventoryService productInventoryService;
+    private final ProductInventoryUpdater productInventoryService;
 
     @Transactional
     public void addOrderItems(Order order, Set<OrderItem> orderItems) {

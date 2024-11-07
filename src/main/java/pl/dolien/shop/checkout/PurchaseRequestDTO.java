@@ -1,4 +1,4 @@
-package pl.dolien.shop.purchase;
+package pl.dolien.shop.checkout;
 
 import lombok.*;
 import pl.dolien.shop.address.Address;
@@ -11,7 +11,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Builder
-public class Purchase {
+public class PurchaseRequestDTO {
 
     private Customer customer;
     private Address shippingAddress;

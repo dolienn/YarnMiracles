@@ -9,7 +9,7 @@ import pl.dolien.shop.product.ProductService;
 
 @Service
 @RequiredArgsConstructor
-public class ProductInventoryService {
+public class ProductInventoryUpdater {
     private final ProductService productService;
     private final DashboardService dashboardService;
 

@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
+import pl.dolien.shop.auth.login.dto.LoginRequestDTO;
+import pl.dolien.shop.auth.login.dto.LoginResponseDTO;
 import pl.dolien.shop.security.JwtService;
 import pl.dolien.shop.user.User;
 import pl.dolien.shop.user.UserService;
@@ -18,7 +20,7 @@ public class LoginService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public LoginResponse login(LoginRequest request) {
+    public LoginResponseDTO login(LoginRequestDTO request) {
         var auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -30,7 +32,7 @@ public class LoginService {
 
         String jwtToken = jwtService.generateToken(Map.of("fullName", user.getFullName()), user);
 
-        return LoginResponse.builder()
+        return LoginResponseDTO.builder()
                 .token(jwtToken).build();
     }
 }

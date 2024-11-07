@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.dolien.shop.auth.login.dto.LoginRequestDTO;
+import pl.dolien.shop.auth.login.dto.LoginResponseDTO;
 
 @RestController
 @RequestMapping("auth")
@@ -17,8 +19,8 @@ public class LoginController {
     private final LoginService service;
 
     @PostMapping("/login")
-    public LoginResponse login(
-            @RequestBody @Valid LoginRequest request
+    public LoginResponseDTO login(
+            @RequestBody @Valid LoginRequestDTO request
     ) {
         return service.login(request);
     }

@@ -16,11 +16,15 @@ public class DashboardService {
         return dashboardDataRepository.findById(1L).orElseThrow(() -> new DashboardDataNotFoundException("Dashboard data not found"));
     }
 
+    private void saveDashboardData(DashboardData data) {
+        dashboardDataRepository.save(data);
+    }
+
     @Transactional
     public void updateOrderMetrics(Order order) {
         DashboardData data = getDashboardData();
         data.setTotalOrders(data.getTotalOrders() + 1);
-        data.setThisMonthRevenue(data.getThisMonthRevenue().add(order.getTotalPrice()));
+        data.setRevenue(data.getRevenue().add(order.getTotalPrice()));
         saveDashboardData(data);
     }
 
@@ -30,13 +34,15 @@ public class DashboardService {
         saveDashboardData(data);
     }
 
-    private void saveDashboardData(DashboardData data) {
-        dashboardDataRepository.save(data);
-    }
-
     public void incrementUserCount() {
         DashboardData dashboardData = getDashboardData();
         dashboardData.setTotalUsers(dashboardData.getTotalUsers() + 1);
+        saveDashboardData(dashboardData);
+    }
+
+    public void incrementCustomerFeedbackCount() {
+        DashboardData dashboardData = getDashboardData();
+        dashboardData.setTotalCustomerFeedback(dashboardData.getTotalCustomerFeedback() + 1);
         saveDashboardData(dashboardData);
     }
 }

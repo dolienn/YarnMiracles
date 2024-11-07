@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.dolien.shop.exception.DirectoryCreationException;
+import pl.dolien.shop.exception.EmptyFileException;
 
 import java.io.File;
 
@@ -17,20 +18,20 @@ public class FileService {
 
     public void validateFileIsNotEmpty(MultipartFile file) {
         if (file.isEmpty()) {
-            throw new IllegalArgumentException("File is empty");
+            throw new EmptyFileException("File cannot be empty");
         }
     }
 
-    public String getUploadDirectory() {
-        String absoluteUploadDir = new File(uploadDir).getAbsolutePath();
-        ensureDirectoryExists(absoluteUploadDir);
-        return absoluteUploadDir;
-    }
+    public void validateUploadDirectory() {
+        File directory = new File(uploadDir);
 
-    private void ensureDirectoryExists(String directoryPath) {
-        File directory = new File(directoryPath);
-        if (!directory.exists() && !directory.mkdirs()) {
-            throw new DirectoryCreationException("Failed to create upload directory: " + directoryPath);
+        if (!directory.exists() || !directory.isDirectory()) {
+            throw new DirectoryCreationException("Upload directory does not exist: " + uploadDir);
+        }
+
+        File[] files = directory.listFiles();
+        if (files == null || files.length == 0) {
+            throw new DirectoryCreationException("Upload directory is empty: " + uploadDir);
         }
     }
 }

@@ -5,9 +5,9 @@ import com.cloudinary.utils.ObjectUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import pl.dolien.shop.exception.EmptyFileException;
 import pl.dolien.shop.exception.ImageReadException;
 import pl.dolien.shop.exception.ImageUploadException;
+import pl.dolien.shop.file.FileService;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -21,22 +21,17 @@ public class ImageUploader {
 
     private final Cloudinary cloudinary;
     private final ImageTransformer imageTransformer;
+    private final FileService fileService;
 
     public String uploadImage(MultipartFile file) {
-        validateFile(file);
+        fileService.validateFileIsNotEmpty(file);
 
         BufferedImage img = readImage(file);
-        String transformation = imageTransformer.determineTransformation(img);
+        String transformation = imageTransformer.getTransformation(img);
 
         Map<String, Object> uploadResult = uploadToCloudinary(file, transformation);
 
         return getSecureUrl(uploadResult);
-    }
-
-    private void validateFile(MultipartFile file) {
-        if (file.isEmpty()) {
-            throw new EmptyFileException("File cannot be empty");
-        }
     }
 
     private BufferedImage readImage(MultipartFile file) {

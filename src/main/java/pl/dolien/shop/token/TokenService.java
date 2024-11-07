@@ -2,11 +2,9 @@ package pl.dolien.shop.token;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.dolien.shop.dashboard.DashboardService;
 import pl.dolien.shop.exception.ExpiredTokenException;
 import pl.dolien.shop.exception.InvalidTokenException;
 import pl.dolien.shop.user.User;
-import pl.dolien.shop.user.UserService;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
@@ -25,14 +23,9 @@ public class TokenService {
     public String generateActivationToken(User user) {
         String generatedToken = generateActivationCode();
 
-        Token token = createAndSaveToken(generatedToken, user);
+        Token token = buildAndSaveToken(generatedToken, user);
 
         return token.getToken();
-    }
-
-    public Token getToken(String token) {
-        return tokenRepository.findByToken(token)
-                .orElseThrow(() -> new InvalidTokenException("Invalid token"));
     }
 
     public Token saveToken(Token token) {
@@ -54,7 +47,7 @@ public class TokenService {
                 .collect(Collectors.joining());
     }
 
-    private Token createAndSaveToken(String generatedToken, User user) {
+    private Token buildAndSaveToken(String generatedToken, User user) {
         Token token = Token.builder()
                 .token(generatedToken)
                 .createdAt(LocalDateTime.now())
@@ -62,6 +55,11 @@ public class TokenService {
                 .user(user)
                 .build();
         return saveToken(token);
+    }
+
+    private Token getToken(String token) {
+        return tokenRepository.findByToken(token)
+                .orElseThrow(() -> new InvalidTokenException("Invalid token"));
     }
 
     private static boolean isTokenExpired(LocalDateTime expirationTime) {

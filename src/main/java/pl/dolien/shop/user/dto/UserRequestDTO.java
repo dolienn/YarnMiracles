@@ -1,4 +1,4 @@
-package pl.dolien.shop.user;
+package pl.dolien.shop.user.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
+public class UserRequestDTO {
     private Integer id;
 
     @NotEmpty(message = "First name is mandatory")

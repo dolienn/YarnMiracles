@@ -21,8 +21,9 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
 
     private static final String[] PUBLIC_ENDPOINTS = {
-            "/admin/**",
-            "/contact/**",
+            "/dashboard/**",
+            "/support/**",
+            "/payment/**",
             "/orders/**",
             "/customers/**",
             "/checkout/**",
@@ -30,7 +31,7 @@ public class SecurityConfig {
             "/feedbacks/**",
             "/users/**",
             "/products/**",
-            "/product-category/**",
+            "/product-categories/**",
             "/auth/**",
             "/v2/api-docs",
             "/v3/api-docs",

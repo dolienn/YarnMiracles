@@ -10,7 +10,7 @@ import pl.dolien.shop.user.UserService;
 
 import javax.management.relation.RoleNotFoundException;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -27,7 +27,7 @@ public class AdminUserInitializer {
 
     public void initializeAdminUser() throws RoleNotFoundException {
         if (isAdminUserNotExists()) {
-            User adminUser = createAdminUser();
+            User adminUser = buildAdminUser();
             userService.saveUser(adminUser);
         }
     }
@@ -36,7 +36,7 @@ public class AdminUserInitializer {
         return !userService.isUserExists(ADMIN_EMAIL);
     }
 
-    private User createAdminUser() throws RoleNotFoundException {
+    private User buildAdminUser() throws RoleNotFoundException {
         return User.builder()
                 .firstname(ADMIN_FIRST_NAME)
                 .lastname(ADMIN_LAST_NAME)
@@ -45,7 +45,7 @@ public class AdminUserInitializer {
                 .password(encodeAdminPassword())
                 .accountLocked(false)
                 .enabled(true)
-                .roles(List.of(getAdminRole()))
+                .roles(Set.of(getAdminRole()))
                 .build();
     }
 

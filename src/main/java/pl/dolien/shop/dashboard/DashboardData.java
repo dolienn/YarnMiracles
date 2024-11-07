@@ -20,5 +20,5 @@ public class DashboardData {
     private int totalOrders;
     private int totalCustomerFeedback;
     private int productsSell;
-    private BigDecimal thisMonthRevenue;
+    private BigDecimal revenue;
 }

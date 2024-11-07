@@ -32,10 +32,10 @@ public class ProductImageInitializer {
             return;
         }
 
-        List<Product> products = productService.findAllProducts();
+        List<Product> products = productService.getAllProducts();
         products.forEach(this::processProductImage);
 
-        markImagesAsUpdated(imageUpdateStatus);
+        imageUpdateStatusService.updateImageStatus(imageUpdateStatus, true);
     }
 
     private void processProductImage(Product product) {
@@ -58,10 +58,5 @@ public class ProductImageInitializer {
         String imageUrl = imageUploader.uploadImage(multipartFile);
         product.setImageUrl(imageUrl);
         productService.saveProduct(product);
-    }
-
-    private void markImagesAsUpdated(ImageUpdateStatus imageUpdateStatus) {
-        imageUpdateStatus.setImagesUpdated(true);
-        imageUpdateStatusService.saveImageUpdateStatus(imageUpdateStatus);
     }
 }

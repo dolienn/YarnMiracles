@@ -5,18 +5,14 @@ import org.springframework.stereotype.Service;
 import pl.dolien.shop.exception.InvalidSortOrderException;
 
 @Service
-public class SortService {
+public class SortGenerator {
     public Sort generateSort(String sortOrderType) {
-        if (isSortOrderTypeNull(sortOrderType)) {
+        if (sortOrderType == null) {
             return Sort.unsorted();
         }
 
         SortOrder validatedSortOrder  = parseAndValidateSortOrder(sortOrderType);
-        return createSort(validatedSortOrder);
-    }
-
-    private boolean isSortOrderTypeNull(String sortOrderType) {
-        return sortOrderType == null;
+        return buildSort(validatedSortOrder);
     }
 
     private SortOrder parseAndValidateSortOrder(String sortOrderType) {
@@ -30,7 +26,7 @@ public class SortService {
         return sortOrder;
     }
 
-    private Sort createSort(SortOrder sortOrder) {
+    private Sort buildSort(SortOrder sortOrder) {
         return Sort.by(Sort.Direction.fromString(sortOrder.getDirection()), sortOrder.getProperty());
     }
 }

@@ -10,7 +10,7 @@ public class ImageTransformer {
     private static final String PORTRAIT_TRANSFORMATION = "w_171,h_171,c_fill";
     private static final String LANDSCAPE_TRANSFORMATION = "w_171,h_171,c_pad,b_auto";
 
-    public String determineTransformation(BufferedImage img) {
+    public String getTransformation(BufferedImage img) {
         int width = img.getWidth();
         int height = img.getHeight();
 

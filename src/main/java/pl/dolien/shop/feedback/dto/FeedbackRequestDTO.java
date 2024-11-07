@@ -1,10 +1,10 @@
-package pl.dolien.shop.feedback;
+package pl.dolien.shop.feedback.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 
 @Builder
-public record FeedbackRequest(
+public record FeedbackRequestDTO(
         @Positive(message = "200")
         @Min(value = 1,message = "201")
         @Max(value = 5,message = "202")

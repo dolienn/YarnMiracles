@@ -1,9 +1,10 @@
-package pl.dolien.shop.product;
+package pl.dolien.shop.productCategory;
 
 import jakarta.persistence.*;
 import lombok.*;
+import pl.dolien.shop.product.Product;
 
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,6 +21,7 @@ public class ProductCategory {
     @Column(unique = true)
     private String categoryName;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
-    private Set<Product> products;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "categoryId")
+    private List<Product> products;
 }
