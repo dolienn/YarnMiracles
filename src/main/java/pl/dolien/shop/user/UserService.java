@@ -45,7 +45,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    @CacheEvict(cacheNames = "connectedUser", key = "#connectedUser.principal.id")
+    @CacheEvict(cacheNames = "connectedUser", keyGenerator = "customKeyGenerator")
     public UserWithRoleDTO addRole(String email, String roleName, Authentication connectedUser) throws RoleNotFoundException {
         verifyUserHasAdminRole(connectedUser);
         User user = getUserByEmail(email);
@@ -56,7 +56,7 @@ public class UserService {
         return toUserWithRoleDTO(saveUser(user));
     }
 
-    @Cacheable(cacheNames = "connectedUser", key = "#connectedUser.principal.id", unless = "#result == null")
+    @Cacheable(cacheNames = "connectedUser", keyGenerator = "customKeyGenerator")
     public UserDTO getUserDTOByAuth(Authentication connectedUser) {
         User user = getUserByAuth(connectedUser);
         return toUserDTO(user);

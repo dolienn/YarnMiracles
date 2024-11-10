@@ -1,13 +1,12 @@
 package pl.dolien.shop.feedback.dto;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
-@Builder
-@AllArgsConstructor
+@SuperBuilder
 @NoArgsConstructor
 public class FeedbackResponseDTO {
 

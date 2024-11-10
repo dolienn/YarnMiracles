@@ -1,9 +1,11 @@
 package pl.dolien.shop.keyGenerator;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import pl.dolien.shop.exception.GeneratorNotFoundException;
 import pl.dolien.shop.pagination.PaginationAndSortParams;
+import pl.dolien.shop.pagination.PaginationParams;
 
 import java.util.List;
 
@@ -21,7 +23,9 @@ public class KeyFragmentGeneratorFactory {
     }
 
     private boolean isMatchingGenerator(KeyFragmentGenerator generator, Object param) {
-        return (generator instanceof PageRequestParamsKeyFragmentGenerator && param instanceof PaginationAndSortParams);
+        return (generator instanceof PaginationAndSortParamsKeyFragmentGenerator && param instanceof PaginationAndSortParams) ||
+                (generator instanceof PaginationParamsKeyFragmentGenerator && param instanceof PaginationParams) ||
+                (generator instanceof AuthenticationKeyFragmentGenerator && param instanceof Authentication);
     }
 
     private KeyFragmentGenerator getDefaultGenerator() {

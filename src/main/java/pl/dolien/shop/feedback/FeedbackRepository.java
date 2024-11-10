@@ -11,11 +11,7 @@ import java.util.List;
 @RepositoryRestResource(exported = false)
 public interface FeedbackRepository extends JpaRepository<Feedback, Integer> {
 
-    @Query("""
-            SELECT f
-            FROM Feedback f
-            WHERE f.productId = :productId
-            """)
+    @Query("SELECT f FROM Feedback f WHERE f.productId = :productId")
     List<Feedback> findAllByProductId(@Param("productId") Long productId, Pageable pageable);
 
     List<Feedback> findAllByProductIdIn(List<Long> ids);

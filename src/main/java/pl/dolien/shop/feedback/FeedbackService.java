@@ -44,8 +44,7 @@ public class FeedbackService {
                                                            PaginationParams paginationParams,
                                                            Authentication connectedUser) {
         Pageable pageable = pageableBuilder.buildPageable(paginationParams);
-        Integer userId = userService.getUserByAuth(connectedUser).getId();
-
+        Integer userId = ((User) connectedUser.getPrincipal()).getId();
         List<Feedback> feedbacks = feedbackRepository.findAllByProductId(productId, pageable);
         return toFeedbackResponses(feedbacks, userId);
     }
