@@ -24,9 +24,6 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private Integer categoryId;
-
     private String sku;
 
     @Column(unique = true)
@@ -40,13 +37,16 @@ public class Product {
     private Double rate;
     private Long sales = 0L;
 
-    @ManyToMany(mappedBy = "favourites", fetch = FetchType.LAZY)
-    private Set<User> favouritedByUsers = new HashSet<>();
+    @Column(nullable = false, updatable = false)
+    private Integer categoryId;
 
-    @ManyToMany(mappedBy = "purchasedProducts", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "favourites")
+    private Set<User> favouritedBy = new HashSet<>();
+
+    @ManyToMany(mappedBy = "purchasedProducts")
     private Set<User> buyers = new HashSet<>();
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "productId", updatable = false, insertable = false)
     private List<Feedback> feedbacks = new ArrayList<>();
 

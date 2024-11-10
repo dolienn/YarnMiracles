@@ -1,19 +1,28 @@
 package pl.dolien.shop.user;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.dolien.shop.exception.EmailAlreadyExistsException;
 import pl.dolien.shop.exception.UserNotFoundException;
 import pl.dolien.shop.role.Role;
 import pl.dolien.shop.role.RoleService;
+import pl.dolien.shop.user.dto.UserDTO;
 import pl.dolien.shop.user.dto.UserRequestDTO;
+import pl.dolien.shop.user.dto.UserWithRoleDTO;
 
 import javax.management.relation.RoleNotFoundException;
 
-import static pl.dolien.shop.user.UserMapper.toUser;
+import java.util.logging.Logger;
+
+import static pl.dolien.shop.user.UserMapper.*;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +31,7 @@ public class UserService {
     private final RoleService roleService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
 
     public User getUserById(Integer userId) {
         return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
@@ -35,14 +45,21 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User addRole(String email, String roleName, Authentication connectedUser) throws RoleNotFoundException {
+    @CacheEvict(cacheNames = "connectedUser", key = "#connectedUser.principal.id")
+    public UserWithRoleDTO addRole(String email, String roleName, Authentication connectedUser) throws RoleNotFoundException {
         verifyUserHasAdminRole(connectedUser);
         User user = getUserByEmail(email);
 
         Role role = roleService.getByName(roleName);
         user.addToRoles(role);
 
-        return saveUser(user);
+        return toUserWithRoleDTO(saveUser(user));
+    }
+
+    @Cacheable(cacheNames = "connectedUser", key = "#connectedUser.principal.id", unless = "#result == null")
+    public UserDTO getUserDTOByAuth(Authentication connectedUser) {
+        User user = getUserByAuth(connectedUser);
+        return toUserDTO(user);
     }
 
     public User getUserByAuth(Authentication connectedUser) {
@@ -53,13 +70,13 @@ public class UserService {
     }
 
     public void verifyUserIsAuthenticatedUser(Integer userId, Authentication connectedUser) {
-        User user = getUserById(userId);
-        if (!user.equals(getUserByAuth(connectedUser))) {
+        if (!userId.equals(getUserByAuth(connectedUser).getId())) {
             throw new AccessDeniedException("Authenticated user does not match the requested user");
         }
     }
 
-    public User editUser(UserRequestDTO userDto, Authentication connectedUser) {
+    @CachePut(cacheNames = "connectedUser", key = "#connectedUser.principal.id")
+    public UserDTO editUser(UserRequestDTO userDto, Authentication connectedUser) {
         verifyUserHasAdminRole(connectedUser);
         User userFromDB = getUserById(userDto.getId());
 
@@ -68,7 +85,7 @@ public class UserService {
         }
 
         User updatedUser = toUser(userFromDB, userDto, passwordEncoder);
-        return saveUser(updatedUser);
+        return toUserDTO(saveUser(updatedUser));
     }
 
     public void verifyUserHasAdminRole(Authentication connectedUser) {

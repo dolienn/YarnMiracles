@@ -1,6 +1,7 @@
 package pl.dolien.shop.user.dto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @SuperBuilder
+@NoArgsConstructor
 public class UserDTO {
     private Integer id;
     private String firstname;

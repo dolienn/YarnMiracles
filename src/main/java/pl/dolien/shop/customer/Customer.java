@@ -24,7 +24,7 @@ public class Customer {
     @Column(unique = true)
     private String email;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customer", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Order> orders = new HashSet<>();
 
     public void add(Order order) {

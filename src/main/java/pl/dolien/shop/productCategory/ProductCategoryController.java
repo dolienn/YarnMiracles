@@ -19,6 +19,6 @@ public class ProductCategoryController {
 
     @GetMapping("/{categoryName}")
     public ProductCategoryDTO getByCategoryName(@PathVariable String categoryName) {
-        return toProductCategoryDTO(productCategoryService.getByCategoryName(categoryName));
+        return productCategoryService.getByCategoryName(categoryName);
     }
 }

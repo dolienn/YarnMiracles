@@ -1,18 +1,27 @@
 package pl.dolien.shop.favourites;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import pl.dolien.shop.exception.ProductAlreadyFavouriteException;
 import pl.dolien.shop.exception.ProductNotFavouriteException;
-import pl.dolien.shop.pagination.PageRequestParams;
+import pl.dolien.shop.pagination.PaginationAndSortParams;
 import pl.dolien.shop.pagination.PageableBuilder;
 import pl.dolien.shop.product.Product;
 import pl.dolien.shop.product.ProductService;
+import pl.dolien.shop.product.dto.ProductDTO;
 import pl.dolien.shop.user.User;
 import pl.dolien.shop.user.UserService;
+
+import java.util.List;
+
+import static pl.dolien.shop.product.ProductMapper.toProductDTO;
+import static pl.dolien.shop.product.ProductMapper.toProductDTOs;
 
 @Service
 @RequiredArgsConstructor
@@ -23,16 +32,18 @@ public class FavouriteService {
     private final PageableBuilder pageableBuilder;
     private final FavouriteRepository favouriteRepository;
 
-    public Page<Product> getFavourites(Integer userId,
-                                       PageRequestParams pageRequestParams,
-                                       Authentication connectedUser) {
+    @Cacheable(cacheNames = "favouritesByUser", keyGenerator = "customKeyGenerator")
+    public List<ProductDTO> getFavourites(Integer userId,
+                                          PaginationAndSortParams paginationAndSortParams,
+                                          Authentication connectedUser) {
         userService.verifyUserIsAuthenticatedUser(userId, connectedUser);
 
-        Pageable pageable = pageableBuilder.buildPageable(pageRequestParams);
+        Pageable pageable = pageableBuilder.buildPageable(paginationAndSortParams);
 
-        return favouriteRepository.findFavouritesByUserId(userId, pageable);
+        return toProductDTOs(favouriteRepository.findFavouritesByUserId(userId, pageable));
     }
 
+    @CacheEvict(cacheNames = "favouritesByUser", keyGenerator = "customKeyGenerator")
     public void addFavouriteProduct(Integer userId,
                                     Long productId,
                                     Authentication connectedUser) {
@@ -42,6 +53,7 @@ public class FavouriteService {
         modifyFavouriteProduct(userProduct, true);
     }
 
+    @CacheEvict(cacheNames = "favouritesByUser", keyGenerator = "customKeyGenerator")
     public void removeFavouriteProduct(Integer userId,
                                        Long productId,
                                        Authentication connectedUser) {
@@ -78,7 +90,7 @@ public class FavouriteService {
 
     private void addProductToFavourites(User user, Product product) {
         user.getFavourites().add(product);
-        product.getFavouritedByUsers().add(user);
+        product.getFavouritedBy().add(user);
     }
 
     private void validateProductIsFavourite(User user, Product product) {
@@ -89,6 +101,6 @@ public class FavouriteService {
 
     private void removeProductFromFavourites(User user, Product product) {
         user.getFavourites().remove(product);
-        product.getFavouritedByUsers().remove(user);
+        product.getFavouritedBy().remove(user);
     }
 }

@@ -24,16 +24,16 @@ public class UserController {
 
     @GetMapping("/byAuth")
     public UserDTO getUserByAuth(Authentication connectedUser) {
-        return toUserDTO(userService.getUserByAuth(connectedUser));
+        return userService.getUserDTOByAuth(connectedUser);
     }
 
     @PutMapping
     public UserDTO editUser(@RequestBody @Valid UserRequestDTO user, Authentication connectedUser) {
-        return toUserDTO(userService.editUser(user, connectedUser));
+        return userService.editUser(user, connectedUser);
     }
 
     @GetMapping("/{email}/roles/{roleName}")
     public UserWithRoleDTO addRole(@PathVariable String email, @PathVariable String roleName, Authentication connectedUser) throws RoleNotFoundException {
-        return toUserWithRoleDTO(userService.addRole(email, roleName, connectedUser));
+        return userService.addRole(email, roleName, connectedUser);
     }
 }

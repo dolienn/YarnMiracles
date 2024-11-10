@@ -5,8 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import pl.dolien.shop.pagination.PageRequestParams;
+import pl.dolien.shop.pagination.PaginationAndSortParams;
 import pl.dolien.shop.product.Product;
+import pl.dolien.shop.product.dto.ProductDTO;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("users")
@@ -17,10 +20,10 @@ public class FavouriteController {
     private final FavouriteService favouriteService;
 
     @GetMapping("/{userId}/favourites")
-    public Page<Product> getFavourites(@PathVariable Integer userId,
-                                       @ModelAttribute PageRequestParams pageRequestParams,
-                                       Authentication connectedUser) {
-        return favouriteService.getFavourites(userId, pageRequestParams, connectedUser);
+    public List<ProductDTO> getFavourites(@PathVariable Integer userId,
+                                          @ModelAttribute PaginationAndSortParams paginationAndSortParams,
+                                          Authentication connectedUser) {
+        return favouriteService.getFavourites(userId, paginationAndSortParams, connectedUser);
     }
 
     @PostMapping("/{userId}/favourites/{productId}")

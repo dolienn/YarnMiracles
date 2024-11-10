@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import pl.dolien.shop.feedback.dto.FeedbackDTO;
 import pl.dolien.shop.feedback.dto.FeedbackRequestDTO;
 import pl.dolien.shop.feedback.dto.FeedbackResponseDTO;
-import pl.dolien.shop.pagination.PageRequestParams;
+import pl.dolien.shop.pagination.PaginationAndSortParams;
+import pl.dolien.shop.pagination.PaginationParams;
 
 import java.util.List;
 
@@ -33,9 +34,9 @@ public class FeedbackController {
     @GetMapping("/products/{productId}")
     public List<FeedbackResponseDTO> getAllFeedbacksByProduct(
             @PathVariable Long productId,
-            @ModelAttribute PageRequestParams pageRequestParams,
+            @ModelAttribute PaginationParams paginationParams,
             Authentication connectedUser
     ) {
-        return service.getFeedbacksByProduct(productId, pageRequestParams, connectedUser);
+        return service.getFeedbacksByProduct(productId, paginationParams, connectedUser);
     }
 }

@@ -1,14 +1,16 @@
 package pl.dolien.shop.feedback;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import pl.dolien.shop.dashboard.DashboardService;
 import pl.dolien.shop.feedback.dto.FeedbackRequestDTO;
 import pl.dolien.shop.feedback.dto.FeedbackResponseDTO;
-import pl.dolien.shop.pagination.PageRequestParams;
 import pl.dolien.shop.pagination.PageableBuilder;
+import pl.dolien.shop.pagination.PaginationParams;
 import pl.dolien.shop.user.User;
 import pl.dolien.shop.user.UserService;
 
@@ -29,6 +31,7 @@ public class FeedbackService {
 
     private final UserService userService;
 
+    @CachePut(cacheNames = "feedbacksByProduct", keyGenerator = "customKeyGenerator")
     public Feedback saveFeedback(FeedbackRequestDTO request, Authentication connectedUser) {
         User user = userService.getUserByAuth(connectedUser);
         Feedback feedback = toFeedbackWithCreator(request, user);
@@ -36,10 +39,11 @@ public class FeedbackService {
         return feedbackRepository.save(feedback);
     }
 
+    @Cacheable(cacheNames = "feedbacksByProduct", keyGenerator = "customKeyGenerator")
     public List<FeedbackResponseDTO> getFeedbacksByProduct(Long productId,
-                                                           PageRequestParams pageRequestParams,
+                                                           PaginationParams paginationParams,
                                                            Authentication connectedUser) {
-        Pageable pageable = pageableBuilder.buildPageable(pageRequestParams);
+        Pageable pageable = pageableBuilder.buildPageable(paginationParams);
         Integer userId = userService.getUserByAuth(connectedUser).getId();
 
         List<Feedback> feedbacks = feedbackRepository.findAllByProductId(productId, pageable);

@@ -1,6 +1,8 @@
 package pl.dolien.shop.product;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -10,16 +12,16 @@ import pl.dolien.shop.feedback.Feedback;
 import pl.dolien.shop.feedback.FeedbackRepository;
 import pl.dolien.shop.file.FileService;
 import pl.dolien.shop.image.ImageUploader;
-import pl.dolien.shop.pagination.PageRequestParams;
+import pl.dolien.shop.pagination.PaginationAndSortParams;
 import pl.dolien.shop.pagination.PageableBuilder;
+import pl.dolien.shop.product.dto.ProductDTO;
 import pl.dolien.shop.product.dto.ProductRequestDTO;
+import pl.dolien.shop.product.dto.ProductWithFeedbackDTO;
 import pl.dolien.shop.user.UserService;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
-import static pl.dolien.shop.product.ProductMapper.toProduct;
+import static pl.dolien.shop.product.ProductMapper.*;
 
 @Service
 @RequiredArgsConstructor
@@ -33,48 +35,55 @@ public class ProductService {
     private final FeedbackRepository feedbackRepository;
     private final UserService userService;
 
-    public List<Product> getAllProducts(PageRequestParams pageRequestParams) {
-        Pageable pageable = pageableBuilder.buildPageable(pageRequestParams);
-
-        return productRepository.findAllProducts(pageable);
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
     }
 
-    public List<Product> getProductsByCategoryId(Long categoryId, PageRequestParams pageRequestParams) {
-        Pageable pageable = pageableBuilder.buildPageable(pageRequestParams);
+    @Cacheable(cacheNames = "products", keyGenerator = "customKeyGenerator")
+    public List<ProductDTO> getAllProducts(PaginationAndSortParams paginationAndSortParams) {
+        Pageable pageable = pageableBuilder.buildPageable(paginationAndSortParams);
 
-        return productRepository.findByCategoryId(categoryId, pageable);
+        return toProductDTOs(productRepository.findAllProducts(pageable));
     }
 
-    public List<Product> getProductsByNameContaining(String name, PageRequestParams pageRequestParams) {
-        Pageable pageable = pageableBuilder.buildPageable(pageRequestParams);
+    @Cacheable(cacheNames = "productsByCategory", keyGenerator = "customKeyGenerator")
+    public List<ProductDTO> getProductsByCategoryId(Long categoryId, PaginationAndSortParams paginationAndSortParams) {
+        Pageable pageable = pageableBuilder.buildPageable(paginationAndSortParams);
 
-        return productRepository.findByNameContaining(name, pageable);
+        return toProductDTOs(productRepository.findByCategoryId(categoryId, pageable));
     }
 
-    public List<Product> getProductsWithFeedbacks(PageRequestParams pageRequestParams) {
-        List<Product> products = getAllProducts(pageRequestParams);
-        List<Long> ids = products.stream()
-                .map(Product::getId)
+    @Cacheable(cacheNames = "productsByName", keyGenerator = "customKeyGenerator")
+    public List<ProductDTO> getProductsByNameContaining(String name, PaginationAndSortParams paginationAndSortParams) {
+        Pageable pageable = pageableBuilder.buildPageable(paginationAndSortParams);
+
+        return toProductDTOs(productRepository.findByNameContaining(name, pageable));
+    }
+
+    @Cacheable(cacheNames = "productsWithFeedbacks", keyGenerator = "customKeyGenerator")
+    public List<ProductWithFeedbackDTO> getAllProductsWithFeedbacks(PaginationAndSortParams paginationAndSortParams) {
+        List<ProductDTO> productDTOs = getAllProducts(paginationAndSortParams);
+
+        List<Long> ids = productDTOs.stream()
+                .map(ProductDTO::getId)
                 .toList();
         List<Feedback> feedbacks = feedbackRepository.findAllByProductIdIn(ids);
-        products.forEach(product -> product.setFeedbacks(extractFeedbacks(feedbacks, product.getId())));
 
-        return products;
+        return toProductWithFeedbackDTOs(productDTOs, feedbacks);
     }
 
     public Product getProductById(Long productId) {
         return productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Product not found"));
     }
-
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
-    }
-
     public Product saveProduct(Product product) {
         return productRepository.save(product);
     }
 
-    public Product saveProductWithImage(ProductRequestDTO request, MultipartFile file, Authentication connectedUser) {
+    @CacheEvict(
+            cacheNames = {"products", "productsByCategory", "productsByName", "productsWithFeedbacks"},
+            allEntries = true
+    )
+    public ProductDTO saveProductWithImage(ProductRequestDTO request, MultipartFile file, Authentication connectedUser) {
         userService.verifyUserHasAdminRole(connectedUser);
 
         fileService.validateFileIsNotEmpty(file);
@@ -88,12 +97,6 @@ public class ProductService {
         String sku = skuGenerator.generateSku(savedProduct.getName(), savedProduct.getId());
         savedProduct.setSku(sku);
 
-        return saveProduct(savedProduct);
-    }
-
-    private List<Feedback> extractFeedbacks(List<Feedback> feedbacks, Long productId) {
-        return feedbacks.stream()
-                .filter(feedback -> Objects.equals(feedback.getProductId(), productId))
-                .collect(Collectors.toList());
+        return toProductDTO(saveProduct(savedProduct));
     }
 }

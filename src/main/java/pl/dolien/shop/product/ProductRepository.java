@@ -22,6 +22,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @EntityGraph(attributePaths = {"buyers"})
     List<Product> findByCategoryId(@Param("id") Long id, Pageable pageable);
 
-    @Query("SELECT p FROM Product p WHERE p.name LIKE %:name%")
+    @Query("SELECT p FROM Product p WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))")
     List<Product> findByNameContaining(@Param("name") String name, Pageable pageable);
 }

@@ -13,13 +13,20 @@ public class PageableBuilder {
 
     private final SortGenerator sortGenerator;
 
-    public Pageable buildPageable(PageRequestParams pageRequestParams) {
-        Sort sort = sortGenerator.generateSort(pageRequestParams.getSortOrderType());
+    public Pageable buildPageable(PaginationAndSortParams paginationAndSortParams) {
+        Sort sort = sortGenerator.generateSort(paginationAndSortParams.getSortOrderType());
 
-        int validatedPage = validatePage(pageRequestParams.getPage());
-        int validatedSize = validateSize(pageRequestParams.getSize());
+        int validatedPage = validatePage(paginationAndSortParams.getPage());
+        int validatedSize = validateSize(paginationAndSortParams.getSize());
 
         return PageRequest.of(validatedPage, validatedSize, sort);
+    }
+
+    public Pageable buildPageable(PaginationParams paginationParams) {
+        int validatedPage = validatePage(paginationParams.getPage());
+        int validatedSize = validateSize(paginationParams.getSize());
+
+        return PageRequest.of(validatedPage, validatedSize);
     }
 
     private int validateSize(Integer size) {

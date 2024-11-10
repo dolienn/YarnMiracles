@@ -56,7 +56,7 @@ public class User implements UserDetails, Principal {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "favourite_products",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -64,7 +64,7 @@ public class User implements UserDetails, Principal {
     )
     private List<Product> favourites = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "purchased_products",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -72,7 +72,8 @@ public class User implements UserDetails, Principal {
     )
     private List<Product> purchasedProducts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany
+    @JoinColumn(name = "createdBy", updatable = false, insertable = false)
     private List<Feedback> feedbacks = new ArrayList<>();
 
     @Override

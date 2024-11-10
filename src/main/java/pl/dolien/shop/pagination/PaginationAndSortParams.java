@@ -5,8 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PageRequestParams {
-    private String sortOrderType;
+public class PaginationAndSortParams {
     private Integer page = 0;
     private Integer size = 20;
+    private String sortOrderType;
 }
