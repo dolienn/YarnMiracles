@@ -18,19 +18,13 @@ public class CustomKeyGenerator implements KeyGenerator {
     public Object generate(@Nonnull Object target,
                            @Nonnull Method method,
                            @Nonnull Object... params) {
-        StringBuilder keyBuilder = buildBaseKey(method);
+        StringBuilder keyBuilder = new StringBuilder();
 
         for (Object param : params) {
             appendKeyFragment(keyBuilder, param);
         }
 
         return keyBuilder.toString();
-    }
-
-    private StringBuilder buildBaseKey(Method method) {
-        StringBuilder keyBuilder = new StringBuilder();
-        keyBuilder.append(method.getName());
-        return keyBuilder;
     }
 
     private void appendKeyFragment(StringBuilder keyBuilder, Object param) {

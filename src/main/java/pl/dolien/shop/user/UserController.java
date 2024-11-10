@@ -11,9 +11,6 @@ import pl.dolien.shop.user.dto.UserWithRoleDTO;
 
 import javax.management.relation.RoleNotFoundException;
 
-import static pl.dolien.shop.user.UserMapper.toUserDTO;
-import static pl.dolien.shop.user.UserMapper.toUserWithRoleDTO;
-
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor

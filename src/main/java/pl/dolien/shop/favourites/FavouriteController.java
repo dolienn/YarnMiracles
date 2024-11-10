@@ -2,11 +2,9 @@ package pl.dolien.shop.favourites;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import pl.dolien.shop.pagination.PaginationAndSortParams;
-import pl.dolien.shop.product.Product;
 import pl.dolien.shop.product.dto.ProductDTO;
 
 import java.util.List;

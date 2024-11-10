@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import pl.dolien.shop.feedback.dto.FeedbackDTO;
 import pl.dolien.shop.feedback.dto.FeedbackRequestDTO;
 import pl.dolien.shop.feedback.dto.FeedbackResponseDTO;
-import pl.dolien.shop.pagination.PaginationAndSortParams;
 import pl.dolien.shop.pagination.PaginationParams;
 
 import java.util.List;

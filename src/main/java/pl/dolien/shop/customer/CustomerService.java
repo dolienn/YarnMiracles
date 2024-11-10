@@ -1,7 +1,6 @@
 package pl.dolien.shop.customer;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +38,6 @@ public class CustomerService {
         return existingCustomer;
     }
 
-    @Cacheable(cacheNames = "customer", key = "#email")
     public Customer getCustomerByEmail(String email) {
         return customerRepository.findByEmail(email).orElse(null);
     }

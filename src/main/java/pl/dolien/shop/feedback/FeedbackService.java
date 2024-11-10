@@ -1,7 +1,7 @@
 package pl.dolien.shop.feedback;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -24,18 +24,16 @@ import static pl.dolien.shop.feedback.FeedbackMapper.toFeedbackWithCreator;
 public class FeedbackService {
 
     private final FeedbackRepository feedbackRepository;
-
     private final PageableBuilder pageableBuilder;
-
     private final DashboardService dashboardService;
-
     private final UserService userService;
 
-    @CachePut(cacheNames = "feedbacksByProduct", keyGenerator = "customKeyGenerator")
+    @CacheEvict(cacheNames = "feedbacksByProduct", allEntries = true)
     public Feedback saveFeedback(FeedbackRequestDTO request, Authentication connectedUser) {
         User user = userService.getUserByAuth(connectedUser);
         Feedback feedback = toFeedbackWithCreator(request, user);
         dashboardService.incrementCustomerFeedbackCount();
+
         return feedbackRepository.save(feedback);
     }
 
@@ -46,6 +44,7 @@ public class FeedbackService {
         Pageable pageable = pageableBuilder.buildPageable(paginationParams);
         Integer userId = ((User) connectedUser.getPrincipal()).getId();
         List<Feedback> feedbacks = feedbackRepository.findAllByProductId(productId, pageable);
+
         return toFeedbackResponses(feedbacks, userId);
     }
 }

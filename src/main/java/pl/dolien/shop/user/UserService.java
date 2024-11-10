@@ -1,15 +1,12 @@
 package pl.dolien.shop.user;
 
 import lombok.RequiredArgsConstructor;
-import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import pl.dolien.shop.exception.EmailAlreadyExistsException;
 import pl.dolien.shop.exception.UserNotFoundException;
 import pl.dolien.shop.role.Role;
@@ -19,8 +16,6 @@ import pl.dolien.shop.user.dto.UserRequestDTO;
 import pl.dolien.shop.user.dto.UserWithRoleDTO;
 
 import javax.management.relation.RoleNotFoundException;
-
-import java.util.logging.Logger;
 
 import static pl.dolien.shop.user.UserMapper.*;
 
@@ -45,7 +40,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    @CacheEvict(cacheNames = "connectedUser", keyGenerator = "customKeyGenerator")
+    @CacheEvict(cacheNames = "connectedUser", key = "'_userId:' + #connectedUser.principal.id")
     public UserWithRoleDTO addRole(String email, String roleName, Authentication connectedUser) throws RoleNotFoundException {
         verifyUserHasAdminRole(connectedUser);
         User user = getUserByEmail(email);
@@ -75,7 +70,7 @@ public class UserService {
         }
     }
 
-    @CachePut(cacheNames = "connectedUser", key = "#connectedUser.principal.id")
+    @CacheEvict(cacheNames = "connectedUser", key = "'_userId:' + #connectedUser.principal.id")
     public UserDTO editUser(UserRequestDTO userDto, Authentication connectedUser) {
         verifyUserHasAdminRole(connectedUser);
         User userFromDB = getUserById(userDto.getId());
