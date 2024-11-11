@@ -1,6 +1,7 @@
 package pl.dolien.shop.cache;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration;
 import org.springframework.cache.annotation.EnableCaching;
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +20,15 @@ import java.util.Map;
 @EnableAutoConfiguration(exclude = {RedisRepositoriesAutoConfiguration.class})
 @RequiredArgsConstructor
 public class RedisConfig {
+
+    @Value("${spring.redis.host}")
+    private String redisHost;
+
+    @Value("${spring.redis.port}")
+    private int redisPort;
+
+    @Value("${spring.redis.password}")
+    private String redisPassword;
 
     private final ObjectMapperConfig objectMapperConfig;
     private final CacheConfigBuilder cacheConfigBuilder;
@@ -35,6 +46,14 @@ public class RedisConfig {
                 .cacheDefaults(defaultCacheConfig)
                 .withInitialCacheConfigurations(cacheConfigurations)
                 .build();
+    }
+
+    @Bean
+    public RedisConnectionFactory redisConnectionFactory() {
+        LettuceConnectionFactory connectionFactory = new LettuceConnectionFactory(redisHost, redisPort);
+        connectionFactory.setPassword(redisPassword);
+        connectionFactory.afterPropertiesSet();
+        return connectionFactory;
     }
 }
 

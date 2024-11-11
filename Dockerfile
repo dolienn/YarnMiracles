@@ -16,6 +16,7 @@ WORKDIR /app
 COPY --from=build /app/target/shop-0.0.1-SNAPSHOT.jar app.jar
 
 COPY --from=build /app/src/main/resources/templates /templates
+COPY --from=build /app/src/main/resources/database /database
 
 
 EXPOSE 8088

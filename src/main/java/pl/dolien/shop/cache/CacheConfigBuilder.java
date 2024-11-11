@@ -12,7 +12,7 @@ import java.time.Duration;
 @Component
 public class CacheConfigBuilder {
 
-    private static final Duration CACHE_TTL = Duration.ofMinutes(2);
+    private static final Duration CACHE_TTL = Duration.ofHours(1);
 
     public RedisCacheConfiguration buildCacheConfig(ObjectMapper objectMapper) {
         return RedisCacheConfiguration.defaultCacheConfig()

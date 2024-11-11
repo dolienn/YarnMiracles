@@ -3,24 +3,47 @@ services:
     container_name: postgres-sql-bsn
     image: postgres
     environment:
-      POSTGRES_USER: username
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
       PGDATA: /var/lib/postgresql/data
       POSTGRES_DB: shop
     volumes:
       - postgres:/data/postgres
-      - ./src/main/resources/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - 5432:5432
+      - ${DATABASE_PORT}:${DATABASE_PORT}
     networks:
       - spring-demo
     restart: unless-stopped
+
+  redis:
+    image: redis:6.0.7
+    container_name: redis
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+    networks:
+      - spring-demo
+    volumes:
+      - redis_volume_data:/data
+    restart: always
+    command: ["redis-server", "--port", "6380"]
+
+  redis_insight:
+    image: redislabs/redisinsight:1.14.0
+    container_name: redis_insight
+    ports:
+      - "8001:8001"
+    networks:
+      - spring-demo
+    volumes:
+      - redis_insight_volume_data:/db
+    restart: always
+
   mail-dev:
     container_name: mail-dev-bsn
     image: maildev/maildev
     ports:
-      - 1080:1080
-      - 1025:1025
+      - "1080:1080"
+      - ${MAIL_PORT}:${MAIL_PORT}
     networks:
       - spring-demo
     restart: unless-stopped
@@ -31,20 +54,24 @@ services:
     env_file:
       - .env
     ports:
-      - 8088:8088
+      - ${SERVER_PORT}:${SERVER_PORT}
     networks:
       - spring-demo
     depends_on:
       - postgres
       - mail-dev
+      - redis
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/shop
-      SPRING_DATASOURCE_USERNAME: username
-      SPRING_DATASOURCE_PASSWORD: password
-      SPRING_MAIL_HOST: mail-dev
-      SPRING_MAIL_PORT: 1025
-      SPRING_MAIL_USERNAME: dolien
-      SPRING_MAIL_PASSWORD: dolien
+      SPRING_DATASOURCE_URL: ${DATABASE_URL}
+      SPRING_DATASOURCE_USERNAME: ${DATABASE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DATABASE_PASSWORD}
+      SPRING_MAIL_HOST: ${MAIL_HOST}
+      SPRING_MAIL_PORT: ${MAIL_PORT}
+      SPRING_MAIL_USERNAME: ${MAIL_USERNAME}
+      SPRING_MAIL_PASSWORD: ${MAIL_PASSWORD}
+      SPRING_REDIS_HOST: ${REDIS_HOST}
+      SPRING_REDIS_PORT: ${REDIS_PORT}
+      SPRING_REDIS_PASSWORD: ${REDIS_PASSWORD}
     volumes:
       - ./shop-ui/src/assets/images/products:/app/shop-ui/src/assets/images/products
     restart: unless-stopped
@@ -53,13 +80,12 @@ services:
     build: ./shop-ui
     container_name: angular-app
     ports:
-      - 80:80
+      - "80:80"
     networks:
       - spring-demo
     depends_on:
       - spring-boot-app
     restart: unless-stopped
-
 
 networks:
   spring-demo:
@@ -68,3 +94,5 @@ networks:
 volumes:
   postgres:
     driver: local
+  redis_volume_data:
+  redis_insight_volume_data:
