@@ -3,6 +3,7 @@ package pl.dolien.shop.dashboard;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.dolien.shop.exception.DashboardDataNotFoundException;
@@ -23,6 +24,7 @@ public class DashboardService {
         dashboardDataRepository.save(data);
     }
 
+    @KafkaListener(topics = "order-created", groupId = "dashboard-metrics")
     @Transactional
     @CacheEvict(cacheNames = "dashboardData", key = "dashboardData")
     public void updateOrderMetrics(Order order) {
@@ -32,6 +34,7 @@ public class DashboardService {
         saveDashboardData(data);
     }
 
+    @KafkaListener(topics = "dashboard-sales-update", groupId = "dashboard-updater")
     @CacheEvict(cacheNames = "dashboardData", key = "dashboardData")
     public void updateProductSales(int quantitySold) {
         DashboardData data = getDashboardData();
