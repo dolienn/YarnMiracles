@@ -3,6 +3,7 @@ package pl.dolien.shop.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,7 +27,7 @@ public class UserService {
     private final RoleService roleService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     public User getUserById(Integer userId) {
         return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));

@@ -1,7 +1,6 @@
 package pl.dolien.shop.customer;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +20,6 @@ public class CustomerService {
     private final CustomerRepository customerRepository;
     private final UserService userService;
     private final ProductService productService;
-    private final KafkaTemplate<String, OrderItem> kafkaTemplate;
 
     @Transactional
     public Customer processCustomer(Order order, Customer customer, Authentication connectedUser) {
@@ -37,7 +35,6 @@ public class CustomerService {
         }
 
         existingCustomer.add(order);
-
         return existingCustomer;
     }
 

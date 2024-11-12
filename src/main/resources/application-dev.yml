@@ -47,13 +47,7 @@ spring:
   liquibase:
     change-log: classpath:liquibase/master-changelog.xml
   kafka:
-    bootstrap-servers: kafka:9092
-    consumer:
-      group-id: my-group
-      auto-offset-reset: earliest
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    bootstrap-servers: localhost:29092
 
 stripe:
   key:

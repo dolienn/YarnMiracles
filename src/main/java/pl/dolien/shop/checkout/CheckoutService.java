@@ -1,7 +1,6 @@
 package pl.dolien.shop.checkout;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,8 +17,8 @@ public class CheckoutService {
 
     private final OrderService orderService;
     private final CustomerService customerService;
+    private final DashboardService dashboardService;
     private final OrderSetupService orderSetupService;
-    private final KafkaTemplate<String, Order> kafkaTemplate;
 
     @Transactional
     public PurchaseResponseDTO placeOrder(PurchaseRequestDTO purchase, Authentication connectedUser) {
@@ -27,8 +26,7 @@ public class CheckoutService {
         Customer customer = customerService.processCustomer(order, purchase.getCustomer(), connectedUser);
         orderService.addOrderItems(order, purchase.getOrderItems());
         customerService.updatePurchasedProducts(customer, purchase.getOrderItems());
-
-        kafkaTemplate.send("order-created", order.getOrderTrackingNumber(), order);
+        dashboardService.updateOrderMetrics(order);
 
         return new PurchaseResponseDTO(order.getOrderTrackingNumber());
     }
