@@ -2,7 +2,7 @@ spring:
   config:
     import: optional:file:.env[.properties]
   datasource:
-    url: ${DATABASE_URL}
+    url: jdbc:postgresql://localhost:${DATABASE_PORT}/shop
     username: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
     driver-class-name: org.postgresql.Driver
@@ -16,7 +16,7 @@ spring:
     database : postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   mail:
-    host: ${MAIL_HOST}
+    host: localhost
     port: ${MAIL_PORT}
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
@@ -40,7 +40,7 @@ spring:
   cache:
     type: redis
   redis:
-    host: ${REDIS_HOST}
+    host: localhost
     port: ${REDIS_PORT}
     password: ${REDIS_PASSWORD}
     client-type: jedis
