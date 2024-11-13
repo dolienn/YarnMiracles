@@ -3,16 +3,16 @@ package pl.dolien.shop.feedback;
 import pl.dolien.shop.feedback.dto.FeedbackDTO;
 import pl.dolien.shop.feedback.dto.FeedbackRequestDTO;
 import pl.dolien.shop.feedback.dto.FeedbackResponseDTO;
-import pl.dolien.shop.user.User;
+import pl.dolien.shop.user.dto.UserDTO;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class FeedbackMapper {
 
-    public static Feedback toFeedbackWithCreator(FeedbackRequestDTO request, User user) {
+    public static Feedback toFeedbackWithCreator(FeedbackRequestDTO request, UserDTO userDTO) {
         Feedback feedback = toFeedback(request);
-        feedback.setCreatedBy(user.getId());
+        feedback.setCreatedBy(userDTO.getId());
         return feedback;
     }
 

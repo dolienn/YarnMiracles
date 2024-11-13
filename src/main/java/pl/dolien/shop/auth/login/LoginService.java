@@ -12,6 +12,8 @@ import pl.dolien.shop.user.UserService;
 
 import java.util.Map;
 
+import static pl.dolien.shop.user.UserMapper.toUser;
+
 @Service
 @RequiredArgsConstructor
 public class LoginService {
@@ -28,7 +30,7 @@ public class LoginService {
                 )
         );
 
-        User user = userService.getUserByAuth(auth);
+        User user = toUser(userService.getUserDTOByAuth(auth));
 
         String jwtToken = jwtService.generateToken(Map.of("fullName", user.getFullName()), user);
 

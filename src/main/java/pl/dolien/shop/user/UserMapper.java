@@ -28,6 +28,20 @@ public class UserMapper {
         return user;
     }
 
+    public static User toUser(UserDTO userDTO) {
+        return User.builder()
+                .id(userDTO.getId())
+                .firstname(userDTO.getFirstname())
+                .lastname(userDTO.getLastname())
+                .email(userDTO.getEmail())
+                .dateOfBirth(userDTO.getDateOfBirth())
+                .accountLocked(userDTO.isAccountLocked())
+                .enabled(userDTO.isEnabled())
+                .createdDate(userDTO.getCreatedDate())
+                .lastModifiedDate(userDTO.getLastModifiedDate())
+                .build();
+    }
+
     public static UserDTO toUserDTO(User user) {
         return UserDTO.builder()
                 .id(user.getId())

@@ -8,6 +8,7 @@ import pl.dolien.shop.auth.registration.RegistrationDTO;
 import pl.dolien.shop.exception.EmailAlreadyExistsException;
 import pl.dolien.shop.user.User;
 import pl.dolien.shop.user.UserService;
+import pl.dolien.shop.user.dto.UserDTO;
 
 @Service
 @RequiredArgsConstructor
@@ -17,18 +18,13 @@ public class UserInfoUpdater {
     private final PasswordChanger passwordChanger;
 
     public User updateUserInformation(RegistrationDTO request, Authentication connectedUser) {
-        User currentUser = userService.getUserByAuth(connectedUser);
+        UserDTO currentUser = userService.getUserDTOByAuth(connectedUser);
+        User userFromDB = userService.getUserById(currentUser.getId());
 
-        passwordChanger.verifyPasswordMatch(request.getPassword(), currentUser.getPassword());
-        validateEmailUniqueness(request.getEmail(), currentUser.getEmail());
+        passwordChanger.verifyPasswordMatch(request.getPassword(), userFromDB.getPassword());
+        userService.assertEmailNotInUse(request.getEmail(), currentUser.getEmail());
 
-        return applyProfileUpdates(request, currentUser);
-    }
-
-    private void validateEmailUniqueness(String newEmail, String currentEmail) {
-        if(userService.isEmailTaken(newEmail, currentEmail)) {
-            throw new EmailAlreadyExistsException("There is a user with the same email");
-        }
+        return applyProfileUpdates(request, userFromDB);
     }
 
     private User applyProfileUpdates(RegistrationDTO request, User currentUser) {

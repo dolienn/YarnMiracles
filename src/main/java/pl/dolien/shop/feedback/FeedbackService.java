@@ -13,6 +13,7 @@ import pl.dolien.shop.pagination.PageableBuilder;
 import pl.dolien.shop.pagination.PaginationParams;
 import pl.dolien.shop.user.User;
 import pl.dolien.shop.user.UserService;
+import pl.dolien.shop.user.dto.UserDTO;
 
 import java.util.List;
 
@@ -30,8 +31,8 @@ public class FeedbackService {
 
     @CacheEvict(cacheNames = "feedbacksByProduct", allEntries = true)
     public Feedback saveFeedback(FeedbackRequestDTO request, Authentication connectedUser) {
-        User user = userService.getUserByAuth(connectedUser);
-        Feedback feedback = toFeedbackWithCreator(request, user);
+        UserDTO userDTO = userService.getUserDTOByAuth(connectedUser);
+        Feedback feedback = toFeedbackWithCreator(request, userDTO);
         dashboardService.incrementCustomerFeedbackCount();
 
         return feedbackRepository.save(feedback);

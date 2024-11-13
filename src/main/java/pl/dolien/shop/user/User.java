@@ -118,6 +118,11 @@ public class User implements UserDetails, Principal {
         if (role == null) {
             return;
         }
+
+        if (this.roles == null) {
+            this.roles = new HashSet<>();
+        }
+
         roles.add(role);
     }
 }
