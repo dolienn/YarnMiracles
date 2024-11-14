@@ -16,8 +16,6 @@ import pl.dolien.shop.user.dto.UserDTO;
 import pl.dolien.shop.user.dto.UserRequestDTO;
 import pl.dolien.shop.user.dto.UserWithRoleDTO;
 
-import javax.management.relation.RoleNotFoundException;
-import java.util.HashSet;
 import java.util.Set;
 
 import static org.mockito.Mockito.*;
@@ -45,7 +43,6 @@ public class UserControllerTest {
     @Autowired
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private Role adminRole;
     private UserDTO testUserDTO;
     private UserRequestDTO testUserRequestDTO;
     private UserWithRoleDTO testUserWithRoleDTO;
@@ -55,7 +52,7 @@ public class UserControllerTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
-        setupRolesAndUsers();
+        initializeTestData();
     }
 
     @Test
@@ -96,8 +93,8 @@ public class UserControllerTest {
         verify(userService, times(1)).addRole(USER_EMAIL, ADMIN_ROLE, authentication);
     }
 
-    private void setupRolesAndUsers() {
-        adminRole = Role.builder().id(2).name(ADMIN_ROLE).build();
+    private void initializeTestData() {
+        Role adminRole = Role.builder().id(2).name(ADMIN_ROLE).build();
 
         testUserDTO = UserDTO.builder()
                 .id(1)

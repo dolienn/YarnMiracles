@@ -27,21 +27,21 @@ public class ProductController {
         return productService.getAllProducts(paginationAndSortParams);
     }
 
-    @GetMapping("/feedbacks")
-    public List<ProductWithFeedbackDTO> getAllProductsWithFeedbacks(@ModelAttribute PaginationAndSortParams paginationAndSortParams) {
-        return productService.getAllProductsWithFeedbacks(paginationAndSortParams);
-    }
-
-    @GetMapping("/category/{id}")
-    public List<ProductDTO> getProductsByCategoryId(@PathVariable Long id,
+    @GetMapping("/category/{categoryId}")
+    public List<ProductDTO> getProductsByCategoryId(@PathVariable Integer categoryId,
                                                  @ModelAttribute PaginationAndSortParams paginationAndSortParams) {
-        return productService.getProductsByCategoryId(id, paginationAndSortParams);
+        return productService.getProductsByCategoryId(categoryId, paginationAndSortParams);
     }
 
     @GetMapping("/search")
     public List<ProductDTO> getProductsByName(@RequestParam String name,
                                            @ModelAttribute PaginationAndSortParams paginationAndSortParams) {
         return productService.getProductsByNameContaining(name, paginationAndSortParams);
+    }
+
+    @GetMapping("/feedbacks")
+    public List<ProductWithFeedbackDTO> getAllProductsWithFeedbacks(@ModelAttribute PaginationAndSortParams paginationAndSortParams) {
+        return productService.getAllProductsWithFeedbacks(paginationAndSortParams);
     }
 
     @PostMapping

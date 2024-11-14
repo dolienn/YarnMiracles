@@ -13,6 +13,6 @@ public class RoleService {
 
     public Role getByName(String name) throws RoleNotFoundException {
         return roleRepository.findByName(name)
-                .orElseThrow(() -> new RoleNotFoundException("ROLE " + name + " was not initialized."));
+                .orElseThrow(() -> new RoleNotFoundException("Role " + name + " not found"));
     }
 }

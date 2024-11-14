@@ -32,6 +32,7 @@ class UserServiceTest {
     private static final String AUTH_USER_NOT_FOUND_MESSAGE = "Authenticated user not found";
     private static final String ACCESS_DENIED_MESSAGE = "You don't have permission to perform this action";
     private static final String AUTH_USER_DOES_NOT_MATCH_REQUESTED_USER_MESSAGE = "Authenticated user does not match the requested user";
+    private static final String EMAIL_ALREADY_EXISTS_MESSAGE = "User with email " + USER_EMAIL + " already exists";
 
     @InjectMocks
     private UserService userService;
@@ -54,7 +55,7 @@ class UserServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        setupRolesAndUsers();
+        initializeTestData();
     }
 
     @Test
@@ -78,6 +79,7 @@ class UserServiceTest {
                 UserNotFoundException.class,
                 () -> userService.getUserById(testUser.getId())
         );
+
         assertEquals(USER_NOT_FOUND_MESSAGE, exception.getMessage());
 
         verify(userRepository, times(1)).findById(testUser.getId());
@@ -104,6 +106,7 @@ class UserServiceTest {
                 UserNotFoundException.class,
                 () -> userService.getUserByEmail(USER_EMAIL)
         );
+
         assertEquals(USER_NOT_FOUND_MESSAGE, exception.getMessage());
 
         verify(userRepository, times(1)).findByEmail(USER_EMAIL);
@@ -128,6 +131,7 @@ class UserServiceTest {
                 UserNotFoundException.class,
                 () -> userService.getUserDTOByAuth(null)
         );
+
         assertEquals(AUTH_USER_NOT_FOUND_MESSAGE, exception.getMessage());
     }
 
@@ -223,6 +227,7 @@ class UserServiceTest {
                 AccessDeniedException.class,
                 () -> userService.verifyUserHasAdminRole(authentication)
         );
+
         assertEquals(ACCESS_DENIED_MESSAGE, exception.getMessage());
     }
 
@@ -241,6 +246,7 @@ class UserServiceTest {
                 AccessDeniedException.class,
                 () -> userService.verifyUserIsAuthenticatedUser(testAdmin.getId(), authentication)
         );
+
         assertEquals(AUTH_USER_DOES_NOT_MATCH_REQUESTED_USER_MESSAGE, exception.getMessage());
     }
 
@@ -266,7 +272,8 @@ class UserServiceTest {
                 EmailAlreadyExistsException.class,
                 () -> userService.assertEmailNotInUse(ADMIN_EMAIL, USER_EMAIL)
         );
-        assertEquals("User with email " + USER_EMAIL + " already exists", exception.getMessage());
+
+        assertEquals(EMAIL_ALREADY_EXISTS_MESSAGE, exception.getMessage());
     }
 
     @Test
@@ -304,7 +311,7 @@ class UserServiceTest {
         assertFalse(userService.isUserExists(NEW_EMAIL));
     }
 
-    private void setupRolesAndUsers() {
+    private void initializeTestData() {
         Role userRole = Role.builder().id(1).name("USER").build();
 
         adminRole = Role.builder().id(2).name("ADMIN").build();

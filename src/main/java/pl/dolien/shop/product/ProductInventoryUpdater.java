@@ -1,10 +1,10 @@
-package pl.dolien.shop.order;
+package pl.dolien.shop.product;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.dolien.shop.product.Product;
-import pl.dolien.shop.product.ProductService;
+import pl.dolien.shop.exception.NotEnoughStockException;
+import pl.dolien.shop.order.OrderItem;
 
 @Service
 @RequiredArgsConstructor
@@ -18,8 +18,8 @@ public class ProductInventoryUpdater {
 
         if (product.getUnitsInStock() >= orderItem.getQuantity()) {
             product.removeUnitsInStock(orderItem.getQuantity());
+        } else {
+            throw new NotEnoughStockException("Not enough units in stock for product: " + product.getId());
         }
-
-        productService.saveProduct(product);
     }
 }

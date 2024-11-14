@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import pl.dolien.shop.dashboard.DashboardService;
+import pl.dolien.shop.feedback.dto.FeedbackDTO;
 import pl.dolien.shop.feedback.dto.FeedbackRequestDTO;
 import pl.dolien.shop.feedback.dto.FeedbackResponseDTO;
 import pl.dolien.shop.pagination.PageableBuilder;
@@ -17,8 +18,7 @@ import pl.dolien.shop.user.dto.UserDTO;
 
 import java.util.List;
 
-import static pl.dolien.shop.feedback.FeedbackMapper.toFeedbackResponses;
-import static pl.dolien.shop.feedback.FeedbackMapper.toFeedbackWithCreator;
+import static pl.dolien.shop.feedback.FeedbackMapper.*;
 
 @Service
 @RequiredArgsConstructor
@@ -30,12 +30,12 @@ public class FeedbackService {
     private final UserService userService;
 
     @CacheEvict(cacheNames = "feedbacksByProduct", allEntries = true)
-    public Feedback saveFeedback(FeedbackRequestDTO request, Authentication connectedUser) {
+    public FeedbackDTO saveFeedback(FeedbackRequestDTO request, Authentication connectedUser) {
         UserDTO userDTO = userService.getUserDTOByAuth(connectedUser);
-        Feedback feedback = toFeedbackWithCreator(request, userDTO);
         dashboardService.incrementCustomerFeedbackCount();
 
-        return feedbackRepository.save(feedback);
+        Feedback feedback = toFeedbackWithCreator(request, userDTO);
+        return toFeedbackDTO(feedbackRepository.save(feedback));
     }
 
     @Cacheable(cacheNames = "feedbacksByProduct", keyGenerator = "customKeyGenerator")

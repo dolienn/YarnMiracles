@@ -68,11 +68,7 @@ public class Product {
     }
 
     public void removeUnitsInStock(int quantity) {
-        if (this.unitsInStock >= quantity) {
-            this.unitsInStock -= quantity;
-        } else {
-            throw new NotEnoughStockException("Not enough units in stock");
-        }
+        this.unitsInStock -= quantity;
     }
 
     @PostLoad

@@ -1,16 +1,12 @@
 package pl.dolien.shop.user;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 import pl.dolien.shop.user.dto.UserDTO;
 import pl.dolien.shop.user.dto.UserRequestDTO;
 import pl.dolien.shop.user.dto.UserWithRoleDTO;
 
 import static pl.dolien.shop.role.RoleMapper.toRoleDTOs;
 
-@Component
-@RequiredArgsConstructor
 public class UserMapper {
     public static User toUser(User user,
                                   UserRequestDTO requestDTO,

@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.dolien.shop.exception.ProductNotFoundException;
 import pl.dolien.shop.feedback.Feedback;
 import pl.dolien.shop.feedback.FeedbackRepository;
-import pl.dolien.shop.file.FileService;
+import pl.dolien.shop.file.FileValidator;
 import pl.dolien.shop.image.ImageUploader;
 import pl.dolien.shop.pagination.PaginationAndSortParams;
 import pl.dolien.shop.pagination.PageableBuilder;
@@ -22,6 +22,7 @@ import pl.dolien.shop.user.UserService;
 import java.util.List;
 
 import static pl.dolien.shop.product.ProductMapper.*;
+import static pl.dolien.shop.product.SkuGenerator.generateSku;
 
 @Service
 @RequiredArgsConstructor
@@ -30,10 +31,13 @@ public class ProductService {
     private final PageableBuilder pageableBuilder;
     private final ProductRepository productRepository;
     private final ImageUploader imageUploader;
-    private final SkuGenerator skuGenerator;
-    private final FileService fileService;
+    private final FileValidator fileValidator;
     private final FeedbackRepository feedbackRepository;
     private final UserService userService;
+
+    public Product getProductById(Long productId) {
+        return productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Product not found"));
+    }
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
@@ -47,7 +51,7 @@ public class ProductService {
     }
 
     @Cacheable(cacheNames = "productsByCategory", keyGenerator = "customKeyGenerator")
-    public List<ProductDTO> getProductsByCategoryId(Long categoryId, PaginationAndSortParams paginationAndSortParams) {
+    public List<ProductDTO> getProductsByCategoryId(Integer categoryId, PaginationAndSortParams paginationAndSortParams) {
         Pageable pageable = pageableBuilder.buildPageable(paginationAndSortParams);
 
         return toProductDTOs(productRepository.findByCategoryId(categoryId, pageable));
@@ -72,9 +76,6 @@ public class ProductService {
         return toProductWithFeedbackDTOs(productDTOs, feedbacks);
     }
 
-    public Product getProductById(Long productId) {
-        return productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Product not found"));
-    }
     public Product saveProduct(Product product) {
         return productRepository.save(product);
     }
@@ -86,15 +87,15 @@ public class ProductService {
     public ProductDTO saveProductWithImage(ProductRequestDTO request, MultipartFile file, Authentication connectedUser) {
         userService.verifyUserHasAdminRole(connectedUser);
 
-        fileService.validateFileIsNotEmpty(file);
-        fileService.validateUploadDirectory();
+        fileValidator.validateFileIsNotEmpty(file);
+        fileValidator.validateUploadDirectory();
 
         String imageUrl = imageUploader.uploadImage(file);
         Product product = toProduct(request, imageUrl);
 
         Product savedProduct = saveProduct(product);
 
-        String sku = skuGenerator.generateSku(savedProduct.getName(), savedProduct.getId());
+        String sku = generateSku(savedProduct.getName(), savedProduct.getId());
         savedProduct.setSku(sku);
 
         return toProductDTO(saveProduct(savedProduct));

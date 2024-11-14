@@ -18,9 +18,4 @@ public class ProductCategoryService {
         return toProductCategoryDTO(productCategoryRepository.findByCategoryName(categoryName)
                 .orElseThrow(() -> new ProductCategoryNotFoundException("Product category not found")));
     }
-
-    public ProductCategory getById(Integer id) {
-        return productCategoryRepository.findById(id)
-                .orElseThrow(() -> new ProductCategoryNotFoundException("Product category not found"));
-    }
 }

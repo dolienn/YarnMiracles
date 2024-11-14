@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("product-categories")
+@RequestMapping("product-category")
 @RequiredArgsConstructor
 @Tag(name = "Product-Category")
 public class ProductCategoryController {

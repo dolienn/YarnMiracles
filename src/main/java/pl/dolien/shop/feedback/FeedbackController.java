@@ -12,8 +12,6 @@ import pl.dolien.shop.pagination.PaginationParams;
 
 import java.util.List;
 
-import static pl.dolien.shop.feedback.FeedbackMapper.toFeedbackDTO;
-
 @RestController
 @RequestMapping("feedbacks")
 @RequiredArgsConstructor
@@ -27,7 +25,7 @@ public class FeedbackController {
             @Valid @RequestBody FeedbackRequestDTO request,
             Authentication connectedUser
     ) {
-        return toFeedbackDTO(service.saveFeedback(request, connectedUser));
+        return service.saveFeedback(request, connectedUser);
     }
 
     @GetMapping("/products/{productId}")

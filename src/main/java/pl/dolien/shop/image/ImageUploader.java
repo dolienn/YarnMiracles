@@ -7,44 +7,50 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.dolien.shop.exception.ImageReadException;
 import pl.dolien.shop.exception.ImageUploadException;
-import pl.dolien.shop.file.FileService;
+import pl.dolien.shop.file.FileValidator;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 import java.util.UUID;
+
+import static pl.dolien.shop.image.ImageTransformer.getTransformation;
 
 @Service
 @RequiredArgsConstructor
 public class ImageUploader {
 
     private final Cloudinary cloudinary;
-    private final ImageTransformer imageTransformer;
-    private final FileService fileService;
+    private final FileValidator fileValidator;
 
     public String uploadImage(MultipartFile file) {
-        fileService.validateFileIsNotEmpty(file);
+        fileValidator.validateFileIsNotEmpty(file);
 
-        BufferedImage img = readImage(file);
-        String transformation = imageTransformer.getTransformation(img);
+        BufferedImage img = readAndValidateImage(file);
+        String transformation = getTransformation(img);
 
         Map<String, Object> uploadResult = uploadToCloudinary(file, transformation);
 
         return getSecureUrl(uploadResult);
     }
 
-    private BufferedImage readImage(MultipartFile file) {
+    protected BufferedImage readImage(InputStream inputStream) throws IOException {
+        return ImageIO.read(inputStream);
+    }
+
+    protected BufferedImage readAndValidateImage(MultipartFile file) {
         try {
-            BufferedImage img = ImageIO.read(file.getInputStream());
-            validateImage(img);
+            BufferedImage img = readImage(file.getInputStream());
+            validateImageIsNotNull(img);
             return img;
         } catch (IOException e) {
             throw new ImageReadException("Error occurred while reading the image: " + e.getMessage());
         }
     }
 
-    private void validateImage(BufferedImage img) {
+    private void validateImageIsNotNull(BufferedImage img) {
         if (img == null) {
             throw new ImageReadException("Unable to read image from file");
         }
@@ -64,6 +70,12 @@ public class ImageUploader {
     }
 
     private String getSecureUrl(Map<String, Object> uploadResult) {
-        return uploadResult.get("secure_url").toString();
+        Object secureUrl = uploadResult.get("secure_url");
+
+        if (secureUrl == null) {
+            throw new ImageUploadException("Secure URL is missing in the upload result");
+        }
+
+        return secureUrl.toString();
     }
 }

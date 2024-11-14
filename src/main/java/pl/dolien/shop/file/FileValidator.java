@@ -1,6 +1,5 @@
 package pl.dolien.shop.file;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,29 +9,27 @@ import pl.dolien.shop.exception.EmptyFileException;
 import java.io.File;
 
 @Service
-@RequiredArgsConstructor
-public class FileService {
+public class FileValidator {
 
-    @Value("${file.upload-dir}")
-    private String uploadDir;
+    private final File directory;
+
+    public FileValidator(@Value("${file.upload-dir}") String uploadDirPath) {
+        this.directory = new File(uploadDirPath);
+    }
 
     public void validateFileIsNotEmpty(MultipartFile file) {
-        if (file.isEmpty()) {
+        if (file.isEmpty())
             throw new EmptyFileException("File cannot be empty");
-        }
     }
 
     public void validateUploadDirectory() {
-        File directory = new File(uploadDir);
-
-        if (!directory.exists() || !directory.isDirectory()) {
-            throw new DirectoryCreationException("Upload directory does not exist: " + uploadDir);
-        }
+        if (!directory.exists() || !directory.isDirectory())
+            throw new DirectoryCreationException("Upload directory does not exist: " + directory.getPath());
 
         File[] files = directory.listFiles();
-        if (files == null || files.length == 0) {
-            throw new DirectoryCreationException("Upload directory is empty: " + uploadDir);
-        }
+
+        if (files == null || files.length == 0)
+            throw new DirectoryCreationException("Upload directory is empty: " + directory.getPath());
     }
 }
 

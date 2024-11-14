@@ -10,6 +10,8 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
+import static pl.dolien.shop.token.TokenMapper.toToken;
+
 @Service
 @RequiredArgsConstructor
 public class TokenService {
@@ -23,8 +25,8 @@ public class TokenService {
     public String generateActivationToken(User user) {
         String generatedToken = generateActivationCode();
 
-        Token token = buildAndSaveToken(generatedToken, user);
-
+        Token token = toToken(generatedToken, user);
+        saveToken(token);
         return token.getToken();
     }
 
@@ -35,7 +37,7 @@ public class TokenService {
     public Token getValidatedToken(String token) {
         Token savedToken = getToken(token);
         if (isTokenExpired(savedToken.getExpiresAt())) {
-            throw new ExpiredTokenException("Activation token has expired.");
+            throw new ExpiredTokenException("Activation token has expired");
         }
         return savedToken;
     }
@@ -45,16 +47,6 @@ public class TokenService {
                 .mapToObj(CHARACTERS::charAt)
                 .map(Object::toString)
                 .collect(Collectors.joining());
-    }
-
-    private Token buildAndSaveToken(String generatedToken, User user) {
-        Token token = Token.builder()
-                .token(generatedToken)
-                .createdAt(LocalDateTime.now())
-                .expiresAt(LocalDateTime.now().plusMinutes(25))
-                .user(user)
-                .build();
-        return saveToken(token);
     }
 
     private Token getToken(String token) {
