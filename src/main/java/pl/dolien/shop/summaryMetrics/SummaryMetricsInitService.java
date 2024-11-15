@@ -1,4 +1,4 @@
-package pl.dolien.shop.dashboard;
+package pl.dolien.shop.summaryMetrics;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -8,14 +8,14 @@ import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
-public class DashboardDataInitService {
+public class SummaryMetricsInitService {
 
-    private final DashboardDataRepository repository;
+    private final SummaryMetricsRepository repository;
 
     @PostConstruct
     public void init() {
         if (repository.count() == 0) {
-            DashboardData dashboardData = DashboardData.builder()
+            SummaryMetrics summaryMetrics = SummaryMetrics.builder()
                     .id(1L)
                     .totalUsers(0)
                     .totalOrders(0)
@@ -23,7 +23,7 @@ public class DashboardDataInitService {
                     .productsSell(0)
                     .revenue(BigDecimal.ZERO)
                     .build();
-            repository.save(dashboardData);
+            repository.save(summaryMetrics);
         }
     }
 }

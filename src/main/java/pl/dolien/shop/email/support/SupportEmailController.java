@@ -3,6 +3,7 @@ package pl.dolien.shop.email.support;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -11,12 +12,12 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "SupportEmail")
 public class SupportEmailController {
 
-    private final SupportEmailService service;
+    private final SupportEmailSender sender;
 
     @PostMapping("send-message")
-    public void sendMessage(
+    public SimpleMailMessage sendMessage(
             @RequestBody @Valid SupportMessageDTO request
     ) {
-        service.sendSupportEmail(request);
+        return sender.sendToSupportEmail(request);
     }
 }

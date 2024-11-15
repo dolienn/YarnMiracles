@@ -1,4 +1,4 @@
-package pl.dolien.shop.dashboard;
+package pl.dolien.shop.summaryMetrics;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class DashboardData {
+public class SummaryMetrics {
 
     @Id
     private Long id;

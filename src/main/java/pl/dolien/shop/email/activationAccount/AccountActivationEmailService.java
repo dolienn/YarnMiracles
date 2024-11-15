@@ -3,6 +3,7 @@ package pl.dolien.shop.email.activationAccount;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -22,7 +23,9 @@ import static org.springframework.mail.javamail.MimeMessageHelper.MULTIPART_MODE
 public class AccountActivationEmailService {
 
     private static final String DEFAULT_TEMPLATE = "confirm-email";
-    private static final String FROM_EMAIL = "thedolien@gmail.com";
+
+    @Value("${support.email}")
+    private final String supportEmail;
 
     private final JavaMailSender mailSender;
     private final SpringTemplateEngine templateEngine;
@@ -50,7 +53,7 @@ public class AccountActivationEmailService {
                 MULTIPART_MODE_MIXED,
                 UTF_8.name()
         );
-        helper.setFrom(FROM_EMAIL);
+        helper.setFrom(supportEmail);
         helper.setTo(accountActivationMessageDTO.getTo());
         helper.setSubject(accountActivationMessageDTO.getSubject());
         return helper;

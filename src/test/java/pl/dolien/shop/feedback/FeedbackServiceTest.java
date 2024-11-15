@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
-import pl.dolien.shop.dashboard.DashboardService;
+import pl.dolien.shop.summaryMetrics.SummaryMetricsService;
 import pl.dolien.shop.feedback.dto.FeedbackDTO;
 import pl.dolien.shop.feedback.dto.FeedbackRequestDTO;
 import pl.dolien.shop.feedback.dto.FeedbackResponseDTO;
@@ -35,7 +35,7 @@ class FeedbackServiceTest {
     private UserService userService;
 
     @Mock
-    private DashboardService dashboardService;
+    private SummaryMetricsService dashboardService;
 
     @Mock
     private PageableBuilder pageableBuilder;

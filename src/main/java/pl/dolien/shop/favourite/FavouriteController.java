@@ -1,4 +1,4 @@
-package pl.dolien.shop.favourites;
+package pl.dolien.shop.favourite;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -24,17 +24,17 @@ public class FavouriteController {
         return favouriteService.getFavourites(userId, paginationAndSortParams, connectedUser);
     }
 
-    @PostMapping("/{userId}/favourites/{productId}")
-    public void addFavouriteProduct(@PathVariable Integer userId,
+    @GetMapping("/{userId}/favourites/{productId}")
+    public void addToFavourites(@PathVariable Integer userId,
                                     @PathVariable Long productId,
                                     Authentication connectedUser) {
-        favouriteService.addFavouriteProduct(userId, productId, connectedUser);
+        favouriteService.addToFavourites(userId, productId, connectedUser);
     }
 
     @DeleteMapping("/{userId}/favourites/{productId}")
-    public void removeFavouriteProduct(@PathVariable Integer userId,
+    public void removeFromFavourites(@PathVariable Integer userId,
                                        @PathVariable Long productId,
                                        Authentication connectedUser) {
-        favouriteService.removeFavouriteProduct(userId, productId, connectedUser);
+        favouriteService.removeFromFavourites(userId, productId, connectedUser);
     }
 }

@@ -5,12 +5,13 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import pl.dolien.shop.exception.NotEnoughStockException;
 import pl.dolien.shop.feedback.Feedback;
 import pl.dolien.shop.user.User;
 
 import java.math.BigDecimal;
 import java.util.*;
+
+import static pl.dolien.shop.product.RatingCalculator.calculateRating;
 
 @Getter
 @Setter
@@ -48,7 +49,7 @@ public class Product {
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "productId", updatable = false, insertable = false)
-    private List<Feedback> feedbacks = new ArrayList<>();
+    private Set<Feedback> feedbacks = new HashSet<>();
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -58,9 +59,16 @@ public class Product {
     @Column(insertable = false)
     private Date lastUpdated;
 
+    @PostLoad
+    @PostPersist
+    @PostUpdate
+    public void calculateRateOnLoad() {
+        calculateRate();
+    }
+
     @Transient
     public void calculateRate() {
-        this.rate = RatingCalculator.calculateRate(this.feedbacks);
+        this.rate = calculateRating(this.feedbacks);
     }
 
     public void incrementSales(int quantity) {
@@ -69,13 +77,6 @@ public class Product {
 
     public void removeUnitsInStock(int quantity) {
         this.unitsInStock -= quantity;
-    }
-
-    @PostLoad
-    @PostPersist
-    @PostUpdate
-    public void calculateRateOnLoad() {
-        calculateRate();
     }
 
     public void addUserWhoPurchased(User user) {

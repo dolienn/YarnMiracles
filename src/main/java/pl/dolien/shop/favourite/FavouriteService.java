@@ -1,10 +1,9 @@
-package pl.dolien.shop.favourites;
+package pl.dolien.shop.favourite;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import pl.dolien.shop.exception.ProductAlreadyFavouriteException;
@@ -29,7 +28,6 @@ public class FavouriteService {
     private final UserService userService;
     private final PageableBuilder pageableBuilder;
     private final FavouriteRepository favouriteRepository;
-    private RedisTemplate<String, Object> redisTemplate;
 
     @Cacheable(cacheNames = "favouritesByUser", keyGenerator = "customKeyGenerator")
     public List<ProductDTO> getFavourites(Integer userId,
@@ -43,9 +41,9 @@ public class FavouriteService {
     }
 
     @CacheEvict(cacheNames = "favouritesByUser", allEntries = true)
-    public void addFavouriteProduct(Integer userId,
-                                    Long productId,
-                                    Authentication connectedUser) {
+    public void addToFavourites(Integer userId,
+                                Long productId,
+                                Authentication connectedUser) {
         userService.verifyUserIsAuthenticatedUser(userId, connectedUser);
 
         UserProductTuple<User, Product> userProduct = getUserAndProduct(userId, productId);
@@ -53,9 +51,9 @@ public class FavouriteService {
     }
 
     @CacheEvict(cacheNames = "favouritesByUser", allEntries = true)
-    public void removeFavouriteProduct(Integer userId,
-                                       Long productId,
-                                       Authentication connectedUser) {
+    public void removeFromFavourites(Integer userId,
+                                     Long productId,
+                                     Authentication connectedUser) {
         userService.verifyUserIsAuthenticatedUser(userId, connectedUser);
 
         UserProductTuple<User, Product> userProduct = getUserAndProduct(userId, productId);

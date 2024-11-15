@@ -62,7 +62,7 @@ public class User implements UserDetails, Principal {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
-    private List<Product> favourites = new ArrayList<>();
+    private Set<Product> favourites = new HashSet<>();
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
@@ -74,7 +74,7 @@ public class User implements UserDetails, Principal {
 
     @OneToMany
     @JoinColumn(name = "createdBy", updatable = false, insertable = false)
-    private List<Feedback> feedbacks = new ArrayList<>();
+    private Set<Feedback> feedbacks = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

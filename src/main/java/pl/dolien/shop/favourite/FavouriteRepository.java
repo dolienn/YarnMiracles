@@ -1,4 +1,4 @@
-package pl.dolien.shop.favourites;
+package pl.dolien.shop.favourite;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

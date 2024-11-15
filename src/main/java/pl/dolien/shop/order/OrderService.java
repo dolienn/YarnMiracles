@@ -16,7 +16,7 @@ import static pl.dolien.shop.order.OrderStatus.PENDING;
 public class OrderService {
     private final ProductInventoryUpdater productInventoryService;
 
-    public Order createOrder(PurchaseRequestDTO purchase) {
+    public Order buildOrder(PurchaseRequestDTO purchase) {
         Order order = purchase.getOrder();
         order.setOrderTrackingNumber(generateOrderTrackingNumber());
         order.setBillingAddress(purchase.getBillingAddress());

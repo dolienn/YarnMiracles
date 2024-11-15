@@ -35,7 +35,7 @@ class OrderServiceTest {
     @Test
     void shouldCreateOrder() {
 
-        Order result = orderService.createOrder(purchaseRequestDTO);
+        Order result = orderService.buildOrder(purchaseRequestDTO);
 
         assertNotNull(result);
         assertEquals(order.getOrderTrackingNumber(), result.getOrderTrackingNumber());

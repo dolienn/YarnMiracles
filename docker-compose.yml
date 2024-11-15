@@ -28,8 +28,8 @@ services:
     command: ["redis-server", "--port", "6380"]
 
   redis_insight:
-    image: redislabs/redisinsight:1.14.0
     container_name: redis_insight
+    image: redislabs/redisinsight:1.14.0
     ports:
       - "8001:8001"
     networks:
@@ -39,6 +39,7 @@ services:
     restart: always
 
   zookeeper:
+    container_name: zookeeper
     image: confluentinc/cp-zookeeper:latest
     ports:
       - 22181:2181
@@ -49,6 +50,7 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
 
   kafka:
+    container_name: kafka
     image: confluentinc/cp-kafka:7.4.4
     depends_on:
       - zookeeper

@@ -6,7 +6,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import pl.dolien.shop.dashboard.DashboardService;
+import pl.dolien.shop.summaryMetrics.SummaryMetricsService;
 import pl.dolien.shop.feedback.dto.FeedbackDTO;
 import pl.dolien.shop.feedback.dto.FeedbackRequestDTO;
 import pl.dolien.shop.feedback.dto.FeedbackResponseDTO;
@@ -26,7 +26,7 @@ public class FeedbackService {
 
     private final FeedbackRepository feedbackRepository;
     private final PageableBuilder pageableBuilder;
-    private final DashboardService dashboardService;
+    private final SummaryMetricsService dashboardService;
     private final UserService userService;
 
     @CacheEvict(cacheNames = "feedbacksByProduct", allEntries = true)

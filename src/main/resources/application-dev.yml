@@ -30,6 +30,8 @@ spring:
         connectiontimout: 5000
         timeout: 3000
         writetimeout: 5000
+    support:
+      mail: ${SUPPORT_EMAIL}
   data:
     rest:
       detection-strategy: ANNOTATED
