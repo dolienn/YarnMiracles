@@ -1,0 +1,37 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { FeedbackRequest } from '../../models/feedback-request/feedback-request';
+import { environment } from '../../../../environments/environment.development';
+import { Feedback } from '../../models/feedback/feedback';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class FeedbackService {
+  private readonly feedbackUrl = `${environment.url}/feedbacks`;
+
+  constructor(private httpClient: HttpClient) {}
+
+  getFeedbacksByProduct(
+    page: number,
+    pageSize: number,
+    productId: number
+  ): Observable<GetResponseFeedbacks> {
+    const feedbacksByProductUrl = `${this.feedbackUrl}/product/${productId}?page=${page}&size=${pageSize}`;
+
+    return this.httpClient.get<GetResponseFeedbacks>(feedbacksByProductUrl);
+  }
+
+  saveFeedback(request: FeedbackRequest): Observable<number> {
+    return this.httpClient.post<number>(this.feedbackUrl, request);
+  }
+}
+
+interface GetResponseFeedbacks {
+  content: Feedback[];
+  size: number;
+  totalElements: number;
+  totalPages: number;
+  number: number;
+}

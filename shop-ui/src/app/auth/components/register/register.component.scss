@@ -1,0 +1,121 @@
+@import "../../../variables.scss";
+
+.navbox {
+  height: $nav-height;
+  width: 100%;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background-image: radial-gradient(rgba(12, 12, 12, 0.171) 2px, transparent 0);
+  background-size: 30px 30px;
+  background-position: -5px -5px;
+  width: 100%;
+  height: 120vh;
+  min-height: 1080px;
+
+  .form-wrapper {
+    width: 80vw;
+    max-width: 28rem;
+    padding: 4rem;
+    margin-top: 2.5rem;
+    border-radius: $border-radius;
+    background-color: $background-color--02;
+    box-shadow: inset 0 0 0 0.15rem $color--01;
+
+    :where(label, p) {
+      color: $color--02;
+    }
+
+    h2 {
+      color: $color--01;
+      font-size: 2rem;
+    }
+
+    .form {
+      margin: 2rem 0 2.5rem;
+
+      button {
+        width: 100%;
+        padding: 1rem 0;
+        font-size: 1rem;
+        color: $background-color--01;
+        font-size: 500;
+        border-radius: $border-radius;
+        background-color: $color--01;
+        margin: 1.6rem 0 0.7rem;
+        transition: 0.1s ease;
+      }
+
+      button:hover {
+        background-color: $color--00;
+      }
+
+      .form-control {
+        position: relative;
+        height: 3.2rem;
+        margin-bottom: 1rem;
+
+        input {
+          height: 100%;
+          width: 100%;
+          background-color: $background-color--01;
+          outline: none;
+          border: none;
+          color: $color--01;
+          font-size: 1rem;
+          border-radius: $border-radius;
+          padding: 0 1.3rem;
+          box-shadow: inset 0 0 0 0.15rem $color--01;
+        }
+
+        input:is(:focus, :valid):not(:placeholder-shown) {
+          padding: 1rem 1.3rem 0;
+          background: $background-color--01;
+        }
+
+        label {
+          position: absolute;
+          left: 1.3rem;
+          top: 50%;
+          color: $color--02;
+          pointer-events: none;
+          font-size: 1rem;
+          transform: translateY(-50%);
+          transition: all 0.1s ease;
+        }
+
+        input:is(:focus, :valid):not(:placeholder-shown) ~ label {
+          font-size: 0.75rem;
+          transform: translateY(-130%);
+        }
+      }
+    }
+  }
+
+  button {
+    border: none;
+    outline: none;
+    cursor: pointer;
+  }
+
+  p button {
+    font-size: 1rem;
+    color: $color--01;
+    background-color: $background-color--02;
+    text-decoration: none;
+  }
+
+  p button:hover {
+    text-decoration: underline;
+  }
+}
+
+@media (max-width: 600px) {
+  .navbox {
+    height: $nav-height * 2;
+  }
+}
