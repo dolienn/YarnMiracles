@@ -8,8 +8,8 @@ import org.mockito.MockitoAnnotations;
 
 import javax.management.relation.RoleNotFoundException;
 
-import java.util.Optional;
-
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -35,18 +35,17 @@ class RoleServiceTest {
 
     @Test
     void shouldGetRoleByName() throws RoleNotFoundException {
-        when(roleRepository.findByName(USER_ROLE_NAME)).thenReturn(Optional.of(userRole));
+        when(roleRepository.findByName(USER_ROLE_NAME)).thenReturn(of(userRole));
 
         Role result = roleService.getByName(USER_ROLE_NAME);
 
         assertEquals(userRole, result);
-
         verify(roleRepository, times(1)).findByName(USER_ROLE_NAME);
     }
 
     @Test
     void shouldThrowRoleNotFoundException() {
-        when(roleRepository.findByName(USER_ROLE_NAME)).thenReturn(Optional.empty());
+        when(roleRepository.findByName(USER_ROLE_NAME)).thenReturn(empty());
 
         RoleNotFoundException exception = assertThrows(RoleNotFoundException.class, () -> roleService.getByName(USER_ROLE_NAME));
 

@@ -8,9 +8,8 @@ public class PaginationAndSortParamsKeyFragmentGenerator implements KeyFragmentG
 
     @Override
     public void appendKeyFragment(StringBuilder keyBuilder, Object param) {
-        if (param instanceof PaginationAndSortParams paginationAndSortParams) {
+        if (param instanceof PaginationAndSortParams paginationAndSortParams)
             appendPaginationAndSortParamsKeyFragment(keyBuilder, paginationAndSortParams);
-        }
     }
 
     private void appendPaginationAndSortParamsKeyFragment(StringBuilder keyBuilder, PaginationAndSortParams paginationAndSortParams) {

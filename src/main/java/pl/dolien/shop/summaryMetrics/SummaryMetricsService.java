@@ -3,19 +3,16 @@ package pl.dolien.shop.summaryMetrics;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.dolien.shop.exception.SummaryMetricsNotFoundException;
 import pl.dolien.shop.order.Order;
-import pl.dolien.shop.user.UserService;
 
 @Service
 @RequiredArgsConstructor
 public class SummaryMetricsService {
 
     private final SummaryMetricsRepository repository;
-    private final UserService userService;
 
     @Cacheable(cacheNames = "summaryMetrics", key = "summaryMetrics")
     public SummaryMetrics getSummaryMetrics() {

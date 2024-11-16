@@ -12,12 +12,12 @@ import lombok.Setter;
 @Builder
 public class PasswordRequestDTO {
 
-    @NotEmpty(message = "Your password is mandatory")
-    @NotBlank(message = "Your password is mandatory")
+    @NotEmpty(message = "Your password field cannot be empty")
+    @NotBlank(message = "Your password field cannot be empty")
     private String yourPassword;
 
-    @NotEmpty(message = "New password is mandatory")
-    @NotBlank(message = "New password is mandatory")
+    @NotEmpty(message = "New password field cannot be empty")
+    @NotBlank(message = "New password field cannot be empty")
     @Size(min = 8, message = "New password should be 8 characters long minimum")
     private String newPassword;
 }

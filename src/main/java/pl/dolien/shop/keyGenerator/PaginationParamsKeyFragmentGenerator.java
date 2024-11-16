@@ -8,9 +8,8 @@ public class PaginationParamsKeyFragmentGenerator implements KeyFragmentGenerato
 
     @Override
     public void appendKeyFragment(StringBuilder keyBuilder, Object param) {
-        if (param instanceof PaginationParams paginationParams) {
+        if (param instanceof PaginationParams paginationParams)
             appendPaginationParamsKeyFragment(keyBuilder, paginationParams);
-        }
     }
 
     private void appendPaginationParamsKeyFragment(StringBuilder keyBuilder, PaginationParams paginationParams) {

@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SupportEmailSender {
 
-    @Value("${support.email}")
-    private final String supportEmail;
-
     private final JavaMailSender mailSender;
+
+    @Value("${support.email}")
+    private String supportEmail;
 
     public SimpleMailMessage sendToSupportEmail(SupportMessageDTO request) {
         SimpleMailMessage message = buildSupportEmailMessage(request);

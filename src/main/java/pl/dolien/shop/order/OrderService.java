@@ -3,7 +3,7 @@ package pl.dolien.shop.order;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.dolien.shop.checkout.PurchaseRequestDTO;
+import pl.dolien.shop.checkout.dto.PurchaseRequestDTO;
 import pl.dolien.shop.product.ProductInventoryUpdater;
 
 import java.util.Set;
@@ -14,6 +14,7 @@ import static pl.dolien.shop.order.OrderStatus.PENDING;
 @Service
 @RequiredArgsConstructor
 public class OrderService {
+
     private final ProductInventoryUpdater productInventoryService;
 
     public Order buildOrder(PurchaseRequestDTO purchase) {

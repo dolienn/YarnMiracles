@@ -1,4 +1,4 @@
-package pl.dolien.shop.checkout;
+package pl.dolien.shop.checkout.dto;
 
 import lombok.*;
 import pl.dolien.shop.address.Address;

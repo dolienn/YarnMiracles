@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.math.BigDecimal;
@@ -45,9 +46,7 @@ class SummaryMetricsControllerTest {
     void shouldReturnSummaryMetrics() throws Exception {
         when(summaryMetricsService.getSummaryMetrics()).thenReturn(testSummaryMetrics);
 
-        mockMvc.perform(get("/summary-metrics")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testSummaryMetrics)))
+        performGetSummaryMetricsRequest()
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(testSummaryMetrics)));
 
@@ -63,5 +62,11 @@ class SummaryMetricsControllerTest {
                 .productsSell(0)
                 .revenue(BigDecimal.ZERO)
                 .build();
+    }
+
+    private ResultActions performGetSummaryMetricsRequest() throws Exception {
+        return mockMvc.perform(get("/summary-metrics")
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(testSummaryMetrics)));
     }
 }

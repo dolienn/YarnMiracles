@@ -1,6 +1,5 @@
 package pl.dolien.shop.productCategory;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -27,9 +26,6 @@ class ProductCategoryControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     private ProductCategoryDTO productCategoryDTO;
 

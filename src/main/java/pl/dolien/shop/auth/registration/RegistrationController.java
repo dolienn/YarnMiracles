@@ -8,8 +8,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.dolien.shop.auth.registration.dto.RegistrationDTO;
+import pl.dolien.shop.user.dto.UserDTO;
 
 import javax.management.relation.RoleNotFoundException;
+
+import static pl.dolien.shop.user.UserMapper.toUserDTO;
 
 @RestController
 @RequestMapping("auth")
@@ -20,9 +24,9 @@ public class RegistrationController {
     private final RegistrationService service;
 
     @PostMapping("/register")
-    public void register(
-            @RequestBody @Valid RegistrationDTO request
+    public UserDTO register(
+            @RequestBody @Valid RegistrationDTO dto
     ) throws MessagingException, RoleNotFoundException {
-        service.registerUser(request);
+        return toUserDTO(service.registerUser(dto));
     }
 }

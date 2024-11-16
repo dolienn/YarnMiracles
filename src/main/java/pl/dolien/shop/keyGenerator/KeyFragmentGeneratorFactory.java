@@ -23,9 +23,21 @@ public class KeyFragmentGeneratorFactory {
     }
 
     private boolean isMatchingGenerator(KeyFragmentGenerator generator, Object param) {
-        return (generator instanceof PaginationAndSortParamsKeyFragmentGenerator && param instanceof PaginationAndSortParams) ||
-                (generator instanceof PaginationParamsKeyFragmentGenerator && param instanceof PaginationParams) ||
-                (generator instanceof AuthenticationKeyFragmentGenerator && param instanceof Authentication);
+        return isPaginationAndSortParams(generator, param) ||
+                isPaginationParams(generator, param) ||
+                isAuthentication(generator, param);
+    }
+
+    private boolean isPaginationAndSortParams(KeyFragmentGenerator generator, Object param) {
+        return generator instanceof PaginationAndSortParamsKeyFragmentGenerator && param instanceof PaginationAndSortParams;
+    }
+
+    private boolean isPaginationParams(KeyFragmentGenerator generator, Object param) {
+        return generator instanceof PaginationParamsKeyFragmentGenerator && param instanceof PaginationParams;
+    }
+
+    private boolean isAuthentication(KeyFragmentGenerator generator, Object param) {
+        return generator instanceof AuthenticationKeyFragmentGenerator && param instanceof Authentication;
     }
 
     private KeyFragmentGenerator getDefaultGenerator() {

@@ -62,8 +62,7 @@ class FavouriteServiceTest {
 
     @Test
     void shouldGetFavouritesByUserId() {
-        when(pageableBuilder.buildPageable(testPaginationAndSortParams)).thenReturn(pageable);
-        when(favouriteRepository.findFavouritesByUserId(testUser.getId(), pageable)).thenReturn(List.of(testProduct));
+        mockDependenciesForGettingFavourites();
 
         List<ProductDTO> products = favouriteService.getFavourites(
                 testUser.getId(),
@@ -71,66 +70,52 @@ class FavouriteServiceTest {
                 authentication
         );
 
-        assertEquals(1, products.size());
-        assertEquals(testProduct.getId(), products.get(0).getId());
-        assertEquals(testProduct.getName(), products.get(0).getName());
-
-        verify(pageableBuilder, times(1)).buildPageable(testPaginationAndSortParams);
-        verify(favouriteRepository, times(1)).findFavouritesByUserId(1, pageable);
+        assertFavourites(products);
+        verifyInteractionsForGettingFavourites();
     }
 
     @Test
     void shouldAddProductToFavourites() {
-        when(userService.getUserById(testUser.getId())).thenReturn(testUser);
-        when(productService.getProductById(testProduct.getId())).thenReturn(testProduct);
+        mockDependenciesForAddingAndRemovingProductToFavourites();
 
         favouriteService.addToFavourites(testUser.getId(), testProduct.getId(), authentication);
 
-        verify(userService, times(1)).getUserById(testUser.getId());
-        verify(productService, times(1)).getProductById(testProduct.getId());
+        verifyInteractionsForAddingAndRemovingProductToFavourites();
     }
 
     @Test
     void shouldThrowExceptionWhenProductIsAlreadyFavourite() {
         testUser.getFavourites().add(testProduct);
 
-        when(userService.getUserById(testUser.getId())).thenReturn(testUser);
-        when(productService.getProductById(testProduct.getId())).thenReturn(testProduct);
+        mockDependenciesForAddingAndRemovingProductToFavourites();
 
         ProductAlreadyFavouriteException exception = assertThrows(ProductAlreadyFavouriteException.class,
                 () -> favouriteService.addToFavourites(testUser.getId(), testProduct.getId(), authentication));
 
         assertEquals(PRODUCT_ALREADY_FAVOURITE_MESSAGE, exception.getMessage());
-
-        verify(userService, times(1)).getUserById(testUser.getId());
-        verify(productService, times(1)).getProductById(testProduct.getId());
+        verifyInteractionsForAddingAndRemovingProductToFavourites();
     }
 
     @Test
     void shouldRemoveProductFromFavourites() {
         testUser.getFavourites().add(testProduct);
 
-        when(userService.getUserById(testUser.getId())).thenReturn(testUser);
-        when(productService.getProductById(testProduct.getId())).thenReturn(testProduct);
+        mockDependenciesForAddingAndRemovingProductToFavourites();
 
         favouriteService.removeFromFavourites(testUser.getId(), testProduct.getId(), authentication);
 
-        verify(userService, times(1)).getUserById(testUser.getId());
-        verify(productService, times(1)).getProductById(testProduct.getId());
+        verifyInteractionsForAddingAndRemovingProductToFavourites();
     }
 
     @Test
     void shouldThrowExceptionWhenProductIsNotFavourite() {
-        when(userService.getUserById(testUser.getId())).thenReturn(testUser);
-        when(productService.getProductById(testProduct.getId())).thenReturn(testProduct);
+        mockDependenciesForAddingAndRemovingProductToFavourites();
 
         ProductNotFavouriteException exception = assertThrows(ProductNotFavouriteException.class,
                 () -> favouriteService.removeFromFavourites(testUser.getId(), testProduct.getId(), authentication));
 
         assertEquals(PRODUCT_NOT_FAVOURITE_MESSAGE, exception.getMessage());
-
-        verify(userService, times(1)).getUserById(testUser.getId());
-        verify(productService, times(1)).getProductById(testProduct.getId());
+        verifyInteractionsForAddingAndRemovingProductToFavourites();
     }
 
     private void initializeTestData() {
@@ -151,5 +136,31 @@ class FavouriteServiceTest {
                 .size(10)
                 .sortOrderType("PRICE_ASC")
                 .build();
+    }
+
+    private void mockDependenciesForGettingFavourites() {
+        when(pageableBuilder.buildPageable(testPaginationAndSortParams)).thenReturn(pageable);
+        when(favouriteRepository.findFavouritesByUserId(testUser.getId(), pageable)).thenReturn(List.of(testProduct));
+    }
+
+    private void assertFavourites(List<ProductDTO> products) {
+        assertEquals(1, products.size());
+        assertEquals(testProduct.getId(), products.get(0).getId());
+        assertEquals(testProduct.getName(), products.get(0).getName());
+    }
+
+    private void verifyInteractionsForGettingFavourites() {
+        verify(pageableBuilder, times(1)).buildPageable(testPaginationAndSortParams);
+        verify(favouriteRepository, times(1)).findFavouritesByUserId(testUser.getId(), pageable);
+    }
+
+    private void mockDependenciesForAddingAndRemovingProductToFavourites() {
+        when(userService.getUserById(testUser.getId())).thenReturn(testUser);
+        when(productService.getProductById(testProduct.getId())).thenReturn(testProduct);
+    }
+
+    private void verifyInteractionsForAddingAndRemovingProductToFavourites() {
+        verify(userService, times(1)).getUserById(testUser.getId());
+        verify(productService, times(1)).getProductById(testProduct.getId());
     }
 }

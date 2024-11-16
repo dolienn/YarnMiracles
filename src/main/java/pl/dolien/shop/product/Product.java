@@ -79,7 +79,7 @@ public class Product {
         this.unitsInStock -= quantity;
     }
 
-    public void addUserWhoPurchased(User user) {
+    public void addBuyer(User user) {
         user.addToPurchasedProducts(this);
         buyers.add(user);
     }

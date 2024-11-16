@@ -39,13 +39,11 @@ class AccountActivationEmailServiceTest {
 
     @Test
     void shouldSendAccountActivationEmail() throws MessagingException {
-        when(mailSender.createMimeMessage()).thenReturn(mimeMessage);
-        when(templateEngine.process(anyString(), any(Context.class))).thenReturn("Test content");
+        mockDependenciesForEmailSending();
 
         accountActivationEmailService.sendActivationEmail(accountActivationMessageDTO);
 
-        verify(mailSender, times(1)).send(mimeMessage);
-        verify(templateEngine, times(1)).process(anyString(), any(Context.class));
+        verifyEmailSendingInteractions();
     }
 
     private void setSupportEmail() {
@@ -60,5 +58,15 @@ class AccountActivationEmailServiceTest {
                 .activationCode("123456")
                 .confirmationUrl("testConfirmationUrl")
                 .build();
+    }
+
+    private void mockDependenciesForEmailSending() {
+        when(mailSender.createMimeMessage()).thenReturn(mimeMessage);
+        when(templateEngine.process(anyString(), any(Context.class))).thenReturn("Test content");
+    }
+
+    private void verifyEmailSendingInteractions() {
+        verify(mailSender, times(1)).send(mimeMessage);
+        verify(templateEngine, times(1)).process(anyString(), any(Context.class));
     }
 }

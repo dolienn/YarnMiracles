@@ -32,10 +32,7 @@ class SupportEmailSenderTest {
     void shouldSendToSupportEmail() {
         SimpleMailMessage result = supportEmailSender.sendToSupportEmail(testSupportMessageDTO);
 
-        assertNotNull(result);
-        assertEquals(testSupportMessageDTO.getFrom(), result.getFrom());
-        assertEquals(testSupportMessageDTO.getSubject(), result.getSubject());
-        assertEquals(testSupportMessageDTO.getText(), result.getText());
+        assertEmailContent(result, testSupportMessageDTO);
 
         verify(mailSender, times(1)).send(any(SimpleMailMessage.class));
     }
@@ -46,5 +43,12 @@ class SupportEmailSenderTest {
                 .subject("Test subject")
                 .text("Test text")
                 .build();
+    }
+
+    private void assertEmailContent(SimpleMailMessage result, SupportMessageDTO dto) {
+        assertNotNull(result);
+        assertEquals(dto.getFrom(), result.getFrom());
+        assertEquals(dto.getSubject(), result.getSubject());
+        assertEquals(dto.getText(), result.getText());
     }
 }

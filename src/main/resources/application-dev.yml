@@ -30,8 +30,6 @@ spring:
         connectiontimout: 5000
         timeout: 3000
         writetimeout: 5000
-    support:
-      mail: ${SUPPORT_EMAIL}
   data:
     rest:
       detection-strategy: ANNOTATED
@@ -63,11 +61,17 @@ application:
   mailing:
     frontend:
       activation-url: ${ACTIVATION_URL}
+
 server:
   address: ${SERVER_ADDRESS}
   port: ${SERVER_PORT}
+
+support:
+  email: ${SUPPORT_EMAIL}
+
 file:
   upload-dir: ./shop-ui/src/assets/images/products
+
 cloudinary:
   cloud:
     name: ${CLOUDINARY_CLOUD_NAME}

@@ -31,7 +31,7 @@ public class ImageUploader {
         BufferedImage img = readAndValidateImage(file);
         String transformation = getTransformation(img);
 
-        Map<String, Object> uploadResult = uploadToCloudinary(file, transformation);
+        Map<String, Object> uploadResult = uploadImageWithTransformation(file, transformation);
 
         return getSecureUrl(uploadResult);
     }
@@ -51,22 +51,26 @@ public class ImageUploader {
     }
 
     private void validateImageIsNotNull(BufferedImage img) {
-        if (img == null) {
+        if (img == null)
             throw new ImageReadException("Unable to read image from file");
-        }
     }
 
-    private Map<String, Object> uploadToCloudinary(MultipartFile file, String transformation) {
+    private Map<String, Object> uploadImageWithTransformation(MultipartFile file, String transformation) {
         try {
-            return cloudinary.uploader().upload(file.getBytes(),
-                    ObjectUtils.asMap(
-                            "public_id", UUID.randomUUID().toString(),
-                            "resource_type", "image",
-                            "transformation", transformation
-                    ));
+            return uploadImageToCloudinary(file, transformation);
         } catch (IOException e) {
             throw new ImageUploadException("Error occurred while uploading image: " + e.getMessage());
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> uploadImageToCloudinary(MultipartFile file, String transformation) throws IOException {
+        return cloudinary.uploader().upload(file.getBytes(),
+                ObjectUtils.asMap(
+                        "public_id", UUID.randomUUID().toString(),
+                        "resource_type", "image",
+                        "transformation", transformation
+                ));
     }
 
     private String getSecureUrl(Map<String, Object> uploadResult) {

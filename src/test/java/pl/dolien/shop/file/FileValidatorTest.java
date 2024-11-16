@@ -33,7 +33,7 @@ class FileValidatorTest {
     private MultipartFile multipartFile;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
         multipartFile = mock(MultipartFile.class);
 
         emptyDir = createDirectory("emptyDir");
@@ -91,15 +91,12 @@ class FileValidatorTest {
         return dir;
     }
 
-    private void createFileInDirectory(File dir) {
+    private void createFileInDirectory(File dir) throws IOException {
         File file = new File(dir, FILE_TXT);
-        try {
-            if (!file.exists()) {
-                boolean fileCreated = file.createNewFile();
-                assertTrue(fileCreated, "Failed to create file: " + FILE_TXT);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to create file: " + FILE_TXT, e);
+
+        if (!file.exists()) {
+            boolean fileCreated = file.createNewFile();
+            assertTrue(fileCreated, "Failed to create file: " + FILE_TXT);
         }
     }
 }

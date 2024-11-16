@@ -9,6 +9,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pl.dolien.shop.pagination.PaginationAndSortParams;
 import pl.dolien.shop.product.dto.ProductDTO;
@@ -56,10 +57,7 @@ class FavouriteControllerTest {
         when(favouriteService.getFavourites(anyInt(), any(PaginationAndSortParams.class), any(Authentication.class)))
                 .thenReturn(List.of(testProductDTO));
 
-        mockMvc.perform(get("/users/{userId}/favourites", TEST_USER_ID)
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testPaginationAndSortParams))
-                        .principal(authentication))
+        mockMvc.perform(buildGetFavouritesRequest())
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(List.of(testProductDTO))));
 
@@ -69,10 +67,7 @@ class FavouriteControllerTest {
 
     @Test
     void shouldAddProductToFavourites() throws Exception {
-        mockMvc.perform(get("/users/{userId}/favourites/{productId}", TEST_USER_ID, testProductDTO.getId())
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testProductDTO))
-                        .principal(authentication))
+        mockMvc.perform(buildAddToFavouritesRequest())
                 .andExpect(status().isOk());
 
         verify(favouriteService, times(1)).addToFavourites(anyInt(), anyLong(), any(Authentication.class));
@@ -80,10 +75,7 @@ class FavouriteControllerTest {
 
     @Test
     void shouldRemoveProductFromFavourites() throws Exception {
-        mockMvc.perform(delete("/users/{userId}/favourites/{productId}", TEST_USER_ID, testProductDTO.getId())
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testProductDTO))
-                        .principal(authentication))
+        mockMvc.perform(buildRemoveFromFavouritesRequest())
                 .andExpect(status().isOk());
 
         verify(favouriteService, times(1)).removeFromFavourites(anyInt(), anyLong(), any(Authentication.class));
@@ -100,5 +92,25 @@ class FavouriteControllerTest {
                 .size(10)
                 .sortOrderType("PRICE_ASC")
                 .build();
+    }
+
+    private MockHttpServletRequestBuilder buildGetFavouritesRequest() throws Exception {
+        return get("/users/{userId}/favourites", TEST_USER_ID)
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(testPaginationAndSortParams))
+                .principal(authentication);
+    }
+
+    private MockHttpServletRequestBuilder buildAddToFavouritesRequest() throws Exception {
+        return get("/users/{userId}/favourites/{productId}", TEST_USER_ID, testProductDTO.getId())
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(testProductDTO))
+                .principal(authentication);
+    }
+
+    private MockHttpServletRequestBuilder buildRemoveFromFavouritesRequest() {
+        return delete("/users/{userId}/favourites/{productId}", TEST_USER_ID, testProductDTO.getId())
+                .contentType(APPLICATION_JSON)
+                .principal(authentication);
     }
 }

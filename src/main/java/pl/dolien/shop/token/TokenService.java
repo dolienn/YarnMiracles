@@ -36,9 +36,10 @@ public class TokenService {
 
     public Token getValidatedToken(String token) {
         Token savedToken = getToken(token);
-        if (isTokenExpired(savedToken.getExpiresAt())) {
+
+        if (isTokenExpired(savedToken.getExpiresAt()))
             throw new ExpiredTokenException("Activation token has expired");
-        }
+
         return savedToken;
     }
 

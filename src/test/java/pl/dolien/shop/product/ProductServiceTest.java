@@ -19,6 +19,7 @@ import pl.dolien.shop.user.UserService;
 import java.math.BigDecimal;
 import java.util.*;
 
+import static java.util.Optional.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -68,12 +69,11 @@ class ProductServiceTest {
 
     @Test
     void shouldGetProductById() {
-        when(productRepository.findById(testProduct.getId())).thenReturn(Optional.of(testProduct));
+        when(productRepository.findById(testProduct.getId())).thenReturn(of(testProduct));
 
         Product product = productService.getProductById(testProduct.getId());
 
         assertEquals(testProduct, product);
-
         verify(productRepository, times(1)).findById(testProduct.getId());
     }
 
@@ -83,76 +83,56 @@ class ProductServiceTest {
 
         List<Product> products = productService.getAllProducts();
 
-        assertEquals(1, products.size());
-        assertEquals(testProduct, products.get(0));
-
+        assertAllProducts(products);
         verify(productRepository, times(1)).findAll();
     }
 
     @Test
     void shouldGetAllProductsWithPagination() {
-        when(pageableBuilder.buildPageable(testPaginationAndSortParams)).thenReturn(pageable);
+        mockPageableBuilder();
         when(productRepository.findAllProducts(pageable)).thenReturn(List.of(testProduct));
 
         List<ProductDTO> productDTOs = productService.getAllProducts(testPaginationAndSortParams);
 
-        assertEquals(1, productDTOs.size());
-        assertEquals(testProduct.getId(), productDTOs.get(0).getId());
-        assertEquals(testProduct.getName(), productDTOs.get(0).getName());
-
-        verify(pageableBuilder, times(1)).buildPageable(testPaginationAndSortParams);
+        assertProducts(productDTOs);
+        verifyPageableBuilder();
         verify(productRepository, times(1)).findAllProducts(pageable);
     }
 
     @Test
     void shouldGetProductsByCategoryId() {
-        when(pageableBuilder.buildPageable(testPaginationAndSortParams)).thenReturn(pageable);
+        mockPageableBuilder();
         when(productRepository.findByCategoryId(testProduct.getCategoryId(), pageable)).thenReturn(List.of(testProduct));
 
         List<ProductDTO> productDTOs = productService.getProductsByCategoryId(testProduct.getCategoryId(), testPaginationAndSortParams);
 
-        assertEquals(1, productDTOs.size());
-        assertEquals(testProduct.getId(), productDTOs.get(0).getId());
-        assertEquals(testProduct.getName(), productDTOs.get(0).getName());
-
-        verify(pageableBuilder, times(1)).buildPageable(testPaginationAndSortParams);
+        assertProducts(productDTOs);
+        verifyPageableBuilder();
         verify(productRepository, times(1)).findByCategoryId(testProduct.getCategoryId(), pageable);
     }
 
     @Test
     void shouldGetProductsByNameContaining() {
-        when(pageableBuilder.buildPageable(testPaginationAndSortParams)).thenReturn(pageable);
+        mockPageableBuilder();
         when(productRepository.findByNameContaining(testProduct.getName(), pageable)).thenReturn(List.of(testProduct));
 
         List<ProductDTO> productDTOs = productService.getProductsByNameContaining(testProduct.getName(), testPaginationAndSortParams);
 
-        assertEquals(1, productDTOs.size());
-        assertEquals(testProduct.getId(), productDTOs.get(0).getId());
-        assertEquals(testProduct.getName(), productDTOs.get(0).getName());
-
-        verify(pageableBuilder, times(1)).buildPageable(testPaginationAndSortParams);
+        assertProducts(productDTOs);
+        verifyPageableBuilder();
         verify(productRepository, times(1)).findByNameContaining(testProduct.getName(), pageable);
     }
 
     @Test
     void shouldGetAllProductsWithFeedbacks() {
-        when(pageableBuilder.buildPageable(testPaginationAndSortParams)).thenReturn(pageable);
-        when(productRepository.findAllProducts(pageable)).thenReturn(List.of(testProduct));
-        when(feedbackRepository.findAllByProductIdIn(List.of(testProduct.getId())))
-                .thenReturn(Collections.singletonList(testFeedback));
+        mockPageableBuilder();
+        mockProductsWithFeedbacks();
 
         List<ProductWithFeedbackDTO> productWithFeedbackDTOs = productService.getAllProductsWithFeedbacks(testPaginationAndSortParams);
 
-        assertEquals(1, productWithFeedbackDTOs.size());
-        assertEquals(testProduct.getId(), productWithFeedbackDTOs.get(0).getId());
-        assertEquals(testProduct.getName(), productWithFeedbackDTOs.get(0).getName());
-        assertEquals(1, productWithFeedbackDTOs.get(0).getFeedbacks().size());
-        assertEquals(testFeedback.getId(), productWithFeedbackDTOs.get(0).getFeedbacks().get(0).getId());
-        assertEquals(testFeedback.getProductId(), productWithFeedbackDTOs.get(0).getFeedbacks().get(0).getProductId());
-
-        verify(pageableBuilder, times(1)).buildPageable(testPaginationAndSortParams);
-        verify(productRepository, times(1)).findAllProducts(pageable);
-        verify(feedbackRepository, times(1)).findAllByProductIdIn(List.of(testProduct.getId()));
+        assertProductsWithFeedbacks(productWithFeedbackDTOs);
+        verifyPageableBuilder();
+        verifyProductsWithFeedbacks();
     }
 
     @Test
@@ -162,25 +142,17 @@ class ProductServiceTest {
         Product savedProduct = productService.saveProduct(testProduct);
 
         assertEquals(testProduct, savedProduct);
-
-        verify(productRepository, times(1)).save(testProduct);
+        verifySaveProduct();
     }
 
     @Test
     void ShouldSaveProductWithImage() {
-        when(imageUploader.uploadImage(file)).thenReturn("testUrl");
-        when(productRepository.save(any(Product.class))).thenReturn(testProduct);
+        mockSaveProductWithImage();
 
-        ProductDTO result = productService.saveProductWithImage(testProductRequestDTO, file, authentication);
+        ProductDTO response = productService.saveProductWithImage(testProductRequestDTO, file, authentication);
 
-        assertEquals(testProduct.getName(), result.getName());
-        assertEquals(testProduct.getDescription(), result.getDescription());
-        assertEquals(testProduct.getImageUrl(), result.getImageUrl());
-
-        verify(userService, times(1)).verifyUserHasAdminRole(authentication);
-        verify(fileValidator, times(1)).validateFileIsNotEmpty(file);
-        verify(imageUploader, times(1)).uploadImage(file);
-        verify(productRepository, times(1)).save(testProduct);
+        assertSavedProductWithImage(response);
+        verifySaveProductWithImage();
     }
 
     private void initializeTestData() {
@@ -209,5 +181,65 @@ class ProductServiceTest {
                 .build();
 
         file = mock(MultipartFile.class);
+    }
+
+    private void mockPageableBuilder() {
+        when(pageableBuilder.buildPageable(testPaginationAndSortParams)).thenReturn(pageable);
+    }
+
+    private void mockProductsWithFeedbacks() {
+        when(productRepository.findAllProducts(pageable)).thenReturn(List.of(testProduct));
+        when(feedbackRepository.findAllByProductIdIn(List.of(testProduct.getId()))).thenReturn(Collections.singletonList(testFeedback));
+    }
+
+    private void mockSaveProductWithImage() {
+        when(imageUploader.uploadImage(file)).thenReturn("testUrl");
+        when(productRepository.save(any(Product.class))).thenReturn(testProduct);
+    }
+
+    private void assertAllProducts(List<Product> products) {
+        assertEquals(1, products.size());
+        assertEquals(testProduct, products.get(0));
+    }
+
+    private void assertProducts(List<ProductDTO> productDTOs) {
+        assertEquals(1, productDTOs.size());
+        assertEquals(testProduct.getId(), productDTOs.get(0).getId());
+        assertEquals(testProduct.getName(), productDTOs.get(0).getName());
+    }
+
+    private void assertProductsWithFeedbacks(List<ProductWithFeedbackDTO> productWithFeedbackDTOs) {
+        assertEquals(1, productWithFeedbackDTOs.size());
+        assertEquals(testProduct.getId(), productWithFeedbackDTOs.get(0).getId());
+        assertEquals(testProduct.getName(), productWithFeedbackDTOs.get(0).getName());
+        assertEquals(1, productWithFeedbackDTOs.get(0).getFeedbacks().size());
+        assertEquals(testFeedback.getId(), productWithFeedbackDTOs.get(0).getFeedbacks().get(0).getId());
+        assertEquals(testFeedback.getProductId(), productWithFeedbackDTOs.get(0).getFeedbacks().get(0).getProductId());
+    }
+
+    private void assertSavedProductWithImage(ProductDTO result) {
+        assertEquals(testProduct.getName(), result.getName());
+        assertEquals(testProduct.getDescription(), result.getDescription());
+        assertEquals(testProduct.getImageUrl(), result.getImageUrl());
+    }
+
+    private void verifyPageableBuilder() {
+        verify(pageableBuilder, times(1)).buildPageable(testPaginationAndSortParams);
+    }
+
+    private void verifyProductsWithFeedbacks() {
+        verify(productRepository, times(1)).findAllProducts(pageable);
+        verify(feedbackRepository, times(1)).findAllByProductIdIn(List.of(testProduct.getId()));
+    }
+
+    private void verifySaveProductWithImage() {
+        verify(userService, times(1)).verifyUserHasAdminRole(authentication);
+        verify(fileValidator, times(1)).validateFileIsNotEmpty(file);
+        verify(imageUploader, times(1)).uploadImage(file);
+        verifySaveProduct();
+    }
+
+    private void verifySaveProduct() {
+        verify(productRepository, times(1)).save(testProduct);
     }
 }

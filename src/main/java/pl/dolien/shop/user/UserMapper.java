@@ -17,9 +17,8 @@ public class UserMapper {
         user.setAccountLocked(requestDTO.isAccountLocked());
         user.setDateOfBirth(requestDTO.getDateOfBirth());
 
-        if (requestDTO.getPassword() != null) {
+        if (requestDTO.getPassword() != null)
             user.setPassword(encodePassword(requestDTO.getPassword(), passwordEncoder));
-        }
 
         return user;
     }

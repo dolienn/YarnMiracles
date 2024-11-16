@@ -42,7 +42,6 @@ class SummaryMetricsServiceTest {
         SummaryMetrics result = summaryMetricsService.getSummaryMetrics();
 
         assertEquals(testSummaryMetrics, result);
-
         verify(summaryMetricsRepository, times(1)).findById(1L);
     }
 
@@ -64,10 +63,7 @@ class SummaryMetricsServiceTest {
 
         summaryMetricsService.updateOrderMetrics(testOrder);
 
-        assertEquals(1, testSummaryMetrics.getTotalOrders());
-        assertEquals(BigDecimal.TEN, testSummaryMetrics.getRevenue());
-        assertEquals(1, testSummaryMetrics.getProductsSell());
-
+        assertUpdatedOrderMetrics();
         verify(summaryMetricsRepository, times(1)).findById(1L);
     }
 
@@ -78,7 +74,6 @@ class SummaryMetricsServiceTest {
         summaryMetricsService.incrementUserCount();
 
         assertEquals(1, testSummaryMetrics.getTotalUsers());
-
         verify(summaryMetricsRepository, times(1)).findById(1L);
     }
 
@@ -89,7 +84,6 @@ class SummaryMetricsServiceTest {
         summaryMetricsService.incrementCustomerFeedbackCount();
 
         assertEquals(1, testSummaryMetrics.getTotalCustomerFeedback());
-
         verify(summaryMetricsRepository, times(1)).findById(1L);
     }
 
@@ -107,5 +101,11 @@ class SummaryMetricsServiceTest {
                 .totalPrice(BigDecimal.TEN)
                 .totalQuantity(1)
                 .build();
+    }
+
+    private void assertUpdatedOrderMetrics() {
+        assertEquals(1, testSummaryMetrics.getTotalOrders());
+        assertEquals(BigDecimal.TEN, testSummaryMetrics.getRevenue());
+        assertEquals(1, testSummaryMetrics.getProductsSell());
     }
 }

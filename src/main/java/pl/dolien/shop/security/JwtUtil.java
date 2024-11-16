@@ -12,9 +12,10 @@ public class JwtUtil {
 
     public static String extractJwt(HttpServletRequest request) {
         final String authHeader = request.getHeader(AUTHORIZATION_HEADER);
-        if (authHeader != null && authHeader.startsWith(BEARER_PREFIX)) {
+
+        if (authHeader != null && authHeader.startsWith(BEARER_PREFIX))
             return authHeader.substring(BEARER_PREFIX_LENGTH);
-        }
+
         return null;
     }
 

@@ -6,9 +6,9 @@ import java.util.Set;
 
 public class RatingCalculator {
     public static double calculateRating(Set<Feedback> feedbacks) {
-        if (feedbacks == null || feedbacks.isEmpty()) {
+        if (feedbacks == null || feedbacks.isEmpty())
             return 0.0;
-        }
+
         return Math.round(feedbacks.stream()
                 .mapToDouble(Feedback::getNote)
                 .average()

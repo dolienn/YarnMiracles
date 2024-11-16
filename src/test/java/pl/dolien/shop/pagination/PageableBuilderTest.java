@@ -35,24 +35,18 @@ class PageableBuilderTest {
         when(sortGenerator.generateSort(paginationAndSortParams.getSortOrderType()))
                 .thenReturn(Sort.by(Sort.Order.asc("p.unitPrice")));
 
-        Pageable result = pageableBuilder.buildPageable(paginationAndSortParams);
+        Pageable response = pageableBuilder.buildPageable(paginationAndSortParams);
 
-        assertNotNull(result);
-        assertEquals(paginationAndSortParams.getPage(), result.getPageNumber());
-        assertEquals(paginationAndSortParams.getSize(), result.getPageSize());
-        assertEquals(Sort.by(Sort.Order.asc("p.unitPrice")), result.getSort());
+        assertPageableWithSort(response, paginationAndSortParams);
 
         verify(sortGenerator, times(1)).generateSort(paginationAndSortParams.getSortOrderType());
     }
 
     @Test
     void shouldBuildPageableWithPaginationParams() {
-        Pageable result = pageableBuilder.buildPageable(paginationParams);
+        Pageable response = pageableBuilder.buildPageable(paginationParams);
 
-        assertNotNull(result);
-        assertEquals(paginationParams.getPage(), result.getPageNumber());
-        assertEquals(paginationParams.getSize(), result.getPageSize());
-        assertTrue(result.getSort().isUnsorted());
+        assertPageableWithoutSort(response, paginationParams);
     }
 
     private void initializeTestData() {
@@ -66,5 +60,19 @@ class PageableBuilderTest {
                 .page(1)
                 .size(12)
                 .build();
+    }
+
+    private void assertPageableWithSort(Pageable pageable, PaginationAndSortParams params) {
+        assertNotNull(pageable);
+        assertEquals(params.getPage(), pageable.getPageNumber());
+        assertEquals(params.getSize(), pageable.getPageSize());
+        assertEquals(Sort.by(Sort.Order.asc("p.unitPrice")), pageable.getSort());
+    }
+
+    private void assertPageableWithoutSort(Pageable pageable, PaginationParams params) {
+        assertNotNull(pageable);
+        assertEquals(params.getPage(), pageable.getPageNumber());
+        assertEquals(params.getSize(), pageable.getPageSize());
+        assertTrue(pageable.getSort().isUnsorted());
     }
 }

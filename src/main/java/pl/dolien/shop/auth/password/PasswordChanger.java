@@ -31,15 +31,13 @@ public class PasswordChanger {
     }
 
     public void verifyPasswordMatch(String inputPassword, String currentPassword) {
-        if (!passwordEncoder.matches(inputPassword, currentPassword)) {
-            throw new IncorrectPasswordException("The current password does not match the one entered in the form.");
-        }
+        if (!passwordEncoder.matches(inputPassword, currentPassword))
+            throw new IncorrectPasswordException("The current password does not match the one entered in the form");
     }
 
     private void validateDifferentPasswords(String currentPassword, String newPassword) {
-        if (Objects.equals(currentPassword, newPassword)) {
-            throw new SamePasswordException("The current password and the new one are the same.");
-        }
+        if (Objects.equals(currentPassword, newPassword))
+            throw new SamePasswordException("The current password and the new one are the same");
     }
 
     private User updateUserPassword(String newPassword, User currentUser) {

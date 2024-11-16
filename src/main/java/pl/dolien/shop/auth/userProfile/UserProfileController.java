@@ -1,4 +1,4 @@
-package pl.dolien.shop.auth.userInfo;
+package pl.dolien.shop.auth.userProfile;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.dolien.shop.auth.registration.RegistrationDTO;
+import pl.dolien.shop.auth.registration.dto.RegistrationDTO;
 import pl.dolien.shop.user.dto.UserDTO;
 
 import static pl.dolien.shop.user.UserMapper.toUserDTO;
@@ -17,15 +17,15 @@ import static pl.dolien.shop.user.UserMapper.toUserDTO;
 @RequestMapping("auth")
 @RequiredArgsConstructor
 @Tag(name = "Authentication")
-public class UserInfoController {
+public class UserProfileController {
 
-    private final UserInfoUpdater service;
+    private final UserProfileUpdater updater;
 
-    @PostMapping("/update-user-info")
-    public UserDTO updateUserInfo(
+    @PostMapping("/update-user-profile")
+    public UserDTO updateUserProfile(
             @RequestBody @Valid RegistrationDTO request,
             Authentication auth
     ) {
-        return toUserDTO(service.updateUserInformation(request, auth));
+        return toUserDTO(updater.updateUserProfile(request, auth));
     }
 }

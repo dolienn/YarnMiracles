@@ -59,32 +59,25 @@ class FeedbackServiceTest {
 
     @Test
     void shouldSaveFeedback() {
-        when(userService.getUserDTOByAuth(authentication)).thenReturn(testUserDTO);
-        when(feedbackRepository.save(any(Feedback.class))).thenReturn(testFeedback);
+        mockDependenciesForSaveFeedback();
 
         FeedbackDTO result = feedbackService.saveFeedback(testFeedbackRequestDTO, authentication);
 
         assertEquals(testFeedbackDTO.getId(), result.getId());
 
-        verify(userService, times(1)).getUserDTOByAuth(authentication);
-        verify(feedbackRepository, times(1)).save(any(Feedback.class));
+        verifyInteractionsForSaveFeedback();
     }
 
     @Test
     void shouldGetFeedbacksByProduct() {
-        when(authentication.getPrincipal()).thenReturn(testUser);
-        when(pageableBuilder.buildPageable(testPaginationParams)).thenReturn(mock(Pageable.class));
-        when(feedbackRepository.findAllByProductId(anyLong(), any(Pageable.class)))
-                .thenReturn(Collections.singletonList(testFeedback));
+        mockDependenciesForGetFeedbacksByProduct();
 
         List<FeedbackResponseDTO> result = feedbackService.getFeedbacksByProduct(1L, testPaginationParams, authentication);
 
         assertEquals(1, result.size());
         assertEquals(testFeedback.getCreatedBy(), result.get(0).getCreatedBy());
 
-        verify(authentication, times(1)).getPrincipal();
-        verify(pageableBuilder, times(1)).buildPageable(testPaginationParams);
-        verify(feedbackRepository, times(1)).findAllByProductId(anyLong(), any(Pageable.class));
+        verifyInteractionsForGetFeedbacksByProduct();
     }
 
     private void initializeTestData() {
@@ -114,5 +107,28 @@ class FeedbackServiceTest {
                 .page(1)
                 .size(10)
                 .build();
+    }
+
+    private void mockDependenciesForSaveFeedback() {
+        when(userService.getUserDTOByAuth(authentication)).thenReturn(testUserDTO);
+        when(feedbackRepository.save(any(Feedback.class))).thenReturn(testFeedback);
+    }
+
+    private void verifyInteractionsForSaveFeedback() {
+        verify(userService, times(1)).getUserDTOByAuth(authentication);
+        verify(feedbackRepository, times(1)).save(any(Feedback.class));
+    }
+
+    private void mockDependenciesForGetFeedbacksByProduct() {
+        when(authentication.getPrincipal()).thenReturn(testUser);
+        when(pageableBuilder.buildPageable(testPaginationParams)).thenReturn(mock(Pageable.class));
+        when(feedbackRepository.findAllByProductId(anyLong(), any(Pageable.class)))
+                .thenReturn(Collections.singletonList(testFeedback));
+    }
+
+    private void verifyInteractionsForGetFeedbacksByProduct() {
+        verify(authentication, times(1)).getPrincipal();
+        verify(pageableBuilder, times(1)).buildPageable(testPaginationParams);
+        verify(feedbackRepository, times(1)).findAllByProductId(anyLong(), any(Pageable.class));
     }
 }

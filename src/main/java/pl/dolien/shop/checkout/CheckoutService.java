@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.dolien.shop.checkout.dto.PurchaseRequestDTO;
+import pl.dolien.shop.checkout.dto.PurchaseResponseDTO;
 import pl.dolien.shop.customer.CustomerService;
 import pl.dolien.shop.customer.Customer;
 import pl.dolien.shop.summaryMetrics.SummaryMetricsService;

@@ -28,9 +28,8 @@ public class ProductImageInitializer {
     public void updateAllProductImages() {
         ImageUpdateStatus imageUpdateStatus = imageUpdateStatusService.getImageUpdateStatus();
 
-        if (imageUpdateStatus.isImagesUpdated()) {
+        if (imageUpdateStatus.isImagesUpdated())
             return;
-        }
 
         List<Product> products = productService.getAllProducts();
         products.forEach(this::processProductImage);
@@ -56,6 +55,7 @@ public class ProductImageInitializer {
     private void uploadAndSetProductImage(Product product, File localFile) {
         MultipartFile multipartFile = new FileMultipartFile(localFile);
         String imageUrl = imageUploader.uploadImage(multipartFile);
+
         product.setImageUrl(imageUrl);
         productService.saveProduct(product);
     }

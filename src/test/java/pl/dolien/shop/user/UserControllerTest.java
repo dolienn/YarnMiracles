@@ -7,9 +7,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pl.dolien.shop.role.Role;
 import pl.dolien.shop.user.dto.UserDTO;
@@ -19,6 +19,7 @@ import pl.dolien.shop.user.dto.UserWithRoleDTO;
 import java.util.Set;
 
 import static org.mockito.Mockito.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static pl.dolien.shop.role.RoleMapper.toRoleDTO;
@@ -59,8 +60,7 @@ public class UserControllerTest {
     void shouldReturnUserDTOWhenAuthenticationIsValid() throws Exception {
         when(userService.getUserDTOByAuth(authentication)).thenReturn(testUserDTO);
 
-        mockMvc.perform(get("/users/byAuth")
-                        .principal(authentication))
+        performGetUserDTOByAuth(authentication)
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(testUserDTO)));
 
@@ -71,10 +71,7 @@ public class UserControllerTest {
     void shouldEditUser() throws Exception {
         when(userService.editUser(any(UserRequestDTO.class), eq(authentication))).thenReturn(testUserDTO);
 
-        mockMvc.perform(put("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testUserRequestDTO))
-                        .principal(authentication))
+        performEditUser(testUserRequestDTO, authentication)
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(testUserDTO)));
 
@@ -85,8 +82,7 @@ public class UserControllerTest {
     void shouldAddRoleToUser() throws Exception {
         when(userService.addRole(USER_EMAIL, ADMIN_ROLE, authentication)).thenReturn(testUserWithRoleDTO);
 
-        mockMvc.perform(get("/users/{email}/roles/{roleName}", USER_EMAIL, ADMIN_ROLE)
-                        .principal(authentication))
+        performAddRoleToUser(authentication)
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(testUserWithRoleDTO)));
 
@@ -111,5 +107,22 @@ public class UserControllerTest {
                 .email(USER_EMAIL)
                 .roles(Set.of(toRoleDTO(adminRole)))
                 .build();
+    }
+
+    private ResultActions performGetUserDTOByAuth(Authentication authentication) throws Exception {
+        return mockMvc.perform(get("/users/byAuth")
+                .principal(authentication));
+    }
+
+    private ResultActions performEditUser(UserRequestDTO userRequestDTO, Authentication authentication) throws Exception {
+        return mockMvc.perform(put("/users")
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userRequestDTO))
+                .principal(authentication));
+    }
+
+    private ResultActions performAddRoleToUser(Authentication authentication) throws Exception {
+        return mockMvc.perform(get("/users/{email}/roles/{roleName}", USER_EMAIL, ADMIN_ROLE)
+                .principal(authentication));
     }
 }

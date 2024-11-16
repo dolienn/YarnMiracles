@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import pl.dolien.shop.checkout.PurchaseRequestDTO;
+import pl.dolien.shop.checkout.dto.PurchaseRequestDTO;
 import pl.dolien.shop.product.ProductInventoryUpdater;
 
 import java.util.Set;
@@ -35,12 +35,9 @@ class OrderServiceTest {
     @Test
     void shouldCreateOrder() {
 
-        Order result = orderService.buildOrder(purchaseRequestDTO);
+        Order response = orderService.buildOrder(purchaseRequestDTO);
 
-        assertNotNull(result);
-        assertEquals(order.getOrderTrackingNumber(), result.getOrderTrackingNumber());
-        assertEquals(purchaseRequestDTO.getShippingAddress(), result.getShippingAddress());
-        assertEquals(purchaseRequestDTO.getBillingAddress(), result.getBillingAddress());
+        assertOrder(response, purchaseRequestDTO);
     }
 
     @Test
@@ -59,5 +56,12 @@ class OrderServiceTest {
                 .order(order)
                 .orderItems(orderItems)
                 .build();
+    }
+
+    private void assertOrder(Order result, PurchaseRequestDTO purchaseRequestDTO) {
+        assertNotNull(result);
+        assertEquals(order.getOrderTrackingNumber(), result.getOrderTrackingNumber());
+        assertEquals(purchaseRequestDTO.getShippingAddress(), result.getShippingAddress());
+        assertEquals(purchaseRequestDTO.getBillingAddress(), result.getBillingAddress());
     }
 }

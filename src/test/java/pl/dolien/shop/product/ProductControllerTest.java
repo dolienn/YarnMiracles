@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pl.dolien.shop.pagination.PaginationAndSortParams;
 import pl.dolien.shop.product.dto.ProductDTO;
@@ -61,9 +62,7 @@ class ProductControllerTest {
     void shouldGetAllProducts() throws Exception {
         when(productService.getAllProducts(any(PaginationAndSortParams.class))).thenReturn(List.of(testProductDTO));
 
-        mockMvc.perform(get("/products")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testPaginationAndSortParams)))
+        performGetAllProducts()
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(List.of(testProductDTO))));
 
@@ -74,9 +73,7 @@ class ProductControllerTest {
     void shouldGetProductsByCategoryId() throws Exception {
         when(productService.getProductsByCategoryId(anyInt(), any(PaginationAndSortParams.class))).thenReturn(List.of(testProductDTO));
 
-        mockMvc.perform(get("/products/category/{categoryId}", 1)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testPaginationAndSortParams)))
+        performGetProductsByCategoryId()
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(List.of(testProductDTO))));
 
@@ -87,10 +84,7 @@ class ProductControllerTest {
     void shouldGetProductsByName() throws Exception {
         when(productService.getProductsByNameContaining(anyString(), any(PaginationAndSortParams.class))).thenReturn(List.of(testProductDTO));
 
-        mockMvc.perform(get("/products/search")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .param("name", "testName")
-                        .content(objectMapper.writeValueAsString(testPaginationAndSortParams)))
+        performGetProductsByName()
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(List.of(testProductDTO))));
 
@@ -101,9 +95,7 @@ class ProductControllerTest {
     void shouldGetAllProductsWithFeedbacks() throws Exception {
         when(productService.getAllProductsWithFeedbacks(any(PaginationAndSortParams.class))).thenReturn(List.of(testProductWithFeedbackDTO));
 
-        mockMvc.perform(get("/products/feedbacks")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testPaginationAndSortParams)))
+        performGetAllProductsWithFeedbacks()
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(List.of(testProductWithFeedbackDTO))));
 
@@ -111,16 +103,13 @@ class ProductControllerTest {
     }
 
     @Test
-    void shouldAddProduct() throws Exception {
+    void shouldAddProductWithImage() throws Exception {
         when(productService.saveProductWithImage(
                 any(ProductRequestDTO.class), any(MockMultipartFile.class), any(Authentication.class)
         ))
                 .thenReturn(testProductDTO);
 
-        mockMvc.perform(multipart("/products")
-                        .file(filePart)
-                        .file(productPart)
-                        .principal(authentication))
+        performAddProductWithImage()
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(testProductDTO)));
 
@@ -132,9 +121,7 @@ class ProductControllerTest {
 
     @Test
     void shouldThrowExceptionWhenAddingProductWithoutImage() throws Exception {
-        mockMvc.perform(multipart("/products")
-                        .file(productPart)
-                        .principal(authentication))
+        performAddProductWithoutImage()
                 .andExpect(status().isBadRequest());
 
         verify(productService, never())
@@ -145,9 +132,7 @@ class ProductControllerTest {
 
     @Test
     void shouldThrowExceptionWhenAddingProductWithoutProduct() throws Exception {
-        mockMvc.perform(multipart("/products")
-                        .file(filePart)
-                        .principal(authentication))
+        performAddProductWithoutProduct()
                 .andExpect(status().isBadRequest());
 
         verify(productService, never())
@@ -189,6 +174,49 @@ class ProductControllerTest {
                 """;
 
         productPart = new MockMultipartFile("product", "", APPLICATION_JSON_VALUE, productJson.getBytes());
+    }
 
+    private ResultActions performGetAllProducts() throws Exception {
+        return mockMvc.perform(get("/products")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(testPaginationAndSortParams)));
+    }
+
+    private ResultActions performGetProductsByCategoryId() throws Exception {
+        return mockMvc.perform(get("/products/category/{categoryId}", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(testPaginationAndSortParams)));
+    }
+
+    private ResultActions performGetProductsByName() throws Exception {
+        return mockMvc.perform(get("/products/search")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("name", "testName")
+                .content(objectMapper.writeValueAsString(testPaginationAndSortParams)));
+    }
+
+    private ResultActions performGetAllProductsWithFeedbacks() throws Exception {
+        return mockMvc.perform(get("/products/feedbacks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(testPaginationAndSortParams)));
+    }
+
+    private ResultActions performAddProductWithImage() throws Exception {
+        return mockMvc.perform(multipart("/products")
+                .file(filePart)
+                .file(productPart)
+                .principal(authentication));
+    }
+
+    private ResultActions performAddProductWithoutImage() throws Exception {
+        return mockMvc.perform(multipart("/products")
+                .file(productPart)
+                .principal(authentication));
+    }
+
+    private ResultActions performAddProductWithoutProduct() throws Exception {
+        return mockMvc.perform(multipart("/products")
+                .file(filePart)
+                .principal(authentication));
     }
 }

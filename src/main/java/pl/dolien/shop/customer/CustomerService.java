@@ -30,16 +30,11 @@ public class CustomerService {
             return customer;
         }
 
-        if (isAuthenticatedCustomer(connectedUser, customer)) {
+        if (isAuthenticatedCustomer(connectedUser, customer))
             updateCustomerInfo(existingCustomer, customer);
-        }
 
         existingCustomer.add(order);
         return existingCustomer;
-    }
-
-    public Customer getCustomerByEmail(String email) {
-        return customerRepository.findByEmail(email).orElse(null);
     }
 
     public void updatePurchasedProducts(Customer customer, Set<OrderItem> orderItems) {
@@ -50,10 +45,13 @@ public class CustomerService {
         userService.saveUser(user);
     }
 
+    private Customer getCustomerByEmail(String email) {
+        return customerRepository.findByEmail(email).orElse(null);
+    }
+
     private void associateProductWithUser(OrderItem orderItem, User user) {
         Product product = productService.getProductById(orderItem.getProductId());
-        user.addToPurchasedProducts(product);
-        product.addUserWhoPurchased(user);
+        product.addBuyer(user);
         productService.saveProduct(product);
     }
 

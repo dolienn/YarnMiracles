@@ -7,9 +7,8 @@ import pl.dolien.shop.exception.InvalidSortOrderException;
 @Service
 public class SortGenerator {
     public Sort generateSort(String sortOrderType) {
-        if (sortOrderType == null) {
+        if (sortOrderType == null)
             return Sort.unsorted();
-        }
 
         SortOrder validatedSortOrder  = parseAndValidateSortOrder(sortOrderType);
         return buildSort(validatedSortOrder);

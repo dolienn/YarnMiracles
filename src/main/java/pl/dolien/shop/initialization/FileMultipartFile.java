@@ -1,5 +1,6 @@
 package pl.dolien.shop.initialization;
 
+import jakarta.annotation.Nonnull;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -17,6 +18,7 @@ public class FileMultipartFile implements MultipartFile {
     }
 
     @Override
+    @Nonnull
     public String getName() {
         return file.getName();
     }
@@ -42,6 +44,7 @@ public class FileMultipartFile implements MultipartFile {
     }
 
     @Override
+    @Nonnull
     public byte[] getBytes() throws IOException {
         try (FileInputStream inputStream = new FileInputStream(file)) {
             return inputStream.readAllBytes();
@@ -49,12 +52,13 @@ public class FileMultipartFile implements MultipartFile {
     }
 
     @Override
+    @Nonnull
     public InputStream getInputStream() throws IOException {
         return new FileInputStream(file);
     }
 
     @Override
-    public void transferTo(File dest) throws IOException, IllegalStateException {
-        Files.copy(file.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+    public void transferTo(File dir) throws IOException, IllegalStateException {
+        Files.copy(file.toPath(), dir.toPath(), StandardCopyOption.REPLACE_EXISTING);
     }
 }

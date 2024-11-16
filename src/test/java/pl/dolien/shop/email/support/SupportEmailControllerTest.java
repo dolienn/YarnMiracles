@@ -1,6 +1,5 @@
 package pl.dolien.shop.email.support;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,12 +7,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -47,9 +45,7 @@ class SupportEmailControllerTest {
     void shouldSendMessageToSupportEmail() throws Exception {
         when(supportEmailSender.sendToSupportEmail(testSupportMessageDTO)).thenReturn(any(SimpleMailMessage.class));
 
-        mockMvc.perform(post("/support/send-message")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testSupportMessageDTO)))
+        performSendMessageRequest()
                 .andExpect(status().isOk());
 
         verify(supportEmailSender, times(1)).sendToSupportEmail(any(SupportMessageDTO.class));
@@ -61,5 +57,11 @@ class SupportEmailControllerTest {
                 .subject("Test subject")
                 .text("Test text")
                 .build();
+    }
+
+    private ResultActions performSendMessageRequest() throws Exception {
+        return mockMvc.perform(post("/support/send-message")
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(testSupportMessageDTO)));
     }
 }

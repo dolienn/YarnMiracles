@@ -7,16 +7,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pl.dolien.shop.feedback.dto.FeedbackDTO;
 import pl.dolien.shop.feedback.dto.FeedbackRequestDTO;
 import pl.dolien.shop.feedback.dto.FeedbackResponseDTO;
 import pl.dolien.shop.pagination.PaginationParams;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -57,10 +56,7 @@ class FeedbackControllerTest {
     void shouldSaveFeedback() throws Exception {
         when(feedbackService.saveFeedback(testFeedbackRequestDTO, authentication)).thenReturn(testFeedbackDTO);
 
-        mockMvc.perform(post("/feedbacks")
-                        .content(objectMapper.writeValueAsString(testFeedbackRequestDTO))
-                        .principal(authentication)
-                        .contentType(APPLICATION_JSON))
+        performPostRequestForSaveFeedback()
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(testFeedbackDTO)));
 
@@ -72,10 +68,7 @@ class FeedbackControllerTest {
         when(feedbackService.getFeedbacksByProduct(anyLong(), any(PaginationParams.class), any(Authentication.class)))
                 .thenReturn(List.of(testFeedbackResponseDTO));
 
-        mockMvc.perform(get("/feedbacks/products/{productId}", 1L)
-                        .content(objectMapper.writeValueAsString(testPaginationParams))
-                        .contentType(APPLICATION_JSON)
-                        .principal(authentication))
+        performGetRequestForFeedbacksByProduct()
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(List.of(testFeedbackResponseDTO))));
 
@@ -101,5 +94,19 @@ class FeedbackControllerTest {
                 .page(0)
                 .size(10)
                 .build();
+    }
+
+    private ResultActions performPostRequestForSaveFeedback() throws Exception {
+        return mockMvc.perform(post("/feedbacks")
+                .content(objectMapper.writeValueAsString(testFeedbackRequestDTO))
+                .principal(authentication)
+                .contentType(APPLICATION_JSON));
+    }
+
+    private ResultActions performGetRequestForFeedbacksByProduct() throws Exception {
+        return mockMvc.perform(get("/feedbacks/products/{productId}", 1L)
+                .content(objectMapper.writeValueAsString(testPaginationParams))
+                .contentType(APPLICATION_JSON)
+                .principal(authentication));
     }
 }

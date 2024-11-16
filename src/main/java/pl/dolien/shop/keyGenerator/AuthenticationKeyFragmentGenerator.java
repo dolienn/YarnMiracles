@@ -9,17 +9,16 @@ public class AuthenticationKeyFragmentGenerator implements KeyFragmentGenerator 
 
     @Override
     public void appendKeyFragment(StringBuilder keyBuilder, Object param) {
-        if (param instanceof Authentication authentication) {
+        if (param instanceof Authentication authentication)
             appendAuthenticationKeyFragment(keyBuilder, authentication);
-        }
     }
 
     private void appendAuthenticationKeyFragment(StringBuilder keyBuilder, Authentication authentication) {
-        if (authentication != null) {
+        if (authentication == null) {
+            keyBuilder.append("_userId:anonymous");
+        } else {
             User user = (User) authentication.getPrincipal();
             keyBuilder.append("_userId:").append(user.getId());
-        } else {
-            keyBuilder.append("_userId:anonymous");
         }
     }
 }

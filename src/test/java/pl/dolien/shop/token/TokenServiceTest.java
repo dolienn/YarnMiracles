@@ -45,10 +45,7 @@ class TokenServiceTest {
         String generatedToken = tokenService.generateActivationToken(testUser);
         String generatedToken2 = tokenService.generateActivationToken(testUser);
 
-        assertNotNull(generatedToken);
-        assertEquals(DEFAULT_CODE_LENGTH, generatedToken.length());
-        assertNotEquals(generatedToken, generatedToken2);
-
+        assertGeneratedToken(generatedToken, generatedToken2);
         verify(tokenRepository, times(2)).save(any(Token.class));
     }
 
@@ -58,23 +55,17 @@ class TokenServiceTest {
 
         Token savedToken = tokenService.saveToken(testToken);
 
-        assertNotNull(savedToken);
-        assertEquals(testToken.getId(), savedToken.getId());
-        assertEquals(testToken.getToken(), savedToken.getToken());
-
+        assertSavedToken(savedToken);
         verify(tokenRepository, times(1)).save(testToken);
     }
 
     @Test
-    void shouldGetValidatedToken() {
+    void shouldReturnValidatedToken() {
         when(tokenRepository.findByToken(testToken.getToken())).thenReturn(Optional.of(testToken));
 
         Token validatedToken = tokenService.getValidatedToken(testToken.getToken());
 
-        assertNotNull(validatedToken);
-        assertEquals(testToken.getId(), validatedToken.getId());
-        assertEquals(testToken.getToken(), validatedToken.getToken());
-
+        assertValidatedToken(validatedToken);
         verify(tokenRepository, times(1)).findByToken(testToken.getToken());
     }
 
@@ -117,5 +108,23 @@ class TokenServiceTest {
                 .user(testUser)
                 .expiresAt(LocalDateTime.now().minusMinutes(25))
                 .build();
+    }
+
+    private void assertGeneratedToken(String generatedToken, String generatedToken2) {
+        assertNotNull(generatedToken);
+        assertEquals(DEFAULT_CODE_LENGTH, generatedToken.length());
+        assertNotEquals(generatedToken, generatedToken2);
+    }
+
+    private void assertSavedToken(Token savedToken) {
+        assertNotNull(savedToken);
+        assertEquals(testToken.getId(), savedToken.getId());
+        assertEquals(testToken.getToken(), savedToken.getToken());
+    }
+
+    private void assertValidatedToken(Token validatedToken) {
+        assertNotNull(validatedToken);
+        assertEquals(testToken.getId(), validatedToken.getId());
+        assertEquals(testToken.getToken(), validatedToken.getToken());
     }
 }

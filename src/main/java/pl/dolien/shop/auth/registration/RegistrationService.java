@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.dolien.shop.auth.registration.dto.RegistrationDTO;
 import pl.dolien.shop.email.EmailTemplateName;
 import pl.dolien.shop.email.activationAccount.AccountActivationEmailService;
 import pl.dolien.shop.email.activationAccount.AccountActivationMessageDTO;
@@ -31,18 +32,17 @@ public class RegistrationService {
     @Value("${application.mailing.frontend.activation-url}")
     private String activationUrl;
 
-    public void registerUser(RegistrationDTO request) throws MessagingException, RoleNotFoundException {
-        validateUserNotExists(request.getEmail());
+    public User registerUser(RegistrationDTO dto) throws MessagingException, RoleNotFoundException {
+        validateUserNotExists(dto.getEmail());
 
-        User user = createUser(request);
-        userService.saveUser(user);
+        User user = createUser(dto);
         sendActivationEmail(user);
+        return userService.saveUser(user);
     }
 
     private void validateUserNotExists(String email) {
-        if (userService.isUserExists(email)) {
+        if (userService.isUserExists(email))
             throw new UserAlreadyExistsException("User with email " + email + " already exists");
-        }
     }
 
     private User createUser(RegistrationDTO dto) throws RoleNotFoundException {

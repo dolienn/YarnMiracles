@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @Builder
 public class PaginationAndSortParams {
-    private Integer page = 0;
-    private Integer size = 20;
+    private Integer page;
+    private Integer size;
     private String sortOrderType;
 }

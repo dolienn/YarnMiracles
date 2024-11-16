@@ -37,9 +37,8 @@ public class UserService {
 
     @Cacheable(cacheNames = "connectedUser", keyGenerator = "customKeyGenerator")
     public UserDTO getUserDTOByAuth(Authentication connectedUser) {
-        if (connectedUser == null) {
+        if (connectedUser == null)
             throw new UserNotFoundException("Authenticated user not found");
-        }
 
         User user = (User) connectedUser.getPrincipal();
         return toUserDTO(user);
@@ -85,15 +84,13 @@ public class UserService {
     }
 
     public void verifyUserIsAuthenticatedUser(Integer userId, Authentication connectedUser) {
-        if (!userId.equals(getUserDTOByAuth(connectedUser).getId())) {
+        if (!userId.equals(getUserDTOByAuth(connectedUser).getId()))
             throw new AccessDeniedException("Authenticated user does not match the requested user");
-        }
     }
 
     public void assertEmailNotInUse(String newEmail, String currentEmail) {
-        if(isEmailTaken(newEmail, currentEmail)) {
+        if(isEmailTaken(newEmail, currentEmail))
             throw new EmailAlreadyExistsException("User with email " + currentEmail + " already exists");
-        }
     }
 
     public boolean isEmailTaken(String email, String userFromDBEmail) {

@@ -11,10 +11,6 @@ class ImageTransformer {
         int width = img.getWidth();
         int height = img.getHeight();
 
-        if (height > width) {
-            return PORTRAIT_TRANSFORMATION;
-        } else {
-            return LANDSCAPE_TRANSFORMATION;
-        }
+        return (height > width) ? PORTRAIT_TRANSFORMATION : LANDSCAPE_TRANSFORMATION;
     }
 }

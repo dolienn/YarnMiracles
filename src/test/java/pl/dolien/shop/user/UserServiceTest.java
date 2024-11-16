@@ -64,10 +64,7 @@ class UserServiceTest {
 
         User foundUser = userService.getUserById(testUser.getId());
 
-        assertNotNull(foundUser);
-        assertEquals(testUser.getId(), foundUser.getId());
-        assertEquals(testUser.getEmail(), foundUser.getEmail());
-
+        assertUser(foundUser);
         verify(userRepository, times(1)).findById(testUser.getId());
     }
 
@@ -81,7 +78,6 @@ class UserServiceTest {
         );
 
         assertEquals(USER_NOT_FOUND_MESSAGE, exception.getMessage());
-
         verify(userRepository, times(1)).findById(testUser.getId());
     }
 
@@ -91,10 +87,7 @@ class UserServiceTest {
 
         User foundUser = userService.getUserByEmail(USER_EMAIL);
 
-        assertNotNull(foundUser);
-        assertEquals(testUser.getId(), foundUser.getId());
-        assertEquals(USER_EMAIL, foundUser.getEmail());
-
+        assertUser(foundUser);
         verify(userRepository, times(1)).findByEmail(USER_EMAIL);
     }
 
@@ -108,7 +101,6 @@ class UserServiceTest {
         );
 
         assertEquals(USER_NOT_FOUND_MESSAGE, exception.getMessage());
-
         verify(userRepository, times(1)).findByEmail(USER_EMAIL);
     }
 
@@ -116,12 +108,9 @@ class UserServiceTest {
     void shouldReturnUserDTOWhenAuthenticationIsValid() {
         when(authentication.getPrincipal()).thenReturn(testUser);
 
-        UserDTO foundUser = userService.getUserDTOByAuth(authentication);
+        UserDTO foundUserDTO = userService.getUserDTOByAuth(authentication);
 
-        assertNotNull(foundUser);
-        assertEquals(testUser.getId(), foundUser.getId());
-        assertEquals(testUser.getEmail(), foundUser.getEmail());
-
+        assertUserDTO(testUser, foundUserDTO);
         verify(authentication, times(1)).getPrincipal();
     }
 
@@ -141,40 +130,26 @@ class UserServiceTest {
 
         User savedUser = userService.saveUser(testUser);
 
-        assertNotNull(savedUser);
-        assertEquals(testUser.getId(), savedUser.getId());
-        assertEquals(testUser.getEmail(), savedUser.getEmail());
-
+        assertUser(savedUser);
         verify(userRepository, times(1)).save(testUser);
     }
 
     @Test
     void shouldAddRoleToUserWhenConnectedUserHasAdminRole() throws RoleNotFoundException {
-        when(authentication.getPrincipal()).thenReturn(testAdmin);
-        when(userRepository.findById(testAdmin.getId())).thenReturn(Optional.ofNullable(testAdmin));
+        mockAuthenticationAndUserRepository(testAdmin);
+        mockRoleAndUserDependencies();
 
-        when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.ofNullable(testUser));
-        when(roleService.getByName(adminRole.getName())).thenReturn(adminRole);
-        when(userRepository.save(testUser)).thenReturn(testUser);
+        UserWithRoleDTO response = userService.addRole(USER_EMAIL, adminRole.getName(), authentication);
 
-        UserWithRoleDTO result = userService.addRole(USER_EMAIL, adminRole.getName(), authentication);
+        assertUserWithRoleDTO(response);
 
-        assertNotNull(result);
-        assertEquals(testUser.getId(), result.getId());
-        assertEquals(testUser.getEmail(), result.getEmail());
-        assertEquals(2, result.getRoles().size());
-
-        verify(authentication, times(1)).getPrincipal();
-        verify(userRepository, times(1)).findById(testAdmin.getId());
-        verify(userRepository, times(1)).findByEmail(testUser.getEmail());
-        verify(roleService, times(1)).getByName(adminRole.getName());
-        verify(userRepository, times(1)).save(testUser);
+        verifyAuthenticationAndUserRepository(testAdmin, 1);
+        verifyRoleAndUserDependencies();
     }
 
     @Test
-    void shouldAddRoleToUserWhenConnectedUserDoesNotHaveAdminRole() {
-        when(authentication.getPrincipal()).thenReturn(testUser);
-        when(userRepository.findById(testUser.getId())).thenReturn(Optional.ofNullable(testUser));
+    void shouldThrowExceptionWhenConnectedUserDoesNotHaveAdminRole() {
+        mockAuthenticationAndUserRepository(testUser);
 
         AccessDeniedException exception = assertThrows(
                 AccessDeniedException.class,
@@ -183,45 +158,36 @@ class UserServiceTest {
 
         assertEquals(ACCESS_DENIED_MESSAGE, exception.getMessage());
 
-        verify(authentication, times(1)).getPrincipal();
-        verify(userRepository, times(1)).findById(testUser.getId());
+        verifyAuthenticationAndUserRepository(testUser, 1);
     }
 
     @Test
     void shouldEditUser() {
-        when(authentication.getPrincipal()).thenReturn(testAdmin);
-        when(userRepository.findById(testAdmin.getId())).thenReturn(Optional.of(testAdmin));
+        mockAuthenticationAndUserRepository(testAdmin);
 
         when(userRepository.findByEmail(testUserRequestDTO.getEmail())).thenReturn(Optional.empty());
         when(userRepository.save(testAdmin)).thenReturn(testAdmin);
 
-        UserDTO result = userService.editUser(testUserRequestDTO, authentication);
+        UserDTO response = userService.editUser(testUserRequestDTO, authentication);
 
-        assertNotNull(result);
-        assertEquals(testUserRequestDTO.getId(), result.getId());
-        assertEquals(testUserRequestDTO.getEmail(), result.getEmail());
+        assertUserDTO(testAdmin, response);
 
-        verify(authentication, times(1)).getPrincipal();
-        verify(userRepository, times(2)).findById(testAdmin.getId());
-        verify(userRepository, times(1)).findByEmail(testUserRequestDTO.getEmail());
-        verify(userRepository, times(1)).save(testAdmin);
+        verifyAuthenticationAndUserRepository(testAdmin, 2);
+        verifyUserRepository();
     }
 
     @Test
     void shouldAllowAccessWhenUserHasAdminRole() {
-        when(authentication.getPrincipal()).thenReturn(testAdmin);
-        when(userRepository.findById(testAdmin.getId())).thenReturn(Optional.of(testAdmin));
+        mockAuthenticationAndUserRepository(testAdmin);
 
         assertDoesNotThrow(() -> userService.verifyUserHasAdminRole(authentication));
 
-        verify(authentication, times(1)).getPrincipal();
-        verify(userRepository, times(1)).findById(testAdmin.getId());
+        verifyAuthenticationAndUserRepository(testAdmin, 1);
     }
 
     @Test
     void shouldDenyAccessWhenUserDoesNotHaveAdminRole() {
-        when(authentication.getPrincipal()).thenReturn(testUser);
-        when(userRepository.findById(testUser.getId())).thenReturn(Optional.of(testUser));
+        mockAuthenticationAndUserRepository(testUser);
 
         AccessDeniedException exception = assertThrows(
                 AccessDeniedException.class,
@@ -332,5 +298,51 @@ class UserServiceTest {
                 .id(2)
                 .email("editedAdmin@example.com")
                 .build();
+    }
+
+    private void mockAuthenticationAndUserRepository(User user) {
+        when(authentication.getPrincipal()).thenReturn(user);
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+    }
+
+    private void mockRoleAndUserDependencies() throws RoleNotFoundException {
+        when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.ofNullable(testUser));
+        when(roleService.getByName(adminRole.getName())).thenReturn(adminRole);
+        when(userRepository.save(testUser)).thenReturn(testUser);
+    }
+
+    private void assertUser(User user) {
+        assertNotNull(user);
+        assertEquals(testUser.getId(), user.getId());
+        assertEquals(USER_EMAIL, user.getEmail());
+    }
+
+    private void assertUserDTO(User user, UserDTO userDTO) {
+        assertNotNull(userDTO);
+        assertEquals(user.getId(), userDTO.getId());
+        assertEquals(user.getEmail(), userDTO.getEmail());
+    }
+
+    private void assertUserWithRoleDTO(UserWithRoleDTO userWithRoleDTO) {
+        assertNotNull(userWithRoleDTO);
+        assertEquals(testUser.getId(), userWithRoleDTO.getId());
+        assertEquals(USER_EMAIL, userWithRoleDTO.getEmail());
+        assertEquals(2, userWithRoleDTO.getRoles().size());
+    }
+
+    private void verifyAuthenticationAndUserRepository(User user, int byIdTimes) {
+        verify(authentication, times(1)).getPrincipal();
+        verify(userRepository, times(byIdTimes)).findById(user.getId());
+    }
+
+    private void verifyRoleAndUserDependencies() throws RoleNotFoundException {
+        verify(userRepository, times(1)).findByEmail(testUser.getEmail());
+        verify(roleService, times(1)).getByName(adminRole.getName());
+        verify(userRepository, times(1)).save(testUser);
+    }
+
+    private void verifyUserRepository() {
+        verify(userRepository, times(1)).findByEmail(testUserRequestDTO.getEmail());
+        verify(userRepository, times(1)).save(testAdmin);
     }
 }

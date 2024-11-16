@@ -24,11 +24,11 @@ public class AccountActivationEmailService {
 
     private static final String DEFAULT_TEMPLATE = "confirm-email";
 
-    @Value("${support.email}")
-    private final String supportEmail;
-
     private final JavaMailSender mailSender;
     private final SpringTemplateEngine templateEngine;
+
+    @Value("${support.email}")
+    private String supportEmail;
 
     @Async
     public void sendActivationEmail(AccountActivationMessageDTO accountActivationMessageDTO) throws MessagingException {

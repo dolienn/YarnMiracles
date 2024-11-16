@@ -12,15 +12,15 @@ import java.math.BigDecimal;
 @Setter
 @Builder
 public class ProductRequestDTO {
-    @NotNull(message = "Enter a valid category")
+    @NotNull(message = "Category field cannot be empty")
     private ProductCategory category;
 
-    @NotEmpty(message = "Enter a valid name")
-    @NotBlank(message = "Enter a valid name")
+    @NotEmpty(message = "Name field cannot be empty")
+    @NotBlank(message = "Name field cannot be empty")
     private String name;
 
-    @NotEmpty(message = "Enter a valid description")
-    @NotBlank(message = "Enter a valid description")
+    @NotEmpty(message = "Description field cannot be empty")
+    @NotBlank(message = "Description field cannot be empty")
     private String description;
 
     @NotNull(message = "Enter a valid price")

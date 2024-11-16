@@ -13,16 +13,16 @@ import lombok.Setter;
 public class SupportMessageDTO {
 
     @Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}", message = "Email is not formatted")
-    @NotEmpty(message = "Email is mandatory")
-    @NotBlank(message = "Email is mandatory")
+    @NotEmpty(message = "Email field cannot be empty")
+    @NotBlank(message = "Email field cannot be empty")
     private String from;
 
-    @NotEmpty(message = "Subject is mandatory")
-    @NotBlank(message = "Subject is mandatory")
+    @NotEmpty(message = "Subject field cannot be empty")
+    @NotBlank(message = "Subject field cannot be empty")
     private String subject;
 
-    @NotEmpty(message = "Message is mandatory")
-    @NotBlank(message = "Message is mandatory")
+    @NotEmpty(message = "Message field cannot be empty")
+    @NotBlank(message = "Message field cannot be empty")
     private String text;
 
 }

@@ -15,7 +15,7 @@ public class ActivationController {
 
     private final ActivationService service;
 
-    @GetMapping("/activate-user")
+    @GetMapping("/activate")
     public void activateUser(
             @RequestParam String token
     ) {
