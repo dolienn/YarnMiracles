@@ -11,7 +11,7 @@ public class AccountActivationEmailListener {
 
     private final AccountActivationEmailService accountActivationEmailService;
 
-    @KafkaListener(topics = "send-activation-email", groupId = "myGroup")
+    @KafkaListener(topics = "send-activation-email", groupId = "user-registration-group")
     public void sendAccountActivationEmail(AccountActivationMessageDTO activationMessageDTO) throws MessagingException {
         accountActivationEmailService.sendActivationEmail(activationMessageDTO);
     }

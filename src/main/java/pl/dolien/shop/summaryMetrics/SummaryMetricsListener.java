@@ -11,17 +11,17 @@ public class SummaryMetricsListener {
 
     private final SummaryMetricsService summaryMetricsService;
 
-    @KafkaListener(topics = "update-order-metrics", groupId = "myGroup")
+    @KafkaListener(topics = "update-order-metrics", groupId = "order-sent-group")
     public void updateOrderMetrics(Order order) {
         summaryMetricsService.updateOrderMetrics(order);
     }
 
-    @KafkaListener(topics = "increment-user-count", groupId = "myGroup")
+    @KafkaListener(topics = "increment-user-count", groupId = "user-registration-group")
     public void incrementUserCount(Integer quantity) {
         summaryMetricsService.incrementUserCount(quantity);
     }
 
-    @KafkaListener(topics = "increment-customer-feedback-count", groupId = "myGroup")
+    @KafkaListener(topics = "increment-customer-feedback-count", groupId = "feedback-sent-group")
     public void incrementCustomerFeedbackCount(Integer quantity) {
         summaryMetricsService.incrementCustomerFeedbackCount(quantity);
     }
