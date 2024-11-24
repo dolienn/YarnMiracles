@@ -1,6 +1,5 @@
 package pl.dolien.shop.auth.registration;
 
-import jakarta.mail.MessagingException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -8,8 +7,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.dolien.shop.auth.registration.dto.RegistrationDTO;
-import pl.dolien.shop.email.activationAccount.AccountActivationEmailService;
 import pl.dolien.shop.exception.UserAlreadyExistsException;
+import pl.dolien.shop.kafka.producer.KafkaJsonProducer;
 import pl.dolien.shop.role.Role;
 import pl.dolien.shop.role.RoleService;
 import pl.dolien.shop.token.TokenService;
@@ -38,7 +37,7 @@ class RegistrationServiceTest {
     private UserService userService;
 
     @Mock
-    private AccountActivationEmailService emailService;
+    private KafkaJsonProducer kafkaJsonProducer;
 
     @Mock
     private TokenService tokenService;
@@ -58,7 +57,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void shouldRegisterUser() throws RoleNotFoundException, MessagingException {
+    void shouldRegisterUser() throws RoleNotFoundException {
         mockSuccessfulRegistration();
 
         User response = registrationService.registerUser(testRegistrationDTO);

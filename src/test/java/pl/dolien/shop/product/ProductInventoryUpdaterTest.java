@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import pl.dolien.shop.order.OrderItem;
+import pl.dolien.shop.productInventory.ProductInventoryUpdater;
 
 import static org.mockito.Mockito.*;
 

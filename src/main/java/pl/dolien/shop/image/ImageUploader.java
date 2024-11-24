@@ -3,7 +3,7 @@ package pl.dolien.shop.image;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import pl.dolien.shop.exception.ImageReadException;
 import pl.dolien.shop.exception.ImageUploadException;
@@ -18,7 +18,7 @@ import java.util.UUID;
 
 import static pl.dolien.shop.image.ImageTransformer.getTransformation;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class ImageUploader {
 

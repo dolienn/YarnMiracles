@@ -6,7 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import pl.dolien.shop.checkout.dto.PurchaseRequestDTO;
-import pl.dolien.shop.product.ProductInventoryUpdater;
+import pl.dolien.shop.kafka.producer.KafkaJsonProducer;
 
 import java.util.Set;
 
@@ -19,10 +19,10 @@ class OrderServiceTest {
     private OrderService orderService;
 
     @Mock
-    private ProductInventoryUpdater productInventoryService;
+    private OrderRepository orderRepository;
 
     @Mock
-    private OrderRepository orderRepository;
+    private KafkaJsonProducer kafkaJsonProducer;
 
     private Order order;
     private Set<OrderItem> orderItems;
@@ -42,13 +42,12 @@ class OrderServiceTest {
         Order response = orderService.buildOrder(purchaseRequestDTO);
 
         assertOrder(response, purchaseRequestDTO);
+        verify(orderRepository, times(1)).save(any(Order.class));
     }
 
     @Test
     void shouldAddOrderItems() {
         orderService.addOrderItems(order, orderItems);
-
-        orderItems.forEach(item -> verify(productInventoryService, times(1)).updateProductInventory(item));
     }
 
     private void initializeTestData() {

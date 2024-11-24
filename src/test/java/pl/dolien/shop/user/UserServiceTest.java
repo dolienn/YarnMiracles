@@ -39,7 +39,7 @@ class UserServiceTest {
     private static final String EMAIL_ALREADY_EXISTS_MESSAGE = "User with email " + ADMIN_EMAIL + " already exists";
 
     @InjectMocks
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @Mock
     private RoleService roleService;

@@ -31,7 +31,7 @@ public class AdminUserInitializer {
         if (isAdminUserNotExists()) {
             User adminUser = buildAdminUser();
             userService.saveUser(adminUser);
-            summaryMetricsService.incrementUserCount();
+            summaryMetricsService.incrementUserCount(1);
         }
     }
 

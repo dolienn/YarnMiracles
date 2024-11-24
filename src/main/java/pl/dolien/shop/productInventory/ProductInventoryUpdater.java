@@ -1,12 +1,14 @@
-package pl.dolien.shop.product;
+package pl.dolien.shop.productInventory;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import pl.dolien.shop.exception.NotEnoughStockException;
 import pl.dolien.shop.order.OrderItem;
+import pl.dolien.shop.product.Product;
+import pl.dolien.shop.product.ProductService;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class ProductInventoryUpdater {
     private final ProductService productService;

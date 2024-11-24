@@ -8,8 +8,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
+import pl.dolien.shop.kafka.producer.KafkaJsonProducer;
 import pl.dolien.shop.pagination.RestPage;
-import pl.dolien.shop.summaryMetrics.SummaryMetricsService;
 import pl.dolien.shop.feedback.dto.FeedbackDTO;
 import pl.dolien.shop.feedback.dto.FeedbackRequestDTO;
 import pl.dolien.shop.feedback.dto.FeedbackResponseDTO;
@@ -39,7 +39,7 @@ class FeedbackServiceTest {
     private UserService userService;
 
     @Mock
-    private SummaryMetricsService dashboardService;
+    private KafkaJsonProducer kafkaJsonProducer;
 
     @Mock
     private PageableBuilder pageableBuilder;

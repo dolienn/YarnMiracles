@@ -1,5 +1,6 @@
 package pl.dolien.shop.customer;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import pl.dolien.shop.order.Order;
@@ -25,6 +26,7 @@ public class Customer {
     private String email;
 
     @OneToMany(mappedBy = "customer", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonIgnore
     private Set<Order> orders = new HashSet<>();
 
     public void add(Order order) {

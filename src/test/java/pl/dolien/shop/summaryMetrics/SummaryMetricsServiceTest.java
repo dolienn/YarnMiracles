@@ -71,7 +71,7 @@ class SummaryMetricsServiceTest {
     void shouldIncrementUserCount() {
         when(summaryMetricsRepository.findById(1L)).thenReturn(of(testSummaryMetrics));
 
-        summaryMetricsService.incrementUserCount();
+        summaryMetricsService.incrementUserCount(1);
 
         assertEquals(1, testSummaryMetrics.getTotalUsers());
         verify(summaryMetricsRepository, times(1)).findById(1L);
@@ -81,7 +81,7 @@ class SummaryMetricsServiceTest {
     void shouldIncrementCustomerFeedbackCount() {
         when(summaryMetricsRepository.findById(1L)).thenReturn(of(testSummaryMetrics));
 
-        summaryMetricsService.incrementCustomerFeedbackCount();
+        summaryMetricsService.incrementCustomerFeedbackCount(1);
 
         assertEquals(1, testSummaryMetrics.getTotalCustomerFeedback());
         verify(summaryMetricsRepository, times(1)).findById(1L);

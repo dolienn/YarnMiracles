@@ -13,7 +13,6 @@ import pl.dolien.shop.auth.login.dto.LoginResponseDTO;
 import pl.dolien.shop.security.JwtService;
 import pl.dolien.shop.user.User;
 import pl.dolien.shop.user.UserService;
-import pl.dolien.shop.user.dto.UserDTO;
 import pl.dolien.shop.user.dto.UserWithRoleDTO;
 
 import static org.junit.jupiter.api.Assertions.*;

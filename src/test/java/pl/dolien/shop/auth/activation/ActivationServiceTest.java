@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import pl.dolien.shop.summaryMetrics.SummaryMetricsService;
+import pl.dolien.shop.kafka.producer.KafkaJsonProducer;
 import pl.dolien.shop.token.Token;
 import pl.dolien.shop.token.TokenService;
 import pl.dolien.shop.user.User;
@@ -26,7 +26,7 @@ class ActivationServiceTest {
     private UserService userService;
 
     @Mock
-    private SummaryMetricsService summaryMetricsService;
+    private KafkaJsonProducer kafkaJsonProducer;
 
     private Token testToken;
 

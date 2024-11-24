@@ -1,14 +1,16 @@
 package pl.dolien.shop.pagination;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@Builder
-public class PaginationAndSortParams {
-    private Integer page;
-    private Integer size;
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
+public class PaginationAndSortParams extends PaginationParams {
     private String sortBy;
 }

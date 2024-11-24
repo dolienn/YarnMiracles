@@ -1,14 +1,14 @@
 package pl.dolien.shop.file;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import pl.dolien.shop.exception.DirectoryCreationException;
 import pl.dolien.shop.exception.EmptyFileException;
 
 import java.io.File;
 
-@Service
+@Component
 public class FileValidator {
 
     private final File directory;

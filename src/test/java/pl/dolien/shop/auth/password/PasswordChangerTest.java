@@ -12,7 +12,6 @@ import pl.dolien.shop.exception.IncorrectPasswordException;
 import pl.dolien.shop.exception.SamePasswordException;
 import pl.dolien.shop.user.User;
 import pl.dolien.shop.user.UserService;
-import pl.dolien.shop.user.dto.UserDTO;
 import pl.dolien.shop.user.dto.UserWithRoleDTO;
 
 import static org.junit.jupiter.api.Assertions.*;

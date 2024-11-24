@@ -64,7 +64,7 @@ public class User implements UserDetails, Principal {
     )
     private Set<Product> favourites = new HashSet<>();
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "purchased_products",
             joinColumns = @JoinColumn(name = "user_id"),

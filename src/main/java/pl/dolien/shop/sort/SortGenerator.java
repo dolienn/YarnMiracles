@@ -1,13 +1,12 @@
 package pl.dolien.shop.sort;
 
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import pl.dolien.shop.exception.InvalidSortOrderException;
 
-@Service
+@Component
 public class SortGenerator {
     public Sort generateSort(String sortBy) {
-        System.out.println(sortBy);
         if (sortBy == null)
             return Sort.unsorted();
 

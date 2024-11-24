@@ -18,6 +18,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "\"order\"")

@@ -8,11 +8,10 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.Authentication;
 import pl.dolien.shop.checkout.dto.PurchaseRequestDTO;
 import pl.dolien.shop.checkout.dto.PurchaseResponseDTO;
-import pl.dolien.shop.customer.Customer;
 import pl.dolien.shop.customer.CustomerService;
+import pl.dolien.shop.kafka.producer.KafkaJsonProducer;
 import pl.dolien.shop.order.Order;
 import pl.dolien.shop.order.OrderService;
-import pl.dolien.shop.summaryMetrics.SummaryMetricsService;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -29,14 +28,13 @@ class CheckoutServiceTest {
     private CustomerService customerService;
 
     @Mock
-    private SummaryMetricsService dashboardService;
+    private Authentication authentication;
 
     @Mock
-    private Authentication authentication;
+    private KafkaJsonProducer kafkaJsonProducer;
 
     private PurchaseRequestDTO testPurchaseRequestDTO;
     private Order testOrder;
-    private Customer testCustomer;
 
     @BeforeEach
     void setUp() {
@@ -63,16 +61,10 @@ class CheckoutServiceTest {
                 .id(1L)
                 .orderTrackingNumber("trackingNumber")
                 .build();
-
-        testCustomer = Customer.builder()
-                .id(1L)
-                .build();
     }
 
     private void mockDependenciesForPlaceOrder() {
         when(orderService.buildOrder(testPurchaseRequestDTO)).thenReturn(testOrder);
-        when(customerService.processCustomer(testOrder, testPurchaseRequestDTO.getCustomer(), authentication))
-                .thenReturn(testCustomer);
     }
 
     private void assertPurchaseResponse(PurchaseResponseDTO response) {
@@ -82,7 +74,5 @@ class CheckoutServiceTest {
 
     private void verifyInteractionsForPlaceOrder() {
         verify(orderService, times(1)).buildOrder(testPurchaseRequestDTO);
-        verify(customerService, times(1)).processCustomer(testOrder, testPurchaseRequestDTO.getCustomer(), authentication);
-        verify(dashboardService, times(1)).updateOrderMetrics(testOrder);
     }
 }

@@ -7,7 +7,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.Authentication;
 import pl.dolien.shop.auth.password.PasswordChanger;
-import pl.dolien.shop.auth.registration.dto.RegistrationDTO;
 import pl.dolien.shop.auth.userProfile.dto.UserProfileDTO;
 import pl.dolien.shop.user.User;
 import pl.dolien.shop.user.UserService;

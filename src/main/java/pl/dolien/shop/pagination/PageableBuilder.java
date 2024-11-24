@@ -2,10 +2,10 @@ package pl.dolien.shop.pagination;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import pl.dolien.shop.sort.SortGenerator;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class PageableBuilder {
 
