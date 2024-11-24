@@ -7,24 +7,24 @@
         </button>
     </div>
 
-    <div *ngIf="!isNotLoggedIn && !hasPurchasedProduct()" class="overlay">
+    <div *ngIf="!isNotLoggedIn && !isPurchasedProduct" class="overlay">
         <i class='bx bxs-lock-alt'></i>
         <h2>You need to buy this product first</h2>
     </div>
 
-    <div *ngIf="!isNotLoggedIn && hasPurchasedProduct() && hasAlreadySentFeedback()" class="overlay">
+    <div *ngIf="!isNotLoggedIn && isPurchasedProduct && hasAlreadySentFeedback()" class="overlay">
         <i class='bx bxs-lock-alt'></i>
         <h2>You already sent feedback</h2>
     </div>
 
     <form *ngIf="product" #feedbackForm="ngForm" id="feedback-form"
-        [ngClass]="{'blur--overlay': isNotLoggedIn, 'already-sent-feedback': hasAlreadySentFeedback(), 'has-not-purchased-product': !hasPurchasedProduct()}">
+        [ngClass]="{'blur--overlay': isNotLoggedIn, 'already-sent-feedback': hasAlreadySentFeedback(), 'has-not-purchased-product': !isPurchasedProduct}">
         <h2>Feedback</h2>
 
         <textarea type="text" id="comment" maxlength="255" [(ngModel)]="feedback.comment" name="comment"
             required></textarea>
         <star-rating-control [showHalfStars]="true" [hoverEnabled]="true" [rating]="feedback.note || 0" [size]="'large'"
-            [staticColor]="'ok'" (ratingChange)="ratingChange($event)" [starType]="'svg'"></star-rating-control>
+            [staticColor]="'ok'" (ratingChange)="onRatingChange($event)" [starType]="'svg'"></star-rating-control>
         <button type="submit" (click)="saveFeedback()">Submit
             Feedback</button>
     </form>
@@ -37,7 +37,7 @@
         <div class="feedback-info">
             <div class="user-and-date">
                 <div class="username">
-                    {{feedback.createdByUser?.firstname}} {{feedback.createdByUser?.lastname}}
+                    {{feedback.createdBy.firstname}} {{feedback.createdBy.lastname}}
                 </div>
                 <div class="date">
                     {{feedback.createdDate |
@@ -51,7 +51,7 @@
 
     </div>
 
-    <app-pagination [totalElements]="totalElements" [pageSize]="pageSize" [(pageNumber)]="pageNumber"
+    <app-pagination [totalElements]="page.totalElements" [pageSize]="page.size" [(pageNumber)]="page.number"
         (pageNumberChange)="scrollToFeedbacks()"></app-pagination>
 
     <app-alert msg="There are no feedbacks yet." *ngIf="feedbacks?.length == 0 && !isLoadingComments"></app-alert>

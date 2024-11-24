@@ -4,201 +4,73 @@ import { Observable, map } from 'rxjs';
 import { environment } from '../../../../environments/environment.development';
 import { Product } from '../../models/product/product';
 import { ProductCategory } from '../../models/product-category/product-category';
+import { PaginationAndSortParams } from '../../../pagination/models/pagination-and-sort-params/pagination-and-sort-params';
+import { PaginatedProductResponse } from '../../models/paginated-product-response/paginated-product-response';
+import { PaginationService } from '../../../pagination/services/pagination/pagination.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductService {
   private readonly productUrl = `${environment.url}/products`;
+  private readonly categoryUrl = `${environment.url}/product-categories`;
 
-  private readonly categoryUrl = `${environment.url}/product-category`;
+  constructor(
+    private httpClient: HttpClient,
+    private paginationService: PaginationService
+  ) {}
 
-  constructor(private httpClient: HttpClient) {}
+  getProductById(id: number): Observable<Product> {
+    const url = `${this.productUrl}/${id}`;
 
-  getProduct(id: number): Observable<Product> {
-    const productUrl = `${this.productUrl}/${id}`;
-
-    return this.httpClient.get<Product>(productUrl);
+    return this.httpClient.get<Product>(url);
   }
 
-  getProductListPaginate(
-    page: number,
-    pageSize: number
-  ): Observable<GetResponseProducts> {
-    const searchUrl = `${this.productUrl}?page=${page}&size=${pageSize}`;
+  getAllProducts(
+    paginationAndSortParams: PaginationAndSortParams
+  ): Observable<PaginatedProductResponse> {
+    const url = this.paginationService.buildUrlWithPaginationAndSort(
+      this.productUrl,
+      paginationAndSortParams
+    );
 
-    return this.httpClient.get<GetResponseProducts>(searchUrl);
+    return this.httpClient.get<PaginatedProductResponse>(url);
   }
 
-  getProductListPaginateOrderByUnitPriceAsc(
-    page: number,
-    pageSize: number
-  ): Observable<GetResponseProducts> {
-    const searchUrl = `${this.productUrl}/search/findAllByOrderByUnitPriceAsc?page=${page}&size=${pageSize}`;
+  getProductsByCategoryId(
+    categoryId: number,
+    paginationAndSortParams: PaginationAndSortParams
+  ): Observable<PaginatedProductResponse> {
+    const baseUrl = `${this.productUrl}/category/${categoryId}`;
+    const url = this.paginationService.buildUrlWithPaginationAndSort(
+      baseUrl,
+      paginationAndSortParams
+    );
 
-    return this.httpClient.get<GetResponseProducts>(searchUrl);
+    return this.httpClient.get<PaginatedProductResponse>(url);
   }
 
-  getProductListPaginateOrderByUnitPriceDesc(
-    page: number,
-    pageSize: number
-  ): Observable<GetResponseProducts> {
-    const searchUrl = `${this.productUrl}/search/findAllByOrderByUnitPriceDesc?page=${page}&size=${pageSize}`;
-
-    return this.httpClient.get<GetResponseProducts>(searchUrl);
+  getProductsByKeyword(
+    keyword: string,
+    paginationAndSortParams: PaginationAndSortParams
+  ): Observable<PaginatedProductResponse> {
+    const baseUrl = `${this.productUrl}/search/${keyword}`;
+    const url = this.paginationService.buildUrlWithPaginationAndSort(
+      baseUrl,
+      paginationAndSortParams
+    );
+    return this.httpClient.get<PaginatedProductResponse>(url);
   }
 
-  getProductListPaginateOrderByRateDesc(
-    page: number,
-    pageSize: number
-  ): Observable<GetResponseProducts> {
-    const searchUrl = `${this.productUrl}/search/findAllByOrderByRateDesc?page=${page}&size=${pageSize}`;
-
-    return this.httpClient.get<GetResponseProducts>(searchUrl);
-  }
-
-  getProductListPaginateOrderBySalesDesc(
-    page: number,
-    pageSize: number
-  ): Observable<GetResponseProducts> {
-    const searchUrl = `${this.productUrl}/search/findAllByOrderBySalesDesc?&page=${page}&size=${pageSize}`;
-
-    return this.httpClient.get<GetResponseProducts>(searchUrl);
-  }
-
-  getProductListPaginateWithCategory(
-    page: number,
-    pageSize: number,
-    theCategoryId: number
-  ): Observable<GetResponseProducts> {
-    const searchUrl = `${this.productUrl}/search/findByCategoryId?id=${theCategoryId}&page=${page}&size=${pageSize}`;
-
-    return this.httpClient.get<GetResponseProducts>(searchUrl);
-  }
-
-  getProductListPaginateOrderByUnitPriceAscWithCategory(
-    page: number,
-    pageSize: number,
-    theCategoryId: number
-  ): Observable<GetResponseProducts> {
-    const searchUrl = `${this.productUrl}/search/findByCategoryIdOrderByUnitPriceAsc?id=${theCategoryId}&page=${page}&size=${pageSize}`;
-
-    return this.httpClient.get<GetResponseProducts>(searchUrl);
-  }
-
-  getProductListPaginateOrderByUnitPriceDescWithCategory(
-    page: number,
-    pageSize: number,
-    theCategoryId: number
-  ): Observable<GetResponseProducts> {
-    const searchUrl = `${this.productUrl}/search/findByCategoryIdOrderByUnitPriceDesc?id=${theCategoryId}&page=${page}&size=${pageSize}`;
-
-    return this.httpClient.get<GetResponseProducts>(searchUrl);
-  }
-
-  getProductListPaginateOrderByRateDescWithCategory(
-    page: number,
-    pageSize: number,
-    theCategoryId: number
-  ): Observable<GetResponseProducts> {
-    const searchUrl = `${this.productUrl}/search/findByCategoryIdOrderByRateDesc?id=${theCategoryId}&page=${page}&size=${pageSize}`;
-
-    return this.httpClient.get<GetResponseProducts>(searchUrl);
-  }
-
-  getProductListPaginateOrderBySalesDescWithCategory(
-    page: number,
-    pageSize: number,
-    theCategoryId: number
-  ): Observable<GetResponseProducts> {
-    const searchUrl = `${this.productUrl}/search/findByCategoryIdOrderBySalesDesc?id=${theCategoryId}&page=${page}&size=${pageSize}`;
-
-    return this.httpClient.get<GetResponseProducts>(searchUrl);
-  }
-
-  getProductList(theCategoryId: number): Observable<Product[]> {
-    const searchUrl = `${this.productUrl}/search/findByCategoryId?id=${theCategoryId}`;
-
-    return this.getProducts(searchUrl);
+  addProduct(productRequest: FormData): Observable<Product> {
+    return this.httpClient.post<Product>(this.productUrl, productRequest);
   }
 
   getProductCategories(): Observable<ProductCategory[]> {
-    return this.httpClient
-      .get<GetResponseProductCategory>(this.categoryUrl)
-      .pipe(map((response) => response._embedded.productCategory));
+    return this.httpClient.get<ProductCategory[]>(this.categoryUrl);
   }
 
-  searchProducts(theKeyword: string): Observable<Product[]> {
-    const searchUrl = `${this.productUrl}/search/findByNameContaining?name=${theKeyword}`;
-
-    return this.getProducts(searchUrl);
-  }
-
-  searchProductsPaginate(
-    page: number,
-    pageSize: number,
-    keyword: string
-  ): Observable<GetResponseProducts> {
-    const searchUrl = `${this.productUrl}/search/findByNameContaining?name=${keyword}&page=${page}&size=${pageSize}`;
-
-    return this.httpClient.get<GetResponseProducts>(searchUrl);
-  }
-
-  searchProductsPaginateOrderByUnitPriceAsc(
-    page: number,
-    pageSize: number,
-    keyword: string
-  ): Observable<GetResponseProducts> {
-    const searchUrl = `${this.productUrl}/search/findByNameContainingOrderByUnitPriceAsc?name=${keyword}&page=${page}&size=${pageSize}`;
-
-    return this.httpClient.get<GetResponseProducts>(searchUrl);
-  }
-
-  searchProductsPaginateOrderByUnitPriceDesc(
-    page: number,
-    pageSize: number,
-    keyword: string
-  ): Observable<GetResponseProducts> {
-    const searchUrl = `${this.productUrl}/search/findByNameContainingOrderByUnitPriceDesc?name=${keyword}&page=${page}&size=${pageSize}`;
-
-    return this.httpClient.get<GetResponseProducts>(searchUrl);
-  }
-
-  searchProductsPaginateOrderByRateDesc(
-    page: number,
-    pageSize: number,
-    keyword: string
-  ): Observable<GetResponseProducts> {
-    const searchUrl = `${this.productUrl}/search/findByNameContainingOrderByRateDesc?name=${keyword}&page=${page}&size=${pageSize}`;
-
-    return this.httpClient.get<GetResponseProducts>(searchUrl);
-  }
-
-  searchProductsPaginateOrderBySalesDesc(
-    page: number,
-    pageSize: number,
-    keyword: string
-  ): Observable<GetResponseProducts> {
-    const searchUrl = `${this.productUrl}/search/findByNameContainingOrderBySalesDesc?name=${keyword}&page=${page}&size=${pageSize}`;
-
-    return this.httpClient.get<GetResponseProducts>(searchUrl);
-  }
-
-  private getProducts(searchUrl: string): Observable<Product[]> {
-    return this.httpClient
-      .get<GetResponseProducts>(searchUrl)
-      .pipe(map((response) => response._embedded.products));
-  }
-
-  getAllProductsOrderBySales(
-    page: number,
-    pageSize: number
-  ): Observable<GetResponseProducts> {
-    const salesUrl = `${this.productUrl}/search/findAllByOrderBySalesDesc?page=${page}&size=${pageSize}`;
-    return this.httpClient.get<GetResponseProducts>(salesUrl);
-  }
-
-  isNewProduct(dateCreated: any): boolean {
+  isProductNew(dateCreated: Date): boolean {
     const oneWeekInMilliseconds = 7 * 24 * 60 * 60 * 1000;
     const currentDate = new Date();
     const productDate = new Date(dateCreated);
@@ -207,22 +79,4 @@ export class ProductService {
       currentDate.getTime() - productDate.getTime() < oneWeekInMilliseconds
     );
   }
-}
-
-interface GetResponseProducts {
-  _embedded: {
-    products: Product[];
-  };
-  page: {
-    size: number;
-    totalElements: number;
-    totalPages: number;
-    number: number;
-  };
-}
-
-interface GetResponseProductCategory {
-  _embedded: {
-    productCategory: ProductCategory[];
-  };
 }

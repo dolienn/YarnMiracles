@@ -19,6 +19,6 @@ public class SummaryMetrics {
     private int totalUsers;
     private int totalOrders;
     private int totalCustomerFeedback;
-    private int productsSell;
+    private int totalProductsSold ;
     private BigDecimal revenue;
 }

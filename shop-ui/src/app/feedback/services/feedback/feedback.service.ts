@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { FeedbackRequest } from '../../models/feedback-request/feedback-request';
+import { PaginationParams } from '../../../pagination/models/pagination-params/pagination-params';
 import { environment } from '../../../../environments/environment.development';
-import { Feedback } from '../../models/feedback/feedback';
+import { FeedbackResponse } from '../../models/feedback-response/feedback-response';
+import { FeedbackRequest } from '../../models/feedback-request/feedback-request';
 
 @Injectable({
   providedIn: 'root',
@@ -14,24 +15,15 @@ export class FeedbackService {
   constructor(private httpClient: HttpClient) {}
 
   getFeedbacksByProduct(
-    page: number,
-    pageSize: number,
-    productId: number
-  ): Observable<GetResponseFeedbacks> {
-    const feedbacksByProductUrl = `${this.feedbackUrl}/product/${productId}?page=${page}&size=${pageSize}`;
+    productId: number,
+    paginationParams: PaginationParams
+  ): Observable<FeedbackResponse> {
+    const feedbacksByProductUrl = `${this.feedbackUrl}/products/${productId}?page=${paginationParams.page}&size=${paginationParams.size}`;
 
-    return this.httpClient.get<GetResponseFeedbacks>(feedbacksByProductUrl);
+    return this.httpClient.get<FeedbackResponse>(feedbacksByProductUrl);
   }
 
   saveFeedback(request: FeedbackRequest): Observable<number> {
     return this.httpClient.post<number>(this.feedbackUrl, request);
   }
-}
-
-interface GetResponseFeedbacks {
-  content: Feedback[];
-  size: number;
-  totalElements: number;
-  totalPages: number;
-  number: number;
 }

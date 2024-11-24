@@ -2,20 +2,20 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment.development';
-import { ContactRequest } from '../../models/contact-request/contact-request';
+import { SupportMessageDTO } from '../../models/support-message-dto/support-message-dto';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ContactService {
-  private readonly contactUrl = `${environment.url}/contact`;
+  private readonly contactUrl = `${environment.url}/support/send-message`;
 
   constructor(private httpClient: HttpClient) {}
 
-  sendMessage(contactRequest: ContactRequest): Observable<any> {
-    return this.httpClient.post<ContactRequest>(
+  sendMessage(supportMessage: SupportMessageDTO): Observable<any> {
+    return this.httpClient.post<SupportMessageDTO>(
       this.contactUrl,
-      contactRequest
+      supportMessage
     );
   }
 }

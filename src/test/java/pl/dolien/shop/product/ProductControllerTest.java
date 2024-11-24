@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.Authentication;
@@ -14,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pl.dolien.shop.pagination.PaginationAndSortParams;
+import pl.dolien.shop.pagination.RestPage;
 import pl.dolien.shop.product.dto.ProductDTO;
 import pl.dolien.shop.product.dto.ProductRequestDTO;
 import pl.dolien.shop.product.dto.ProductWithFeedbackDTO;
@@ -21,8 +23,7 @@ import pl.dolien.shop.product.dto.ProductWithFeedbackDTO;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
+import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -60,44 +61,51 @@ class ProductControllerTest {
 
     @Test
     void shouldGetAllProducts() throws Exception {
-        when(productService.getAllProducts(any(PaginationAndSortParams.class))).thenReturn(List.of(testProductDTO));
+        when(productService.getAllProducts(any(PaginationAndSortParams.class))).thenReturn(
+                buildRestPageByProductDTO(List.of(testProductDTO))
+        );
 
         performGetAllProducts()
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(List.of(testProductDTO))));
+                .andExpect(content().json(objectMapper.writeValueAsString(buildRestPageByProductDTO(List.of(testProductDTO)))));
 
         verify(productService, times(1)).getAllProducts(any(PaginationAndSortParams.class));
     }
 
     @Test
     void shouldGetProductsByCategoryId() throws Exception {
-        when(productService.getProductsByCategoryId(anyInt(), any(PaginationAndSortParams.class))).thenReturn(List.of(testProductDTO));
+        when(productService.getProductsByCategoryId(anyInt(), any(PaginationAndSortParams.class)))
+                .thenReturn(buildRestPageByProductDTO(List.of(testProductDTO)));
 
         performGetProductsByCategoryId()
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(List.of(testProductDTO))));
+                .andExpect(content().json(objectMapper.writeValueAsString(buildRestPageByProductDTO(List.of(testProductDTO)))));
 
-        verify(productService, times(1)).getProductsByCategoryId(anyInt(), any(PaginationAndSortParams.class));
+        verify(productService, times(1))
+                .getProductsByCategoryId(anyInt(), any(PaginationAndSortParams.class));
     }
 
     @Test
-    void shouldGetProductsByName() throws Exception {
-        when(productService.getProductsByNameContaining(anyString(), any(PaginationAndSortParams.class))).thenReturn(List.of(testProductDTO));
+    void shouldGetProductsByKeyword() throws Exception {
+        when(productService.getProductsByKeyword(anyString(), any(PaginationAndSortParams.class)))
+                .thenReturn(buildRestPageByProductDTO(List.of(testProductDTO)));
 
-        performGetProductsByName()
+        performGetProductsByKeyword()
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(List.of(testProductDTO))));
+                .andExpect(content().json(objectMapper.writeValueAsString(buildRestPageByProductDTO(List.of(testProductDTO)))));
 
-        verify(productService, times(1)).getProductsByNameContaining(anyString(), any(PaginationAndSortParams.class));
+        verify(productService, times(1))
+                .getProductsByKeyword(anyString(), any(PaginationAndSortParams.class));
     }
 
     @Test
     void shouldGetAllProductsWithFeedbacks() throws Exception {
-        when(productService.getAllProductsWithFeedbacks(any(PaginationAndSortParams.class))).thenReturn(List.of(testProductWithFeedbackDTO));
+        when(productService.getAllProductsWithFeedbacks(any(PaginationAndSortParams.class)))
+                .thenReturn(buildRestPageByProductWithFeedbackDTO(List.of(testProductWithFeedbackDTO)));
 
         performGetAllProductsWithFeedbacks()
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(List.of(testProductWithFeedbackDTO))));
+                .andExpect(content().json(objectMapper.writeValueAsString(buildRestPageByProductWithFeedbackDTO(List.of(testProductWithFeedbackDTO)))));
 
         verify(productService, times(1)).getAllProductsWithFeedbacks(any(PaginationAndSortParams.class));
     }
@@ -156,7 +164,7 @@ class ProductControllerTest {
         testPaginationAndSortParams = PaginationAndSortParams.builder()
                 .page(1)
                 .size(10)
-                .sortOrderType("PRICE_ASC")
+                .sortBy("PRICE_ASC")
                 .build();
 
         filePart = new MockMultipartFile("file", "image.jpg", MULTIPART_FORM_DATA_VALUE, "image content".getBytes());
@@ -178,26 +186,25 @@ class ProductControllerTest {
 
     private ResultActions performGetAllProducts() throws Exception {
         return mockMvc.perform(get("/products")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testPaginationAndSortParams)));
     }
 
     private ResultActions performGetProductsByCategoryId() throws Exception {
         return mockMvc.perform(get("/products/category/{categoryId}", 1)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testPaginationAndSortParams)));
     }
 
-    private ResultActions performGetProductsByName() throws Exception {
-        return mockMvc.perform(get("/products/search")
-                .contentType(MediaType.APPLICATION_JSON)
-                .param("name", "testName")
+    private ResultActions performGetProductsByKeyword() throws Exception {
+        return mockMvc.perform(get("/products/search/{keyword}", "testName")
+                .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testPaginationAndSortParams)));
     }
 
     private ResultActions performGetAllProductsWithFeedbacks() throws Exception {
         return mockMvc.perform(get("/products/feedbacks")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testPaginationAndSortParams)));
     }
 
@@ -218,5 +225,13 @@ class ProductControllerTest {
         return mockMvc.perform(multipart("/products")
                 .file(filePart)
                 .principal(authentication));
+    }
+
+    private Page<ProductDTO> buildRestPageByProductDTO(List<ProductDTO> content) {
+        return new RestPage<>(content, 1, 1, 1);
+    }
+
+    private Page<ProductWithFeedbackDTO> buildRestPageByProductWithFeedbackDTO(List<ProductWithFeedbackDTO> content) {
+        return new RestPage<>(content, 1, 1, 1);
     }
 }

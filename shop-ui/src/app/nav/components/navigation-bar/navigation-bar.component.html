@@ -7,8 +7,7 @@
         <li *ngIf="!isCategoryButtonClicked">
             <a class="categories navlink" (click)="handleCategoryButton()">categories</a>
             <div class="categoryList">
-                <p *ngFor="let productCategory of productCategories"
-                    routerLink="/category/{{productCategory.id }}/{{ productCategory.categoryName }}"
+                <p *ngFor="let productCategory of productCategories" routerLink="/category/{{productCategory.id }}"
                     class="categoryName">{{productCategory.categoryName}}
                 </p>
             </div>

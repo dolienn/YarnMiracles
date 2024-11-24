@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.dolien.shop.auth.registration.dto.RegistrationDTO;
+import pl.dolien.shop.auth.userProfile.dto.UserProfileDTO;
 import pl.dolien.shop.user.dto.UserDTO;
 
 import static pl.dolien.shop.user.UserMapper.toUserDTO;
@@ -23,7 +23,7 @@ public class UserProfileController {
 
     @PostMapping("/update-user-profile")
     public UserDTO updateUserProfile(
-            @RequestBody @Valid RegistrationDTO request,
+            @RequestBody @Valid UserProfileDTO request,
             Authentication auth
     ) {
         return toUserDTO(updater.updateUserProfile(request, auth));

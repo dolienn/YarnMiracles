@@ -20,7 +20,7 @@ public class SummaryMetricsInitService {
                     .totalUsers(0)
                     .totalOrders(0)
                     .totalCustomerFeedback(0)
-                    .productsSell(0)
+                    .totalProductsSold(0)
                     .revenue(BigDecimal.ZERO)
                     .build();
             repository.save(summaryMetrics);

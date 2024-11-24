@@ -15,6 +15,7 @@ import static pl.dolien.shop.order.OrderStatus.PENDING;
 @RequiredArgsConstructor
 public class OrderService {
 
+    private final OrderRepository orderRepository;
     private final ProductInventoryUpdater productInventoryService;
 
     public Order buildOrder(PurchaseRequestDTO purchase) {
@@ -23,13 +24,17 @@ public class OrderService {
         order.setBillingAddress(purchase.getBillingAddress());
         order.setShippingAddress(purchase.getShippingAddress());
         order.setStatus(PENDING);
-        return order;
+        return saveOrder(order);
     }
 
     @Transactional
     public void addOrderItems(Order order, Set<OrderItem> orderItems) {
         orderItems.forEach(order::add);
         orderItems.forEach(productInventoryService::updateProductInventory);
+    }
+
+    public Order saveOrder(Order order) {
+        return orderRepository.save(order);
     }
 
     private String generateOrderTrackingNumber() {

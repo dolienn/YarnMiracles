@@ -1,9 +1,7 @@
-export class OrderHistory {
-  constructor(
-    public id: string,
-    public orderTrackingNumber: string,
-    public totalPrice: number,
-    public totalQuantity: number,
-    public dateCreated: Date
-  ) {}
+import { Order } from '../order/order';
+
+export class OrderHistory extends Order {
+  public id: string = '';
+  public orderTrackingNumber: string = '';
+  public dateCreated: Date = new Date();
 }

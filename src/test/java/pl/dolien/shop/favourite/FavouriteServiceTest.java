@@ -5,12 +5,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import pl.dolien.shop.exception.ProductAlreadyFavouriteException;
 import pl.dolien.shop.exception.ProductNotFavouriteException;
 import pl.dolien.shop.pagination.PageableBuilder;
 import pl.dolien.shop.pagination.PaginationAndSortParams;
+import pl.dolien.shop.pagination.RestPage;
 import pl.dolien.shop.product.Product;
 import pl.dolien.shop.product.ProductService;
 import pl.dolien.shop.product.dto.ProductDTO;
@@ -64,7 +66,7 @@ class FavouriteServiceTest {
     void shouldGetFavouritesByUserId() {
         mockDependenciesForGettingFavourites();
 
-        List<ProductDTO> products = favouriteService.getFavourites(
+        Page<ProductDTO> products = favouriteService.getFavourites(
                 testUser.getId(),
                 testPaginationAndSortParams,
                 authentication
@@ -134,19 +136,20 @@ class FavouriteServiceTest {
         testPaginationAndSortParams = PaginationAndSortParams.builder()
                 .page(0)
                 .size(10)
-                .sortOrderType("PRICE_ASC")
+                .sortBy("PRICE_ASC")
                 .build();
     }
 
     private void mockDependenciesForGettingFavourites() {
         when(pageableBuilder.buildPageable(testPaginationAndSortParams)).thenReturn(pageable);
-        when(favouriteRepository.findFavouritesByUserId(testUser.getId(), pageable)).thenReturn(List.of(testProduct));
+        when(favouriteRepository.findFavouritesByUserId(testUser.getId(), pageable))
+                .thenReturn(buildRestPage(List.of(testProduct)));
     }
 
-    private void assertFavourites(List<ProductDTO> products) {
-        assertEquals(1, products.size());
-        assertEquals(testProduct.getId(), products.get(0).getId());
-        assertEquals(testProduct.getName(), products.get(0).getName());
+    private void assertFavourites(Page<ProductDTO> products) {
+        assertEquals(1, products.getContent().size());
+        assertEquals(testProduct.getId(), products.getContent().get(0).getId());
+        assertEquals(testProduct.getName(), products.getContent().get(0).getName());
     }
 
     private void verifyInteractionsForGettingFavourites() {
@@ -162,5 +165,9 @@ class FavouriteServiceTest {
     private void verifyInteractionsForAddingAndRemovingProductToFavourites() {
         verify(userService, times(1)).getUserById(testUser.getId());
         verify(productService, times(1)).getProductById(testProduct.getId());
+    }
+
+    private RestPage<Product> buildRestPage(List<Product> content) {
+        return new RestPage<>(content, 1, 1, 1);
     }
 }

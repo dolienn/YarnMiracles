@@ -30,7 +30,7 @@ public class LoginService {
                 )
         );
 
-        User user = toUser(userService.getUserDTOByAuth(auth));
+        User user = toUser(userService.getUserByAuth(auth));
 
         String jwtToken = jwtService.generateToken(Map.of("fullName", user.getFullName()), user);
 

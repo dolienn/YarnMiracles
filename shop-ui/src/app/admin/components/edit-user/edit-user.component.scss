@@ -104,6 +104,17 @@
   box-shadow: 0px 0px 0px 0.125rem $color--01;
 }
 
+.add_btn {
+  width: 10rem;
+  height: 2.5rem;
+  border: 0;
+  background: $primary--02;
+  border-radius: 0.4375rem;
+  outline: none;
+  color: $background-color--01;
+  cursor: pointer;
+}
+
 .edit_btn {
   width: 10rem;
   height: 2.5rem;

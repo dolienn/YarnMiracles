@@ -8,10 +8,10 @@ import {
   HttpClient,
   HttpClientModule,
 } from '@angular/common/http';
-import { LoginComponent } from './auth/components/login/login.component';
+import { LoginComponent } from './auth/login/components/login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RegisterComponent } from './auth/components/register/register.component';
-import { ActivateAccountComponent } from './activate-account/components/activate-account.component';
+import { RegisterComponent } from './auth/registration/components/register/register.component';
+import { ActivateAccountComponent } from './auth/activation/components/activate-account.component';
 import { CodeInputModule } from 'angular-code-input';
 import { NavigationBarComponent } from './nav/components/navigation-bar/navigation-bar.component';
 import { HomeComponent } from './home/components/home/home.component';
@@ -24,7 +24,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CartStatusComponent } from './cart/components/cart-status/cart-status.component';
 import { HttpTokenInterceptor } from './interceptor/http-token.interceptor';
 import { NotificationComponent } from './notification/components/notification/notification.component';
-import { UserDetailsComponent } from './user/components/user-details/user-details.component';
+import { UserDetailsComponent } from './auth/user-profile/components/user-details/user-details.component';
 import { FavouriteProductComponent } from './shared/components/favourite-product/favourite-product.component';
 import { RatingComponent } from './shared/components/rating/rating.component';
 import { FeedbackComponent } from './feedback/components/feedback/feedback.component';
@@ -34,7 +34,7 @@ import { AlertComponent } from './shared/components/alert/alert.component';
 import { CartDetailsComponent } from './cart/components/cart-details/cart-details.component';
 import { CheckoutComponent } from './checkout/components/checkout/checkout.component';
 import { OrderHistoryComponent } from './order/components/order-history/order-history.component';
-import { PaginationComponent } from './shared/components/pagination/pagination.component';
+import { PaginationComponent } from './pagination/components/pagination/pagination.component';
 import { SuccessfulPurchaseComponent } from './purchase/components/successful-purchase/successful-purchase.component';
 import { ContactUsComponent } from './support/components/contact-us/contact-us.component';
 import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';

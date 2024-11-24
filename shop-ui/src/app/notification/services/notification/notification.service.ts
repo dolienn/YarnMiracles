@@ -5,23 +5,37 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root',
 })
 export class NotificationService {
+  private readonly MESSAGE_DISPLAY_DURATION = 3000; // Duration in milliseconds
+
   private messageSource = new BehaviorSubject<string>('');
   message$ = this.messageSource.asObservable();
 
   private isVisibleSource = new BehaviorSubject<boolean>(false);
   isVisible$ = this.isVisibleSource.asObservable();
 
-  showMessage(message: string) {
+  private typeSource = new BehaviorSubject<boolean>(true);
+  type$ = this.typeSource.asObservable();
+
+  showMessage(
+    message: string,
+    isSuccess: boolean,
+    duration: number = this.MESSAGE_DISPLAY_DURATION
+  ): void {
     this.messageSource.next(message);
     this.isVisibleSource.next(true);
-    setTimeout(() => {
-      this.messageSource.next('');
-      this.isVisibleSource.next(false);
-    }, 3000);
+    this.typeSource.next(isSuccess);
+    this.autoHideMessage(duration);
   }
 
-  clearMessage() {
+  private autoHideMessage(duration: number): void {
+    setTimeout(() => {
+      this.hideMessage();
+    }, duration);
+  }
+
+  private hideMessage(): void {
     this.messageSource.next('');
     this.isVisibleSource.next(false);
+    this.typeSource.next(true);
   }
 }

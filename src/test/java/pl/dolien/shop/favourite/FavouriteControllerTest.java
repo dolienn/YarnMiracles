@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pl.dolien.shop.pagination.PaginationAndSortParams;
+import pl.dolien.shop.pagination.RestPage;
 import pl.dolien.shop.product.dto.ProductDTO;
 
 import java.util.List;
@@ -55,11 +56,11 @@ class FavouriteControllerTest {
     @Test
     void shouldGetFavouritesByUserId() throws Exception {
         when(favouriteService.getFavourites(anyInt(), any(PaginationAndSortParams.class), any(Authentication.class)))
-                .thenReturn(List.of(testProductDTO));
+                .thenReturn(buildRestPage(List.of(testProductDTO)));
 
         mockMvc.perform(buildGetFavouritesRequest())
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(List.of(testProductDTO))));
+                .andExpect(content().json(objectMapper.writeValueAsString(buildRestPage(List.of(testProductDTO)))));
 
         verify(favouriteService, times(1))
                 .getFavourites(anyInt(), any(PaginationAndSortParams.class), any(Authentication.class));
@@ -90,7 +91,7 @@ class FavouriteControllerTest {
         testPaginationAndSortParams = PaginationAndSortParams.builder()
                 .page(0)
                 .size(10)
-                .sortOrderType("PRICE_ASC")
+                .sortBy("PRICE_ASC")
                 .build();
     }
 
@@ -112,5 +113,9 @@ class FavouriteControllerTest {
         return delete("/users/{userId}/favourites/{productId}", TEST_USER_ID, testProductDTO.getId())
                 .contentType(APPLICATION_JSON)
                 .principal(authentication);
+    }
+
+    private RestPage<ProductDTO> buildRestPage(List<ProductDTO> content) {
+        return new RestPage<>(content, 0, 10, 1);
     }
 }

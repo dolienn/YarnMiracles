@@ -10,17 +10,17 @@
             <app-alert backgroundColor="#ff6961" borderColor="#d60b00" msg="{{msg}}"></app-alert>
         </div>
         <div class="contact-control email-control">
-            <input [(ngModel)]="contactRequest.email" type="text" id="email" placeholder=" " [value]="user.email">
+            <input [(ngModel)]="supportMessage.from" type="text" id="email" placeholder=" " [value]="user.email">
             <label for="email">Email</label>
         </div>
 
         <div class="contact-control">
-            <input [(ngModel)]="contactRequest.subject" type="text" id="subject" placeholder=" ">
+            <input [(ngModel)]="supportMessage.subject" type="text" id="subject" placeholder=" ">
             <label for="subject">Subject</label>
         </div>
 
         <div class="contact-message">
-            <textarea [(ngModel)]="contactRequest.message" placeholder="Message"></textarea>
+            <textarea [(ngModel)]="supportMessage.text" placeholder="Message"></textarea>
         </div>
 
         <div class="send-button">

@@ -2,6 +2,7 @@ package pl.dolien.shop.favourite;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import pl.dolien.shop.pagination.PaginationAndSortParams;
@@ -18,7 +19,7 @@ public class FavouriteController {
     private final FavouriteService favouriteService;
 
     @GetMapping("/{userId}/favourites")
-    public List<ProductDTO> getFavourites(@PathVariable Integer userId,
+    public Page<ProductDTO> getFavourites(@PathVariable Integer userId,
                                           @ModelAttribute PaginationAndSortParams paginationAndSortParams,
                                           Authentication connectedUser) {
         return favouriteService.getFavourites(userId, paginationAndSortParams, connectedUser);

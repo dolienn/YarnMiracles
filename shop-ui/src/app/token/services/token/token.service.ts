@@ -5,26 +5,32 @@ import { HttpClient } from '@angular/common/http';
 import { NotificationService } from '../../../notification/services/notification/notification.service';
 import { User } from '../../../user/models/user/user';
 import { environment } from '../../../../environments/environment.development';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TokenService {
+  private readonly jwtHelper = new JwtHelperService();
+  private loggedIn = new BehaviorSubject<boolean>(this.isTokenValid());
+
   constructor(
     private notificationService: NotificationService,
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    private router: Router
   ) {}
-
-  private loggedIn = new BehaviorSubject<boolean>(this.isTokenValid());
 
   set token(token: string) {
     localStorage.setItem('token', token);
-    this.loggedIn.next(this.isTokenValid());
-    this.notificationService.showMessage('Pomyślnie zalogowano');
+    this.updateLoginStatus(this.isTokenValid());
   }
 
   get token() {
-    return localStorage.getItem('token') as string;
+    return localStorage.getItem('token') ?? '';
+  }
+
+  storeToken(token: string): void {
+    this.token = token;
   }
 
   isTokenNotValid() {
@@ -33,15 +39,10 @@ export class TokenService {
 
   isTokenValid() {
     const token = this.token;
-    if (!token) {
-      return false;
-    }
+    if (!token) return false;
 
-    const jwtHelper = new JwtHelperService();
-    const isTokenExpired = jwtHelper.isTokenExpired(token);
-
-    if (isTokenExpired) {
-      localStorage.clear();
+    if (this.jwtHelper.isTokenExpired(token)) {
+      this.clearLocalStorage();
       return false;
     }
 
@@ -53,19 +54,27 @@ export class TokenService {
   }
 
   logout() {
-    localStorage.clear();
-    this.loggedIn.next(false);
-    this.notificationService.showMessage('Pomyślnie wylogowano');
+    this.clearLocalStorage();
+    this.updateLoginStatus(false);
+    localStorage.setItem('logoutMessage', 'Successfully logged out');
+    this.router.navigate(['']);
+    window.location.reload();
   }
 
-  getUserInfo() {
-    const token = localStorage.getItem('token');
-    if (token) {
-      return this.httpClient.get<User>(`${environment.url}/auth/info`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-    }
+  getUserByJwtToken() {
+    const jwtToken = this.token;
+    if (!jwtToken) return null;
 
-    return null;
+    return this.httpClient.get<User>(`${environment.url}/users/byAuth`, {
+      headers: { Authorization: `Bearer ${jwtToken}` },
+    });
+  }
+
+  private clearLocalStorage(): void {
+    localStorage.clear();
+  }
+
+  private updateLoginStatus(isLoggedIn: boolean = true): void {
+    this.loggedIn.next(isLoggedIn);
   }
 }

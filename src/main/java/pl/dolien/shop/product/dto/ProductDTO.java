@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Getter
 @SuperBuilder
@@ -21,4 +22,5 @@ public class ProductDTO {
     private int unitsInStock;
     private Double rate;
     private Long sales;
+    private Date dateCreated;
 }

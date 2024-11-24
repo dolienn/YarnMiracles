@@ -9,6 +9,7 @@ import pl.dolien.shop.order.OrderItem;
 import pl.dolien.shop.product.Product;
 import pl.dolien.shop.product.ProductService;
 import pl.dolien.shop.user.User;
+import pl.dolien.shop.user.UserRepository;
 import pl.dolien.shop.user.UserService;
 
 import java.util.Objects;
@@ -19,6 +20,7 @@ import java.util.Set;
 public class CustomerService {
     private final CustomerRepository customerRepository;
     private final UserService userService;
+    private final UserRepository userRepository;
     private final ProductService productService;
 
     @Transactional
@@ -26,6 +28,7 @@ public class CustomerService {
         Customer existingCustomer = getCustomerByEmail(customer.getEmail());
 
         if (existingCustomer == null) {
+            customerRepository.save(customer);
             customer.add(order);
             return customer;
         }
@@ -38,11 +41,12 @@ public class CustomerService {
     }
 
     public void updatePurchasedProducts(Customer customer, Set<OrderItem> orderItems) {
-        User user = userService.getUserByEmail(customer.getEmail());
+        User user = userRepository.findByEmail(customer.getEmail()).orElse(null);
 
-        orderItems.forEach(orderItem -> associateProductWithUser(orderItem, user));
-
-        userService.saveUser(user);
+        if(user != null) {
+            orderItems.forEach(orderItem -> associateProductWithUser(orderItem, user));
+            userService.saveUser(user);
+        }
     }
 
     private Customer getCustomerByEmail(String email) {

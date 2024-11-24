@@ -14,7 +14,7 @@ public class PasswordRequestDTO {
 
     @NotEmpty(message = "Your password field cannot be empty")
     @NotBlank(message = "Your password field cannot be empty")
-    private String yourPassword;
+    private String currentPassword;
 
     @NotEmpty(message = "New password field cannot be empty")
     @NotBlank(message = "New password field cannot be empty")

@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,7 +13,7 @@ import pl.dolien.shop.product.dto.ProductDTO;
 import pl.dolien.shop.product.dto.ProductRequestDTO;
 import pl.dolien.shop.product.dto.ProductWithFeedbackDTO;
 
-import java.util.List;
+import static pl.dolien.shop.product.ProductMapper.toProductDTO;
 
 @RestController
 @RequestMapping("products")
@@ -22,25 +23,30 @@ public class ProductController {
 
     private final ProductService productService;
 
+    @GetMapping("/{productId}")
+    public ProductDTO getProductById(@PathVariable Long productId) {
+        return toProductDTO(productService.getProductById(productId));
+    }
+
     @GetMapping
-    public List<ProductDTO> getAllProducts(@ModelAttribute PaginationAndSortParams paginationAndSortParams) {
+    public Page<ProductDTO> getAllProducts(@ModelAttribute PaginationAndSortParams paginationAndSortParams) {
         return productService.getAllProducts(paginationAndSortParams);
     }
 
     @GetMapping("/category/{categoryId}")
-    public List<ProductDTO> getProductsByCategoryId(@PathVariable Integer categoryId,
+    public Page<ProductDTO> getProductsByCategoryId(@PathVariable Integer categoryId,
                                                  @ModelAttribute PaginationAndSortParams paginationAndSortParams) {
         return productService.getProductsByCategoryId(categoryId, paginationAndSortParams);
     }
 
-    @GetMapping("/search")
-    public List<ProductDTO> getProductsByName(@RequestParam String name,
+    @GetMapping("/search/{keyword}")
+    public Page<ProductDTO> getProductsByKeyword(@PathVariable String keyword,
                                            @ModelAttribute PaginationAndSortParams paginationAndSortParams) {
-        return productService.getProductsByNameContaining(name, paginationAndSortParams);
+        return productService.getProductsByKeyword(keyword, paginationAndSortParams);
     }
 
     @GetMapping("/feedbacks")
-    public List<ProductWithFeedbackDTO> getAllProductsWithFeedbacks(@ModelAttribute PaginationAndSortParams paginationAndSortParams) {
+    public Page<ProductWithFeedbackDTO> getAllProductsWithFeedbacks(@ModelAttribute PaginationAndSortParams paginationAndSortParams) {
         return productService.getAllProductsWithFeedbacks(paginationAndSortParams);
     }
 

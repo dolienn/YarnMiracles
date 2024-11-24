@@ -15,6 +15,6 @@ public class PaginationAndSortParamsKeyFragmentGenerator implements KeyFragmentG
     private void appendPaginationAndSortParamsKeyFragment(StringBuilder keyBuilder, PaginationAndSortParams paginationAndSortParams) {
         keyBuilder.append("_page:").append(paginationAndSortParams.getPage())
                 .append("_size:").append(paginationAndSortParams.getSize())
-                .append("_sortOrderType:").append(paginationAndSortParams.getSortOrderType());
+                .append("_sortBy:").append(paginationAndSortParams.getSortBy());
     }
 }

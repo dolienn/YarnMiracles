@@ -60,13 +60,13 @@
             </div>
         </div>
 
-        <div *ngIf="!addProductLoading">
+        <div *ngIf="!isAddingProduct">
             <button (click)="addProduct()" class="add_btn">
                 <span>Add Product</span>
             </button>
         </div>
 
-        <div *ngIf="addProductLoading">
+        <div *ngIf="isAddingProduct">
             <button class="add_btn"><app-loader width="1rem" height="1rem" [maxHeight]="false"></app-loader></button>
         </div>
 

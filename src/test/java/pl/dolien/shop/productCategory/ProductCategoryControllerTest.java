@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import pl.dolien.shop.productCategory.dto.ProductCategoryDTO;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -41,7 +42,7 @@ class ProductCategoryControllerTest {
     void shouldGetProductCategoryDTOByCategoryName() throws Exception {
         when(productCategoryService.getByCategoryName(CATEGORY_NAME)).thenReturn(productCategoryDTO);
 
-        mockMvc.perform(get("/product-category/{categoryName}", CATEGORY_NAME))
+        mockMvc.perform(get("/product-categories/{categoryName}", CATEGORY_NAME))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(productCategoryDTO.getId()))

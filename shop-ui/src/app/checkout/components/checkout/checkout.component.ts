@@ -6,26 +6,23 @@ import {
   QueryList,
   ViewChildren,
 } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 
 import { Router } from '@angular/router';
 import { User } from '../../../user/models/user/user';
-import { Country } from '../../models/country/country';
 import { environment } from '../../../../environments/environment.development';
 import { PaymentInfo } from '../../../payment/models/payment-info/payment-info';
-import { FormService } from '../../services/form/form.service';
 import { CartService } from '../../../cart/services/cart/cart.service';
 import { CheckoutService } from '../../services/checkout/checkout.service';
 import { TokenService } from '../../../token/services/token/token.service';
-import { FormValidators } from '../../../validators/form-validators';
 import { Order } from '../../../order/models/order/order';
 import { OrderItem } from '../../../order/models/order-item/order-item';
 import { Purchase } from '../../models/purchase/purchase';
+import { CartStorageService } from '../../../cart/services/cart-storage/cart-storage.service';
+import { PaymentService } from '../../../payment/services/payment/payment.service';
+import { Country } from '../../../country/models/country/country';
+import { CountryService } from '../../../country/services/country/country.service';
+import { CheckoutFormService } from '../../services/checkout-form/checkout-form.service';
 
 @Component({
   selector: 'app-checkout',
@@ -36,139 +33,43 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
   @ViewChildren('alert') alerts!: QueryList<ElementRef>;
 
   checkoutFormGroup!: FormGroup;
-
   user: User = new User();
-
   totalPrice: number = 0;
   totalQuantity: number = 0;
-
   countries: Country[] = [];
+  shippingCost: number = 19.99;
 
-  purchaseLoading: boolean = false;
-
-  isChecked: boolean = true;
   isLoading: boolean = true;
+  purchaseLoading: boolean = false;
+  isChecked: boolean = true;
   isCheckboxDisabled: boolean = false;
-
-  shipping: number = 19.99;
+  isDisabled: boolean = false;
 
   stripe = Stripe(environment.stripePublishableKey);
-
   paymentInfo: PaymentInfo = new PaymentInfo();
   cardElement: any;
   displayError: string = '';
 
-  isDisabled: boolean = false;
-
   constructor(
-    private formBuilder: FormBuilder,
-    private formService: FormService,
+    private countryService: CountryService,
     private cartService: CartService,
+    private cartStorageService: CartStorageService,
     private checkoutService: CheckoutService,
     private tokenService: TokenService,
+    private checkoutFormService: CheckoutFormService,
+    private paymentService: PaymentService,
     private router: Router
   ) {}
 
-  ngOnInit(): void {
-    this.setupStripePaymentForm();
-
-    this.reviewCartDetails();
-
-    this.checkoutFormGroup = this.formBuilder.group({
-      customer: this.formBuilder.group({
-        firstname: new FormControl(this.user.firstname, [
-          Validators.required,
-          Validators.minLength(2),
-          Validators.maxLength(13),
-          FormValidators.notOnlyWhitespace,
-        ]),
-        lastname: new FormControl(this.user.lastname, [
-          Validators.required,
-          Validators.minLength(2),
-          Validators.maxLength(20),
-          FormValidators.notOnlyWhitespace,
-        ]),
-        email: new FormControl(this.user.email, [
-          Validators.required,
-          Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'),
-        ]),
-      }),
-      shippingAddress: this.formBuilder.group({
-        street: new FormControl('', [
-          Validators.required,
-          Validators.minLength(2),
-          FormValidators.notOnlyWhitespace,
-        ]),
-        city: new FormControl('', [
-          Validators.required,
-          Validators.minLength(2),
-          FormValidators.notOnlyWhitespace,
-        ]),
-        country: new FormControl('', [Validators.required]),
-        zipCode: new FormControl('', [
-          Validators.required,
-          Validators.minLength(2),
-          FormValidators.notOnlyWhitespace,
-        ]),
-      }),
-      billingAddress: this.formBuilder.group({
-        street: new FormControl('', [
-          Validators.required,
-          Validators.minLength(2),
-          FormValidators.notOnlyWhitespace,
-        ]),
-        city: new FormControl('', [
-          Validators.required,
-          Validators.minLength(2),
-          FormValidators.notOnlyWhitespace,
-        ]),
-        country: new FormControl('', [Validators.required]),
-        zipCode: new FormControl('', [
-          Validators.required,
-          Validators.minLength(2),
-          FormValidators.notOnlyWhitespace,
-        ]),
-      }),
-    });
-
-    this.tokenService.getUserInfo()?.subscribe((data) => {
-      this.user = data;
-      this.checkoutFormGroup.patchValue({
-        customer: {
-          firstname: this.user.firstname,
-          lastname: this.user.lastname,
-          email: this.user.email,
-        },
-      });
-    });
-
-    this.checkoutFormGroup
-      .get('billingAddress')!
-      .valueChanges.subscribe((value) => {
-        if (this.isChecked) {
-          this.checkoutFormGroup.get('shippingAddress')!.patchValue(value);
-        }
-      });
-
-    this.formService.getCountries().subscribe((data) => {
-      this.countries = data;
-      this.isLoading = false;
-
-      if (this.countries.length > 0) {
-        this.checkoutFormGroup
-          .get('billingAddress.country')
-          ?.setValue(this.countries[0]);
-        this.checkoutFormGroup
-          .get('shippingAddress.country')
-          ?.setValue(this.countries[0]);
-      }
-
-      this.copyBillingAddressToShippingAddress({
-        target: { checked: this.isChecked },
-      });
-    });
+  async ngOnInit(): Promise<void> {
+    await Promise.all([
+      this.setupStripePaymentForm(),
+      this.loadCartDetails(),
+      this.initFormAndUser(),
+      this.setupBillingAddressSubscription(),
+      this.loadCountries(),
+    ]);
   }
-
   ngAfterViewInit() {
     this.alerts.changes.subscribe(() => {
       if (this.alerts.length) {
@@ -177,104 +78,52 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
     });
   }
 
-  get firstname() {
-    return this.checkoutFormGroup.get('customer.firstname');
-  }
-
-  get lastname() {
-    return this.checkoutFormGroup.get('customer.lastname');
-  }
-
-  get email() {
-    return this.checkoutFormGroup.get('customer.email');
-  }
-
-  get shippingAddressStreet() {
-    return this.checkoutFormGroup.get('shippingAddress.street');
-  }
-
-  get shippingAddressCity() {
-    return this.checkoutFormGroup.get('shippingAddress.city');
-  }
-
-  get shippingAddressCountry() {
-    return this.checkoutFormGroup.get('shippingAddress.country');
-  }
-
-  get shippingAddressZipCode() {
-    return this.checkoutFormGroup.get('shippingAddress.zipCode');
-  }
-
-  get billingAddressStreet() {
-    return this.checkoutFormGroup.get('billingAddress.street');
-  }
-
-  get billingAddressCity() {
-    return this.checkoutFormGroup.get('billingAddress.city');
-  }
-
-  get billingAddressCountry() {
-    return this.checkoutFormGroup.get('billingAddress.country');
-  }
-
-  get billingAddressZipCode() {
-    return this.checkoutFormGroup.get('billingAddress.zipCode');
-  }
-
-  copyBillingAddressToShippingAddress(event: any) {
-    const shippingAddressContainer = document.querySelector(
-      '.shippingAddressContainer'
-    );
-
-    if (event.target.checked) {
-      this.isChecked = true;
-      this.checkoutFormGroup.controls['shippingAddress'].setValue(
-        this.checkoutFormGroup.controls['billingAddress'].value
-      );
-      if (!shippingAddressContainer?.classList.contains('disabled')) {
-        shippingAddressContainer?.classList.add('disabled');
-      }
-    } else {
-      this.isChecked = false;
-      this.checkoutFormGroup.controls['shippingAddress'].reset();
-
-      if (shippingAddressContainer?.classList.contains('disabled')) {
-        shippingAddressContainer?.classList.remove('disabled');
-      }
+  onSubmit() {
+    if (this.isFormInvalid()) {
+      this.handleInvalidForm();
+      return;
     }
 
-    this.checkoutFormGroup.controls['shippingAddress']
-      .get('country')
-      ?.setValue(this.countries[0]);
+    this.purchaseLoading = true;
+    this.setShippingAddressIfDisabled();
+    const purchase = this.createPurchaseDetails();
+    this.setPaymentInfo(purchase);
+
+    this.processPayment(purchase);
   }
 
-  differentCountry(country: string) {
-    const shippingAddressContainer = document.querySelector(
-      '.shippingAddressContainer'
-    );
+  copyBillingToShipping(event: any): void {
+    const isChecked = event.target.checked;
+    this.isChecked = isChecked;
 
-    if (country !== '0: Object') {
-      this.isChecked = false;
-      if (shippingAddressContainer?.classList.contains('disabled')) {
-        shippingAddressContainer?.classList.remove('disabled');
-      }
-      this.isCheckboxDisabled = true;
-      this.checkoutFormGroup.controls['shippingAddress'].reset();
-    } else {
-      this.isChecked = true;
-      if (!shippingAddressContainer?.classList.contains('disabled')) {
-        shippingAddressContainer?.classList.add('disabled');
-      }
-      this.isCheckboxDisabled = false;
-    }
-
-    this.checkoutFormGroup.controls['shippingAddress']
-      .get('country')
-      ?.setValue(this.countries[0]);
+    this.copyBillingAddressToShipping(isChecked);
+    this.toggleShippingAddressContainer(isChecked);
+    this.setShippingAddressCountry();
   }
 
-  setupStripePaymentForm() {
-    var elements = this.stripe.elements();
+  onCountryChange(country: string): void {
+    const isCountryValid = country !== '0: Object';
+    this.updateCheckboxAndShippingAddress(isCountryValid);
+    this.updateShippingAddressContainer(isCountryValid);
+    this.setShippingAddressCountry();
+  }
+
+  getField(controlName: string) {
+    return this.checkoutFormGroup.get(controlName);
+  }
+
+  isFieldInvalid(controlName: string): boolean | undefined {
+    const control = this.checkoutFormGroup.get(controlName);
+    return control?.invalid && (control?.dirty || control?.touched);
+  }
+
+  hasError(controlName: string, errorCode: string): boolean {
+    const control = this.checkoutFormGroup.get(controlName);
+    return control?.hasError(errorCode) ?? false;
+  }
+
+  private async setupStripePaymentForm(): Promise<void> {
+    const elements = this.stripe.elements();
     this.cardElement = elements.create('card', { hidePostalCode: true });
 
     this.cardElement.mount('#card-element');
@@ -288,7 +137,7 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
     });
   }
 
-  reviewCartDetails() {
+  private async loadCartDetails(): Promise<void> {
     this.cartService.totalQuantity.subscribe(
       (data) => (this.totalQuantity = data)
     );
@@ -296,127 +145,66 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
     this.cartService.totalPrice.subscribe((data) => (this.totalPrice = data));
   }
 
-  onSubmit() {
-    if (this.checkoutFormGroup.invalid) {
-      this.checkoutFormGroup.markAllAsTouched();
-      this.scrollToFirstAlert();
-      return;
-    }
-
-    this.purchaseLoading = true;
-
-    const shippingAddressContainer = document.querySelector(
-      '.shippingAddressContainer'
+  private async initFormAndUser(): Promise<void> {
+    this.checkoutFormGroup = this.checkoutFormService.createCheckoutForm(
+      this.user
     );
 
-    if (shippingAddressContainer?.classList.contains('disabled')) {
-      this.checkoutFormGroup.controls['shippingAddress'].setValue(
-        this.checkoutFormGroup.controls['billingAddress'].value
-      );
-    }
+    this.tokenService.getUserByJwtToken()?.subscribe((data) => {
+      this.user = data;
+      this.checkoutFormGroup.patchValue({
+        customer: {
+          firstname: this.user.firstname,
+          lastname: this.user.lastname,
+          email: this.user.email,
+        },
+      });
+    });
+  }
 
-    let order = new Order();
-    order.totalPrice = this.totalPrice;
-    order.totalQuantity = this.totalQuantity;
+  private async setupBillingAddressSubscription(): Promise<void> {
+    this.checkoutFormGroup
+      .get('billingAddress')!
+      .valueChanges.subscribe((value) => {
+        if (this.isChecked) {
+          this.patchShippingAddress(value);
+        }
+      });
+  }
 
-    const cartItems = this.cartService.cartItems;
+  private patchShippingAddress(value: any): void {
+    this.checkoutFormGroup.get('shippingAddress')!.patchValue(value);
+  }
 
-    let orderItems: OrderItem[] = cartItems.map(
-      (cartItem) => new OrderItem(cartItem)
-    );
+  private async loadCountries(): Promise<void> {
+    this.isLoading = true;
 
-    let purchase = new Purchase();
+    this.countryService.getCountries().subscribe({
+      next: (data) => {
+        this.countries = data;
+        this.isLoading = false;
 
-    purchase.customer = this.checkoutFormGroup.controls['customer'].value;
+        if (this.countries.length > 0) {
+          this.setDefaultCountries();
+        }
 
-    purchase.shippingAddress = {
-      ...this.checkoutFormGroup.controls['shippingAddress'].value,
-    };
-    const shippingCountry: Country = JSON.parse(
-      JSON.stringify(purchase.shippingAddress?.country)
-    );
-    purchase.shippingAddress!.country = shippingCountry.name;
+        this.copyBillingToShipping({ target: { checked: this.isChecked } });
+      },
+      error: () => {
+        this.isLoading = false;
+      },
+    });
+  }
 
-    purchase.billingAddress = {
-      ...this.checkoutFormGroup.controls['billingAddress'].value,
-    };
-    const billingCountry: Country = JSON.parse(
-      JSON.stringify(purchase.billingAddress?.country)
-    );
-    purchase.billingAddress!.country = billingCountry.name;
+  private setDefaultCountries(): void {
+    const defaultCountry = this.countries[0];
 
-    purchase.order = order;
-    purchase.orderItems = orderItems;
-
-    this.paymentInfo.amount = Math.round(this.totalPrice * 100);
-    this.paymentInfo.currency = 'PLN';
-    this.paymentInfo.receiptEmail = purchase.customer?.email;
-
-    if (!this.checkoutFormGroup.invalid && this.displayError === '') {
-      this.isDisabled = true;
-
-      this.checkoutService
-        .createPaymentIntent(this.paymentInfo)
-        .subscribe((paymentIntentResponse) => {
-          this.stripe
-            .confirmCardPayment(
-              paymentIntentResponse.client_secret,
-              {
-                payment_method: {
-                  card: this.cardElement,
-                  billing_details: {
-                    email: purchase.customer?.email,
-                    name: `${purchase.customer?.firstName} ${purchase.customer?.lastName}`,
-                    address: {
-                      line1: purchase.billingAddress?.street,
-                      city: purchase.billingAddress?.city,
-                      postal_code: purchase.billingAddress?.zipCode,
-                      country: this.billingAddressCountry?.value.code,
-                    },
-                  },
-                },
-              },
-              {
-                handleActions: false,
-              }
-            )
-            .then((result: any) => {
-              if (result.error) {
-                this.isDisabled = false;
-                this.purchaseLoading = false;
-              } else {
-                this.checkoutService.placeOrder(purchase).subscribe({
-                  next: (response: any) => {
-                    sessionStorage.setItem(
-                      'orderDetails',
-                      JSON.stringify(response)
-                    );
-                    sessionStorage.setItem(
-                      'purchase',
-                      JSON.stringify(purchase)
-                    );
-
-                    this.router.navigate(['/successful-purchase']);
-
-                    this.resetCart();
-
-                    this.isDisabled = false;
-                    this.purchaseLoading = false;
-                  },
-                  error: () => {
-                    this.isDisabled = false;
-                    this.purchaseLoading = false;
-                  },
-                });
-              }
-            });
-        });
-    } else {
-      this.checkoutFormGroup.markAllAsTouched();
-      this.scrollToFirstAlert();
-      this.purchaseLoading = false;
-      return;
-    }
+    this.checkoutFormGroup
+      .get('billingAddress.country')
+      ?.setValue(defaultCountry);
+    this.checkoutFormGroup
+      .get('shippingAddress.country')
+      ?.setValue(defaultCountry);
   }
 
   private scrollToFirstAlert() {
@@ -429,12 +217,201 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
     }
   }
 
+  private isFormInvalid(): boolean {
+    return this.checkoutFormGroup.invalid || this.displayError !== '';
+  }
+
+  private handleInvalidForm(): void {
+    this.checkoutFormGroup.markAllAsTouched();
+    this.scrollToFirstAlert();
+    this.purchaseLoading = false;
+  }
+
+  private setShippingAddressIfDisabled(): void {
+    const shippingAddressContainer = document.querySelector(
+      '.shippingAddressContainer'
+    );
+
+    if (shippingAddressContainer?.classList.contains('disabled')) {
+      this.checkoutFormGroup.controls['shippingAddress'].setValue(
+        this.checkoutFormGroup.controls['billingAddress'].value
+      );
+    }
+  }
+
+  private createPurchaseDetails(): Purchase {
+    const order = this.createOrder();
+    const cartItems = this.cartService.cartItems;
+
+    const orderItems: OrderItem[] = cartItems.map(
+      (cartItem) => new OrderItem(cartItem)
+    );
+
+    const purchase = new Purchase();
+    purchase.customer = this.checkoutFormGroup.controls['customer'].value;
+
+    purchase.shippingAddress =
+      this.getAddressWithCountryName('shippingAddress');
+    purchase.billingAddress = this.getAddressWithCountryName('billingAddress');
+
+    purchase.order = order;
+    purchase.orderItems = orderItems;
+
+    return purchase;
+  }
+
+  private createOrder(): Order {
+    const order = new Order();
+    order.totalPrice = this.totalPrice;
+    order.totalQuantity = this.totalQuantity;
+    return order;
+  }
+
+  private getAddressWithCountryName(
+    addressType: 'shippingAddress' | 'billingAddress'
+  ): any {
+    const address = this.checkoutFormGroup.controls[addressType].value;
+    const country: Country = address?.country;
+    if (country) {
+      address.country = country.name;
+    }
+    return { ...address };
+  }
+
+  private setPaymentInfo(purchase: Purchase): void {
+    this.paymentInfo.amount = Math.round(this.totalPrice * 100);
+    this.paymentInfo.currency = 'PLN';
+    this.paymentInfo.receiptEmail = purchase.customer?.email;
+  }
+
+  private processPayment(purchase: any): void {
+    this.isDisabled = true;
+
+    this.paymentService.createPaymentIntent(this.paymentInfo).subscribe({
+      next: (paymentIntentResponse) =>
+        this.handlePaymentIntentResponse(paymentIntentResponse, purchase),
+      error: () => this.handlePaymentError(),
+    });
+  }
+
+  private handlePaymentIntentResponse(
+    paymentIntentResponse: any,
+    purchase: any
+  ): void {
+    this.stripe
+      .confirmCardPayment(
+        paymentIntentResponse.client_secret,
+        {
+          payment_method: this.createPaymentMethod(purchase),
+        },
+        { handleActions: false }
+      )
+      .then((result: any) => {
+        if (result.error) {
+          this.handlePaymentError();
+        } else {
+          this.placeOrder(purchase);
+        }
+      });
+  }
+
+  private createPaymentMethod(purchase: any): any {
+    return {
+      card: this.cardElement,
+      billing_details: {
+        email: purchase.customer?.email,
+        name: `${purchase.customer?.firstname} ${purchase.customer?.lastname}`,
+        address: {
+          line1: purchase.billingAddress?.street,
+          city: purchase.billingAddress?.city,
+          postal_code: purchase.billingAddress?.zipCode,
+          country: this.checkoutFormGroup.get('billingAddress.country')?.value
+            .code,
+        },
+      },
+    };
+  }
+
+  private handlePaymentError(): void {
+    this.isDisabled = false;
+    this.purchaseLoading = false;
+  }
+
+  private placeOrder(purchase: any): void {
+    this.checkoutService.placeOrder(purchase).subscribe({
+      next: (response: any) => {
+        this.savePurchaseResponse(response, purchase);
+        this.router.navigate(['/successful-purchase']);
+        this.resetCart();
+        this.finalizePurchase();
+      },
+      error: () => this.finalizePurchase(),
+    });
+  }
+
+  private savePurchaseResponse(response: any, purchase: any): void {
+    sessionStorage.setItem('purchaseResponse', JSON.stringify(response));
+    sessionStorage.setItem('purchase', JSON.stringify(purchase));
+  }
+
   private resetCart() {
-    this.cartService.cartItems = [];
-    this.cartService.totalPrice.next(0);
-    this.cartService.totalQuantity.next(0);
-    this.cartService.persistCartItems();
+    this.cartService.resetCart();
+    this.cartStorageService.saveCartItems(this.cartService.cartItems);
 
     this.checkoutFormGroup.reset();
+  }
+
+  private finalizePurchase(): void {
+    this.isDisabled = false;
+    this.purchaseLoading = false;
+  }
+
+  private copyBillingAddressToShipping(isChecked: boolean): void {
+    if (isChecked) {
+      this.checkoutFormGroup.controls['shippingAddress'].setValue(
+        this.checkoutFormGroup.controls['billingAddress'].value
+      );
+    } else {
+      this.checkoutFormGroup.controls['shippingAddress'].reset();
+    }
+  }
+
+  private toggleShippingAddressContainer(isChecked: boolean): void {
+    const shippingAddressContainer = document.querySelector(
+      '.shippingAddressContainer'
+    );
+
+    if (shippingAddressContainer) {
+      if (isChecked) {
+        shippingAddressContainer.classList.add('disabled');
+      } else {
+        shippingAddressContainer.classList.remove('disabled');
+      }
+    }
+  }
+
+  private setShippingAddressCountry(): void {
+    this.checkoutFormGroup.controls['shippingAddress']
+      .get('country')
+      ?.setValue(this.countries[0]);
+  }
+
+  private updateCheckboxAndShippingAddress(isCountryValid: boolean): void {
+    this.isChecked = !isCountryValid;
+    this.isCheckboxDisabled = isCountryValid;
+
+    if (isCountryValid) {
+      this.checkoutFormGroup.controls['shippingAddress'].reset();
+    }
+  }
+
+  private updateShippingAddressContainer(isCountryValid: boolean): void {
+    const shippingAddressContainer = document.querySelector(
+      '.shippingAddressContainer'
+    );
+
+    if (shippingAddressContainer) {
+      shippingAddressContainer.classList.toggle('disabled', !isCountryValid);
+    }
   }
 }

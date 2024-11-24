@@ -1,6 +1,6 @@
-<app-loader [isLoading]="isLoading"></app-loader>
+<app-loader [isLoading]="isPageLoading"></app-loader>
 
-<div class="container" [class.visible]="!isLoading">
+<div class="container" [class.visible]="!isPageLoading">
     <section class="main-home">
         <div class="main-text">
             <h5>Summer Collection</h5>
@@ -15,9 +15,9 @@
         </div>
     </section>
 
-    <app-loader [isLoading]="isLoadingProducts"></app-loader>
+    <app-loader [isLoading]="isProductsLoading"></app-loader>
 
-    <section class="trending-product" *ngIf="!isLoadingProducts" #trendingSection>
+    <section class="trending-product" *ngIf="!isProductsLoading" #trendingSection>
         <div class="center-text">
             <h2>Our Trending <span>Products</span></h2>
         </div>
@@ -28,7 +28,7 @@
                     <img src='{{product.imageUrl}}' alt="Product Name">
                 </a>
 
-                <div class="product-new" *ngIf="isNewProduct(product.dateCreated)">
+                <div class="product-new" *ngIf="isProductNew(product.dateCreated)">
                     <h5>New</h5>
                 </div>
 

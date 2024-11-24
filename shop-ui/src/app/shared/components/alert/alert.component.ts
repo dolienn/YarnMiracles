@@ -6,29 +6,31 @@ import { Component, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
   styleUrl: './alert.component.scss',
 })
 export class AlertComponent implements OnInit {
-  @Input()
-  msg: string = '';
-
-  @Input()
-  backgroundColor: string = '';
-
-  @Input()
-  color: string = '';
-
-  @Input()
-  borderColor: string = '';
+  @Input() msg: string = '';
+  @Input() backgroundColor: string = '';
+  @Input() color: string = '';
+  @Input() borderColor: string = '';
 
   constructor(private renderer: Renderer2, private el: ElementRef) {}
 
   ngOnInit(): void {
-    this.setBackgroundColor();
-    this.setColor();
-    this.setBorderColor();
+    this.applyStyles();
   }
 
-  setBackgroundColor() {
+  private applyStyles() {
     const alertElement = this.el.nativeElement.querySelector('.alert');
-    if (alertElement && this.backgroundColor !== '') {
+    const msgElement = this.el.nativeElement.querySelector('.msg');
+
+    if (alertElement) {
+      this.setBackgroundColor(alertElement);
+      this.setBorderColor(alertElement);
+    }
+
+    this.setColor(msgElement);
+  }
+
+  private setBackgroundColor(alertElement: any) {
+    if (this.backgroundColor !== '') {
       this.renderer.setStyle(
         alertElement,
         'background-color',
@@ -37,21 +39,19 @@ export class AlertComponent implements OnInit {
     }
   }
 
-  setColor() {
-    const msgElement = this.el.nativeElement.querySelector('.msg');
-    if (msgElement && this.color !== '') {
-      this.renderer.setStyle(msgElement, 'color', this.color);
-    }
-  }
-
-  setBorderColor() {
-    const alertElement = this.el.nativeElement.querySelector('.alert');
-    if (alertElement && this.borderColor !== '') {
+  private setBorderColor(alertElement: any) {
+    if (this.borderColor !== '') {
       this.renderer.setStyle(
         alertElement,
         'border-left-color',
         this.borderColor
       );
+    }
+  }
+
+  private setColor(msgElement: any) {
+    if (this.color !== '') {
+      this.renderer.setStyle(msgElement, 'color', this.color);
     }
   }
 }

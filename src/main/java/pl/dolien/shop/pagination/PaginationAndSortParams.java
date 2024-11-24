@@ -10,5 +10,5 @@ import lombok.Setter;
 public class PaginationAndSortParams {
     private Integer page;
     private Integer size;
-    private String sortOrderType;
+    private String sortBy;
 }

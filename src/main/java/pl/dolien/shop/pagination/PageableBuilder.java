@@ -14,7 +14,7 @@ public class PageableBuilder {
     private final SortGenerator sortGenerator;
 
     public Pageable buildPageable(PaginationAndSortParams paginationAndSortParams) {
-        Sort sort = sortGenerator.generateSort(paginationAndSortParams.getSortOrderType());
+        Sort sort = sortGenerator.generateSort(paginationAndSortParams.getSortBy());
 
         int validatedPage = validatePage(paginationAndSortParams.getPage());
         int validatedSize = validateSize(paginationAndSortParams.getSize());

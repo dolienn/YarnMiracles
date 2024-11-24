@@ -16,7 +16,7 @@ public class ActivationService {
 
     private final TokenService tokenService;
     private final UserService userService;
-    private final SummaryMetricsService dashboardService;
+    private final SummaryMetricsService summaryMetricsService;
 
     public void activateUser(String token) {
         Token savedToken = tokenService.getValidatedToken(token);
@@ -25,7 +25,7 @@ public class ActivationService {
     }
 
     private void enableUser(User user) {
-        dashboardService.incrementUserCount();
+        summaryMetricsService.incrementUserCount();
 
         user.setEnabled(true);
         userService.saveUser(user);
@@ -33,6 +33,7 @@ public class ActivationService {
 
     private void markTokenAsValidated(Token token) {
         token.setValidatedAt(LocalDateTime.now());
+        token.setUsed(true);
         tokenService.saveToken(token);
     }
 }

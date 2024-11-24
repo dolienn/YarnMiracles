@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import pl.dolien.shop.exception.ExpiredTokenException;
 import pl.dolien.shop.exception.InvalidTokenException;
+import pl.dolien.shop.exception.TokenAlreadyUsedException;
 import pl.dolien.shop.user.User;
 
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ import static org.mockito.Mockito.*;
 class TokenServiceTest {
 
     private static final String TOKEN_EXPIRED_MESSAGE = "Activation token has expired";
+    private static final String TOKEN_USED_MESSAGE = "Activation token has already been used";
     private static final String TOKEN_INVALID_MESSAGE = "Invalid token";
 
     @InjectMocks
@@ -29,6 +31,7 @@ class TokenServiceTest {
     private User testUser;
     private Token testToken;
     private Token testExpiredToken;
+    private Token testUsedToken;
 
     private static final int DEFAULT_CODE_LENGTH = 6;
 
@@ -80,6 +83,16 @@ class TokenServiceTest {
     }
 
     @Test
+    void shouldThrowExceptionWhenTokenIsAlreadyUsed() {
+        when(tokenRepository.findByToken(testUsedToken.getToken())).thenReturn(Optional.of(testUsedToken));
+
+        TokenAlreadyUsedException exception = assertThrows(TokenAlreadyUsedException.class,
+                () -> tokenService.getValidatedToken(testUsedToken.getToken()));
+
+        assertEquals(TOKEN_USED_MESSAGE, exception.getMessage());
+    }
+
+    @Test
     void shouldThrowExceptionWhenTokenIsInvalid() {
         when(tokenRepository.findByToken(testToken.getToken())).thenReturn(Optional.empty());
 
@@ -107,6 +120,14 @@ class TokenServiceTest {
                 .token("testExpiredToken123")
                 .user(testUser)
                 .expiresAt(LocalDateTime.now().minusMinutes(25))
+                .build();
+
+        testUsedToken = Token.builder()
+                .id(3)
+                .token("testUsedToken123")
+                .user(testUser)
+                .expiresAt(LocalDateTime.now().plusMinutes(25))
+                .used(true)
                 .build();
     }
 

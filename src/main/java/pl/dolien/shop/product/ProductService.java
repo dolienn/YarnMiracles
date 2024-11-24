@@ -3,6 +3,7 @@ package pl.dolien.shop.product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -44,34 +45,34 @@ public class ProductService {
     }
 
     @Cacheable(cacheNames = "products", keyGenerator = "customKeyGenerator")
-    public List<ProductDTO> getAllProducts(PaginationAndSortParams paginationAndSortParams) {
+    public Page<ProductDTO> getAllProducts(PaginationAndSortParams paginationAndSortParams) {
         Pageable pageable = pageableBuilder.buildPageable(paginationAndSortParams);
 
         return toProductDTOs(productRepository.findAllProducts(pageable));
     }
 
     @Cacheable(cacheNames = "productsByCategory", keyGenerator = "customKeyGenerator")
-    public List<ProductDTO> getProductsByCategoryId(Integer categoryId, PaginationAndSortParams paginationAndSortParams) {
+    public Page<ProductDTO> getProductsByCategoryId(Integer categoryId, PaginationAndSortParams paginationAndSortParams) {
         Pageable pageable = pageableBuilder.buildPageable(paginationAndSortParams);
 
         return toProductDTOs(productRepository.findByCategoryId(categoryId, pageable));
     }
 
     @Cacheable(cacheNames = "productsByName", keyGenerator = "customKeyGenerator")
-    public List<ProductDTO> getProductsByNameContaining(String name, PaginationAndSortParams paginationAndSortParams) {
+    public Page<ProductDTO> getProductsByKeyword(String keyword, PaginationAndSortParams paginationAndSortParams) {
         Pageable pageable = pageableBuilder.buildPageable(paginationAndSortParams);
 
-        return toProductDTOs(productRepository.findByNameContaining(name, pageable));
+        return toProductDTOs(productRepository.findByNameContaining(keyword, pageable));
     }
 
     @Cacheable(cacheNames = "productsWithFeedbacks", keyGenerator = "customKeyGenerator")
-    public List<ProductWithFeedbackDTO> getAllProductsWithFeedbacks(PaginationAndSortParams paginationAndSortParams) {
-        List<ProductDTO> productDTOs = getAllProducts(paginationAndSortParams);
+    public Page<ProductWithFeedbackDTO> getAllProductsWithFeedbacks(PaginationAndSortParams paginationAndSortParams) {
+        Page<ProductDTO> productDTOs = getAllProducts(paginationAndSortParams);
 
-        List<Long> ids = productDTOs.stream()
+        List<Long> productIds = productDTOs.stream()
                 .map(ProductDTO::getId)
                 .toList();
-        List<Feedback> feedbacks = feedbackRepository.findAllByProductIdIn(ids);
+        List<Feedback> feedbacks = feedbackRepository.findAllByProductIdIn(productIds);
 
         return toProductWithFeedbackDTOs(productDTOs, feedbacks);
     }

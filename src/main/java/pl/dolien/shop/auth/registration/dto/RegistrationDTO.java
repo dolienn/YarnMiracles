@@ -1,16 +1,20 @@
 package pl.dolien.shop.auth.registration.dto;
 
 import jakarta.validation.constraints.*;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 
 
 @Getter
 @Setter
-@Builder
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RegistrationDTO {
 
     @NotEmpty(message = "Firstname field cannot be empty")

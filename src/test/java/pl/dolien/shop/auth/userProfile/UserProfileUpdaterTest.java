@@ -8,9 +8,10 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.Authentication;
 import pl.dolien.shop.auth.password.PasswordChanger;
 import pl.dolien.shop.auth.registration.dto.RegistrationDTO;
+import pl.dolien.shop.auth.userProfile.dto.UserProfileDTO;
 import pl.dolien.shop.user.User;
 import pl.dolien.shop.user.UserService;
-import pl.dolien.shop.user.dto.UserDTO;
+import pl.dolien.shop.user.dto.UserWithRoleDTO;
 
 import static java.time.LocalDate.parse;
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,9 +33,9 @@ class UserProfileUpdaterTest {
     @Mock
     private Authentication authentication;
 
-    private UserDTO testUserDTO;
+    private UserWithRoleDTO testUserDTO;
     private User testUser;
-    private RegistrationDTO testRegistrationDTO;
+    private UserProfileDTO testUserProfileDTO;
 
     @BeforeEach
     void setUp() {
@@ -47,14 +48,14 @@ class UserProfileUpdaterTest {
     void shouldUpdateUserProfile() {
         mockDependenciesForUpdateProfile();
 
-        User response = userProfileUpdater.updateUserProfile(testRegistrationDTO, authentication);
+        User response = userProfileUpdater.updateUserProfile(testUserProfileDTO, authentication);
 
         assertUpdatedUserProfile(response);
         verifyInteractionsForUpdateProfile();
     }
 
     private void initializeTestData() {
-        testUserDTO = UserDTO.builder()
+        testUserDTO = UserWithRoleDTO.builder()
                 .id(1)
                 .build();
 
@@ -67,7 +68,7 @@ class UserProfileUpdaterTest {
                 .dateOfBirth(parse("2020-01-01"))
                 .build();
 
-        testRegistrationDTO = RegistrationDTO.builder()
+        testUserProfileDTO = UserProfileDTO.builder()
                 .email(USER_NEW_EMAIL)
                 .firstname("NewJohn")
                 .lastname("NewDoe")
@@ -77,7 +78,7 @@ class UserProfileUpdaterTest {
     }
 
     private void mockDependenciesForUpdateProfile() {
-        when(userService.getUserDTOByAuth(authentication)).thenReturn(testUserDTO);
+        when(userService.getUserByAuth(authentication)).thenReturn(testUserDTO);
         when(userService.getUserById(testUserDTO.getId())).thenReturn(testUser);
         when(userService.saveUser(testUser)).thenReturn(testUser);
     }
@@ -91,7 +92,7 @@ class UserProfileUpdaterTest {
     }
 
     private void verifyInteractionsForUpdateProfile() {
-        verify(userService, times(1)).getUserDTOByAuth(authentication);
+        verify(userService, times(1)).getUserByAuth(authentication);
         verify(userService, times(1)).getUserById(testUserDTO.getId());
         verify(userService, times(1)).saveUser(testUser);
     }

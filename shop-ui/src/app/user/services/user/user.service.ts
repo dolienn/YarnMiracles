@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, map } from 'rxjs';
-import { Product } from '../../../product/models/product/product';
+import { Observable } from 'rxjs';
 import { User } from '../../models/user/user';
 import { environment } from '../../../../environments/environment.development';
+import { UserRequestDTO } from '../../models/user-request-dto/user-request-dto';
+import { UserResponse } from '../../models/user-reponse/user-response';
 
 @Injectable({
   providedIn: 'root',
@@ -13,81 +14,46 @@ export class UserService {
 
   constructor(private httpClient: HttpClient) {}
 
-  addFavouriteProduct(userId: number, productId: number): Observable<void> {
-    const favouritesUrl = `${this.userUrl}/${userId}/favourites/${productId}`;
-
-    return this.httpClient.post<void>(favouritesUrl, {});
+  editUser(user: UserRequestDTO): Observable<User> {
+    return this.httpClient.put<User>(`${this.userUrl}`, user);
   }
 
-  removeFavouriteProduct(userId: number, productId: number): Observable<void> {
-    const favouritesUrl = `${this.userUrl}/${userId}/favourites/${productId}`;
-
-    return this.httpClient.delete<void>(favouritesUrl);
+  getUsers(page: number, pageSize: number): Observable<UserResponse> {
+    return this.httpClient.get<UserResponse>(
+      `${this.userUrl}?page=${page}&size=${pageSize}`
+    );
   }
 
-  getFavouriteProducts(userId: number): Observable<Product[]> {
-    const favouritesUrl = `${this.userUrl}/${userId}/favourites`;
-
-    return this.httpClient
-      .get<GetResponseProducts>(favouritesUrl)
-      .pipe(map((response) => response._embedded.products));
+  getQuantityOfPurchasedProducts(id: number): Observable<any> {
+    return this.httpClient.get<any>(
+      `${this.userUrl}/${id}/quantityOfPurchasedProducts`
+    );
   }
 
-  getFavouriteProductsPaginate(
-    page: number,
-    pageSize: number,
-    userId: number
-  ): Observable<GetResponseProducts> {
-    const favouritesUrl = `${this.userUrl}/search/findFavouritesByUserId?userId=${userId}&page=${page}&size=${pageSize}`;
-
-    return this.httpClient.get<GetResponseProducts>(favouritesUrl);
-  }
-
-  getFavouriteProductsPaginateOrderByUnitPriceAsc(
-    page: number,
-    pageSize: number,
-    userId: number
-  ): Observable<GetResponseProducts> {
-    const favouritesUrl = `${this.userUrl}/search/findFavouritesByUserIdOrderAsc?userId=${userId}&page=${page}&size=${pageSize}`;
-
-    return this.httpClient.get<GetResponseProducts>(favouritesUrl);
-  }
-
-  getFavouriteProductsPaginateOrderByUnitPriceDesc(
-    page: number,
-    pageSize: number,
-    userId: number
-  ): Observable<GetResponseProducts> {
-    const favouritesUrl = `${this.userUrl}/search/findFavouritesByUserIdOrderDesc?userId=${userId}&page=${page}&size=${pageSize}`;
-
-    return this.httpClient.get<GetResponseProducts>(favouritesUrl);
-  }
-
-  getFavouriteProductsPaginateOrderByRateDesc(
-    page: number,
-    pageSize: number,
-    userId: number
-  ): Observable<GetResponseProducts> {
-    const favouritesUrl = `${this.userUrl}/search/findFavouritesByUserIdOrderByRateDesc?userId=${userId}&page=${page}&size=${pageSize}`;
-
-    return this.httpClient.get<GetResponseProducts>(favouritesUrl);
-  }
-
-  getById(id: number): Observable<User> {
+  getUserById(id: number): Observable<User> {
     const findUserUrl = `${this.userUrl}/${id}`;
 
     return this.httpClient.get<User>(findUserUrl);
   }
-}
 
-interface GetResponseProducts {
-  _embedded: {
-    products: Product[];
-  };
-  page: {
-    size: number;
-    totalElements: number;
-    totalPages: number;
-    number: number;
-  };
+  addRoleToUser(email: string, roleName: string): Observable<UserRequestDTO> {
+    const url = `${this.userUrl}/${email}/roles/${roleName}`;
+
+    return this.httpClient.get<UserRequestDTO>(url);
+  }
+
+  removeRoleFromUser(email: string, roleName: string): Observable<void> {
+    const url = `${this.userUrl}/${email}/roles/${roleName}`;
+
+    return this.httpClient.delete<void>(url);
+  }
+
+  hasUserPurchasedProduct(
+    userId: number,
+    productId: number
+  ): Observable<boolean> {
+    const url = `${this.userUrl}/${userId}/purchased/${productId}`;
+
+    return this.httpClient.get<boolean>(url);
+  }
 }

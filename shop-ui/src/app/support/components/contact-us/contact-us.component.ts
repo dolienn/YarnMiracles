@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ContactRequest } from '../../models/contact-request/contact-request';
 import { ContactService } from '../../services/contact/contact.service';
 import { TokenService } from '../../../token/services/token/token.service';
 import { NotificationService } from '../../../notification/services/notification/notification.service';
 import { User } from '../../../user/models/user/user';
+import { SupportMessageDTO } from '../../models/support-message-dto/support-message-dto';
 
 @Component({
   selector: 'app-contact-us',
@@ -12,11 +12,11 @@ import { User } from '../../../user/models/user/user';
   styleUrl: './contact-us.component.scss',
 })
 export class ContactUsComponent implements OnInit {
-  contactRequest: ContactRequest = {
-    email: '',
-    subject: '',
-    message: '',
-  };
+  supportMessage: SupportMessageDTO = this.initializeSupportMessage();
+  errorMsg: string[] = [];
+  isLoading: boolean = false;
+  sendLoading: boolean = false;
+  user: User = new User();
 
   constructor(
     private contactService: ContactService,
@@ -24,42 +24,57 @@ export class ContactUsComponent implements OnInit {
     private notificationService: NotificationService
   ) {}
 
-  errorMsg: Array<string> = [];
-
-  isLoading: boolean = false;
-
-  sendLoading: boolean = false;
-
-  user: User = new User();
-
   ngOnInit(): void {
-    this.tokenService.getUserInfo()?.subscribe((data) => {
+    this.loadUserData();
+  }
+
+  sendMessage(): void {
+    this.sendLoading = true;
+    this.resetErrorMessages();
+
+    this.contactService.sendMessage(this.supportMessage).subscribe({
+      next: () => this.handleMessageSuccess(),
+      error: (err) => this.handleMessageError(err),
+    });
+  }
+
+  private initializeSupportMessage(): SupportMessageDTO {
+    return {
+      from: '',
+      subject: '',
+      text: '',
+    };
+  }
+
+  private loadUserData(): void {
+    this.tokenService.getUserByJwtToken()?.subscribe((data) => {
       this.user = data;
-      this.contactRequest.email = this.user.email;
+      this.supportMessage.from = this.user?.email || '';
       this.isLoading = false;
     });
   }
 
-  sendMessage() {
-    console.log(this.contactRequest);
-    this.sendLoading = true;
+  private resetErrorMessages(): void {
     this.errorMsg = [];
-    this.contactService.sendMessage(this.contactRequest).subscribe({
-      next: () => {
-        this.notificationService.showMessage('Pomyślnie przesłano wiadomość');
-        if (this.user === null) {
-          this.contactRequest.email = '';
-        } else {
-          this.contactRequest.email = this.user.email;
-        }
-        this.contactRequest.subject = '';
-        this.contactRequest.message = '';
-        this.sendLoading = false;
-      },
-      error: (err) => {
-        this.errorMsg = err.error.validationErrors;
-        this.sendLoading = false;
-      },
-    });
+  }
+
+  private handleMessageSuccess(): void {
+    this.resetContactRequest();
+    this.sendLoading = false;
+    this.notificationService.showMessage('Successfully sent the message', true);
+  }
+
+  private resetContactRequest(): void {
+    this.supportMessage = {
+      from: this.user?.email || '',
+      subject: '',
+      text: '',
+    };
+  }
+
+  private handleMessageError(err: any): void {
+    this.errorMsg = err.error.validationErrors || [err.error];
+    this.sendLoading = false;
+    this.notificationService.showMessage('Failed to send the message', false);
   }
 }

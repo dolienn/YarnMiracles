@@ -3,7 +3,7 @@
 <div class="container">
 
     <h1 class="thanks">Thank you for your purchase!</h1>
-    <p class="order-tracking-number">Order tracking number: {{ orderDetails.orderTrackingNumber }}</p>
+    <p class="order-tracking-number">Order tracking number: {{ purchaseResponse.orderTrackingNumber }}</p>
 
     <div class="order-title">
         <h3>Your Order</h3>
@@ -51,7 +51,7 @@
 
             <tr>
                 <td>Total</td>
-                <td>{{purchase.order?.totalPrice + shipping | currency: 'PLN'}}</td>
+                <td>{{purchase.order!.totalPrice + shipping | currency: 'PLN'}}</td>
             </tr>
         </table>
     </div>
@@ -59,26 +59,26 @@
     <div class="address-group">
         <h3>Customer</h3>
         <div class="row">
-            <p>{{ purchase.customer.firstname }} {{ purchase.customer.lastname }}</p>
+            <p>{{ purchase.customer!.firstname }} {{ purchase.customer!.lastname }}</p>
         </div>
         <div class="row">
-            <p>{{ purchase.customer.email }}</p>
+            <p>{{ purchase.customer!.email }}</p>
         </div>
 
         <h3>Shipping Address</h3>
         <div class="row">
-            <p>{{ purchase.shippingAddress.street }}, {{ purchase.shippingAddress.city }}</p>
+            <p>{{ purchase.shippingAddress!.street }}, {{ purchase.shippingAddress!.city }}</p>
         </div>
         <div class="row">
-            <p>{{ purchase.shippingAddress.zipCode }}, {{ purchase.shippingAddress.country }}</p>
+            <p>{{ purchase.shippingAddress!.zipCode }}, {{ purchase.shippingAddress!.country }}</p>
         </div>
 
         <h3>Billing Address</h3>
         <div class="row">
-            <p>{{ purchase.billingAddress.street }}, {{ purchase.billingAddress.city }}</p>
+            <p>{{ purchase.billingAddress!.street }}, {{ purchase.billingAddress!.city }}</p>
         </div>
         <div class="row">
-            <p>{{ purchase.billingAddress.zipCode }}, {{ purchase.billingAddress.country }}</p>
+            <p>{{ purchase.billingAddress!.zipCode }}, {{ purchase.billingAddress!.country }}</p>
         </div>
     </div>
 </div>

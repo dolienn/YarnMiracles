@@ -12,13 +12,14 @@
                     <label for="firstname">First Name</label>
                 </div>
 
-                <div *ngIf="firstname?.invalid && (firstname?.dirty || firstname?.touched)" #alert>
+                <div *ngIf="isFieldInvalid('customer.firstname')" #alert>
                     <app-alert msg="First name is required"
-                        *ngIf="firstname?.errors!['required'] || firstname?.errors!['notOnlyWhitespace']"
+                        *ngIf="hasError('customer.firstname', 'required') || hasError('customer.firstname', 'notOnlyWhitespace')"
                         backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
 
-                    <app-alert msg="First name must be at least 2 characters" *ngIf="firstname?.errors!['minlength']"
-                        backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
+                    <app-alert msg="First name must be at least 2 characters"
+                        *ngIf="hasError('customer.firstname', 'minlength')" backgroundColor="#ff6961"
+                        borderColor="#d60b00"></app-alert>
                 </div>
             </div>
 
@@ -28,13 +29,14 @@
                     <label for="lastname">Last Name</label>
                 </div>
 
-                <div *ngIf="lastname?.invalid && (lastname?.dirty || lastname?.touched)" #alert>
+                <div *ngIf="isFieldInvalid('customer.lastname')" #alert>
                     <app-alert msg="Last name is required"
-                        *ngIf="lastname?.errors!['required'] || lastname?.errors!['notOnlyWhitespace']"
+                        *ngIf="hasError('customer.lastname', 'required') || hasError('customer.lastname', 'notOnlyWhitespace')"
                         backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
 
-                    <app-alert msg="Last name must be at least 2 characters" *ngIf="lastname?.errors!['minlength']"
-                        backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
+                    <app-alert msg="Last name must be at least 2 characters"
+                        *ngIf="hasError('customer.lastname', 'minlength')" backgroundColor="#ff6961"
+                        borderColor="#d60b00"></app-alert>
                 </div>
             </div>
 
@@ -44,12 +46,13 @@
                     <label for="email">Email</label>
                 </div>
 
-                <div *ngIf="email?.invalid && (email?.dirty || email?.touched)" #alert>
-                    <app-alert msg="Email is required" *ngIf="email?.errors!['required']" backgroundColor="#ff6961"
-                        borderColor="#d60b00"></app-alert>
-
-                    <app-alert msg="Email must be a valid email address format" *ngIf="email?.errors!['pattern']"
+                <div *ngIf="isFieldInvalid('customer.email')" #alert>
+                    <app-alert msg="Email is required" *ngIf="hasError('customer.email', 'required')"
                         backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
+
+                    <app-alert msg="Email must be a valid email address format"
+                        *ngIf="hasError('customer.email', 'pattern')" backgroundColor="#ff6961"
+                        borderColor="#d60b00"></app-alert>
                 </div>
             </div>
         </div>
@@ -58,7 +61,7 @@
             <h3>Billing Address</h3>
             <div class="row">
                 <div class="form-control">
-                    <select formControlName="country" (change)="differentCountry(countrySelect.value)" #countrySelect>
+                    <select formControlName="country" (change)="onCountryChange(countrySelect.value)" #countrySelect>
                         <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}
                             ({{country.code}})
                         </option>
@@ -66,9 +69,8 @@
                     <label for="country">Country</label>
                 </div>
 
-                <div *ngIf="billingAddressCountry?.invalid && (billingAddressCountry?.dirty || billingAddressCountry?.touched)"
-                    #alert>
-                    <app-alert msg="Country is required" *ngIf="billingAddressCountry?.errors!['required']"
+                <div *ngIf="isFieldInvalid('billingAddress.country')" #alert>
+                    <app-alert msg="Country is required" *ngIf="hasError('billingAddress.country', 'required')"
                         backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
                 </div>
             </div>
@@ -79,14 +81,13 @@
                     <label for="street">Street</label>
                 </div>
 
-                <div *ngIf="billingAddressStreet?.invalid && (billingAddressStreet?.dirty || billingAddressStreet?.touched)"
-                    #alert>
+                <div *ngIf="isFieldInvalid('billingAddress.street')" #alert>
                     <app-alert msg="Street is required"
-                        *ngIf="billingAddressStreet?.errors!['required'] || billingAddressStreet?.errors!['notOnlyWhitespace']"
+                        *ngIf="hasError('billingAddress.street', 'required') || hasError('billingAddress.street', 'notOnlyWhitespace')"
                         backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
 
                     <app-alert msg="Street must be at least 2 characters"
-                        *ngIf="billingAddressStreet?.errors!['minlength']" backgroundColor="#ff6961"
+                        *ngIf="hasError('billingAddress.street', 'minlength')" backgroundColor="#ff6961"
                         borderColor="#d60b00"></app-alert>
                 </div>
             </div>
@@ -97,14 +98,14 @@
                     <label for="city">City</label>
                 </div>
 
-                <div *ngIf="billingAddressCity?.invalid && (billingAddressCity?.dirty || billingAddressCity?.touched)"
-                    #alert>
+                <div *ngIf="isFieldInvalid('billingAddress.city')" #alert>
                     <app-alert msg="City is required"
-                        *ngIf="billingAddressCity?.errors!['required'] || billingAddressCity?.errors!['notOnlyWhitespace']"
+                        *ngIf="hasError('billingAddress.city', 'required') || hasError('billingAddress.city', 'notOnlyWhitespace')"
                         backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
 
-                    <app-alert msg="City must be at least 2 characters" *ngIf="billingAddressCity?.errors!['minlength']"
-                        backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
+                    <app-alert msg="City must be at least 2 characters"
+                        *ngIf="hasError('billingAddress.city', 'minlength')" backgroundColor="#ff6961"
+                        borderColor="#d60b00"></app-alert>
                 </div>
             </div>
 
@@ -114,22 +115,21 @@
                     <label for="zipCode">Zip Code</label>
                 </div>
 
-                <div *ngIf="billingAddressZipCode?.invalid && (billingAddressZipCode?.dirty || billingAddressZipCode?.touched)"
-                    #alert>
+                <div *ngIf="isFieldInvalid('billingAddress.zipCode')" #alert>
                     <app-alert msg="Zip Code is required"
-                        *ngIf="billingAddressZipCode?.errors!['required'] || billingAddressZipCode?.errors!['notOnlyWhitespace']"
+                        *ngIf="hasError('billingAddress.zipCode', 'required') || hasError('billingAddress.zipCode', 'notOnlyWhitespace')"
                         backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
 
                     <app-alert msg="Zip Code must be at least 2 characters"
-                        *ngIf="billingAddressZipCode?.errors!['minlength']" backgroundColor="#ff6961"
+                        *ngIf="hasError('billingAddress.zipCode', 'minlength')" backgroundColor="#ff6961"
                         borderColor="#d60b00"></app-alert>
                 </div>
             </div>
         </div>
 
         <div class="shippingAsBilling">
-            <input type="checkbox" [checked]="isChecked" (change)="copyBillingAddressToShippingAddress($event)"
-                id="checkbox" [disabled]="isCheckboxDisabled">
+            <input type="checkbox" [checked]="isChecked" (change)="copyBillingToShipping($event)" id="checkbox"
+                [disabled]="isCheckboxDisabled">
             <label for="checkbox" [class.checkboxDisabled]="isCheckboxDisabled">Shipping Address same as Billing
                 Address</label>
         </div>
@@ -152,9 +152,8 @@
                     <label for="country">Country</label>
                 </div>
 
-                <div *ngIf="shippingAddressCountry?.invalid && (shippingAddressCountry?.dirty || shippingAddressCountry?.touched)"
-                    #alert>
-                    <app-alert msg="Country is required" *ngIf="shippingAddressCountry?.errors!['required']"
+                <div *ngIf="isFieldInvalid('shippingAddress.country')" #alert>
+                    <app-alert msg="Country is required" *ngIf="hasError('shippingAddress.country', 'required')"
                         backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
                 </div>
             </div>
@@ -165,14 +164,13 @@
                     <label for="street">Street</label>
                 </div>
 
-                <div *ngIf="shippingAddressStreet?.invalid && (shippingAddressStreet?.dirty || shippingAddressStreet?.touched)"
-                    #alert>
+                <div *ngIf="isFieldInvalid('shippingAddress.street')" #alert>
                     <app-alert msg="Street is required"
-                        *ngIf="shippingAddressStreet?.errors!['required'] || shippingAddressStreet?.errors!['notOnlyWhitespace']"
+                        *ngIf="hasError('shippingAddress.street', 'required') || hasError('shippingAddress.street', 'notOnlyWhitespace')"
                         backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
 
                     <app-alert msg="Street must be at least 2 characters"
-                        *ngIf="shippingAddressStreet?.errors!['minlength']" backgroundColor="#ff6961"
+                        *ngIf="hasError('shippingAddress.street', 'minlength')" backgroundColor="#ff6961"
                         borderColor="#d60b00"></app-alert>
                 </div>
             </div>
@@ -183,14 +181,13 @@
                     <label for="city">City</label>
                 </div>
 
-                <div *ngIf="shippingAddressCity?.invalid && (shippingAddressCity?.dirty || shippingAddressCity?.touched)"
-                    #alert>
+                <div *ngIf="isFieldInvalid('shippingAddress.city')" #alert>
                     <app-alert msg="City is required"
-                        *ngIf="shippingAddressCity?.errors!['required'] || shippingAddressCity?.errors!['notOnlyWhitespace']"
+                        *ngIf="hasError('shippingAddress.city', 'required') || hasError('shippingAddress.city', 'notOnlyWhitespace')"
                         backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
 
                     <app-alert msg="City must be at least 2 characters"
-                        *ngIf="shippingAddressCity?.errors!['minlength']" backgroundColor="#ff6961"
+                        *ngIf="hasError('shippingAddress.city', 'minlength')" backgroundColor="#ff6961"
                         borderColor="#d60b00"></app-alert>
                 </div>
             </div>
@@ -201,14 +198,13 @@
                     <label for="zipCode">Zip Code</label>
                 </div>
 
-                <div *ngIf="shippingAddressZipCode?.invalid && (shippingAddressZipCode?.dirty || shippingAddressZipCode?.touched)"
-                    #alert>
+                <div *ngIf="isFieldInvalid('shippingAddress.zipCode')" #alert>
                     <app-alert msg="Zip Code is required"
-                        *ngIf="shippingAddressZipCode?.errors!['required'] || shippingAddressZipCode?.errors!['notOnlyWhitespace']"
+                        *ngIf="hasError('shippingAddress.zipCode', 'required') || hasError('shippingAddress.zipCode', 'notOnlyWhitespace')"
                         backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
 
                     <app-alert msg="Zip Code must be at least 2 characters"
-                        *ngIf="shippingAddressZipCode?.errors!['minlength']" backgroundColor="#ff6961"
+                        *ngIf="hasError('shippingAddress.zipCode', 'minlength')" backgroundColor="#ff6961"
                         borderColor="#d60b00"></app-alert>
                 </div>
             </div>
@@ -234,12 +230,12 @@
 
                 <tr>
                     <td>Shipping</td>
-                    <td>{{shipping | currency: 'PLN'}}</td>
+                    <td>{{shippingCost | currency: 'PLN'}}</td>
                 </tr>
 
                 <tr>
                     <td>Total</td>
-                    <td>{{totalPrice + shipping | currency: 'PLN'}}</td>
+                    <td>{{totalPrice + shippingCost | currency: 'PLN'}}</td>
                 </tr>
             </table>
         </div>

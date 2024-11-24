@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.dolien.shop.exception.ExpiredTokenException;
 import pl.dolien.shop.exception.InvalidTokenException;
+import pl.dolien.shop.exception.TokenAlreadyUsedException;
 import pl.dolien.shop.user.User;
 
 import java.security.SecureRandom;
@@ -39,6 +40,9 @@ public class TokenService {
 
         if (isTokenExpired(savedToken.getExpiresAt()))
             throw new ExpiredTokenException("Activation token has expired");
+
+        if (savedToken.isUsed())
+            throw new TokenAlreadyUsedException("Activation token has already been used");
 
         return savedToken;
     }

@@ -21,6 +21,9 @@ class OrderServiceTest {
     @Mock
     private ProductInventoryUpdater productInventoryService;
 
+    @Mock
+    private OrderRepository orderRepository;
+
     private Order order;
     private Set<OrderItem> orderItems;
     private PurchaseRequestDTO purchaseRequestDTO;
@@ -34,6 +37,7 @@ class OrderServiceTest {
 
     @Test
     void shouldCreateOrder() {
+        when(orderRepository.save(any(Order.class))).thenReturn(order);
 
         Order response = orderService.buildOrder(purchaseRequestDTO);
 

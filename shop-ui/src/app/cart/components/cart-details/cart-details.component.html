@@ -22,7 +22,7 @@
                             <div class="name">{{cartItem.name}}</div>
                             <div class="price">{{cartItem.unitPrice | currency: 'PLN'}}</div>
                             <div class="remove-button">
-                                <button (click)="remove(cartItem)">Remove</button>
+                                <button (click)="removeItem(cartItem)">Remove</button>
                             </div>
                         </div>
                     </div>

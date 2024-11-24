@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -15,6 +16,8 @@ import pl.dolien.shop.feedback.dto.FeedbackDTO;
 import pl.dolien.shop.feedback.dto.FeedbackRequestDTO;
 import pl.dolien.shop.feedback.dto.FeedbackResponseDTO;
 import pl.dolien.shop.pagination.PaginationParams;
+import pl.dolien.shop.pagination.RestPage;
+import pl.dolien.shop.user.dto.UserDTO;
 
 import java.util.List;
 
@@ -66,11 +69,11 @@ class FeedbackControllerTest {
     @Test
     void shouldGetAllFeedbacksByProduct() throws Exception {
         when(feedbackService.getFeedbacksByProduct(anyLong(), any(PaginationParams.class), any(Authentication.class)))
-                .thenReturn(List.of(testFeedbackResponseDTO));
+                .thenReturn(buildRestPageByFeedbackResponseDTO(List.of(testFeedbackResponseDTO)));
 
         performGetRequestForFeedbacksByProduct()
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(List.of(testFeedbackResponseDTO))));
+                .andExpect(content().json(objectMapper.writeValueAsString(buildRestPageByFeedbackResponseDTO(List.of(testFeedbackResponseDTO)))));
 
         verify(feedbackService).getFeedbacksByProduct(anyLong(), any(PaginationParams.class), any(Authentication.class));
     }
@@ -86,8 +89,12 @@ class FeedbackControllerTest {
                 .productId(1L)
                 .build();
 
+        UserDTO testUserDTO = UserDTO.builder()
+                .id(1)
+                .build();
+
         testFeedbackResponseDTO = FeedbackResponseDTO.builder()
-                .createdBy(1)
+                .createdBy(testUserDTO)
                 .build();
 
         testPaginationParams = PaginationParams.builder()
@@ -108,5 +115,9 @@ class FeedbackControllerTest {
                 .content(objectMapper.writeValueAsString(testPaginationParams))
                 .contentType(APPLICATION_JSON)
                 .principal(authentication));
+    }
+
+    private Page<FeedbackResponseDTO> buildRestPageByFeedbackResponseDTO(List<FeedbackResponseDTO> content) {
+        return new RestPage<>(content, 1, 1, 1);
     }
 }

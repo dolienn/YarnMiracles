@@ -93,7 +93,7 @@ class SummaryMetricsServiceTest {
                 .totalUsers(0)
                 .totalOrders(0)
                 .totalCustomerFeedback(0)
-                .productsSell(0)
+                .totalProductsSold(0)
                 .revenue(BigDecimal.ZERO)
                 .build();
 
@@ -106,6 +106,6 @@ class SummaryMetricsServiceTest {
     private void assertUpdatedOrderMetrics() {
         assertEquals(1, testSummaryMetrics.getTotalOrders());
         assertEquals(BigDecimal.TEN, testSummaryMetrics.getRevenue());
-        assertEquals(1, testSummaryMetrics.getProductsSell());
+        assertEquals(1, testSummaryMetrics.getTotalProductsSold());
     }
 }

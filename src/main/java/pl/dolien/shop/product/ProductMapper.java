@@ -1,7 +1,10 @@
 package pl.dolien.shop.product;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import pl.dolien.shop.feedback.Feedback;
 import pl.dolien.shop.feedback.dto.FeedbackDTO;
+import pl.dolien.shop.pagination.RestPage;
 import pl.dolien.shop.product.dto.ProductDTO;
 import pl.dolien.shop.product.dto.ProductRequestDTO;
 import pl.dolien.shop.product.dto.ProductWithFeedbackDTO;
@@ -29,10 +32,14 @@ public class ProductMapper {
                 .build();
     }
 
-    public static List<ProductDTO> toProductDTOs(List<Product> products) {
-        return products.stream()
+    public static Page<ProductDTO> toProductDTOs(Page<Product> products) {
+        List<ProductDTO> productDTOs = products.stream()
                 .map(ProductMapper::toProductDTO)
                 .collect(Collectors.toList());
+
+        Pageable pageable = products.getPageable();
+
+        return new RestPage<>(productDTOs, pageable.getPageNumber(), pageable.getPageSize(), products.getTotalElements());
     }
 
     public static ProductDTO toProductDTO(Product post) {
@@ -48,13 +55,18 @@ public class ProductMapper {
                 .unitsInStock(post.getUnitsInStock())
                 .rate(post.getRate())
                 .sales(post.getSales())
+                .dateCreated(post.getDateCreated())
                 .build();
     }
 
-    public static List<ProductWithFeedbackDTO> toProductWithFeedbackDTOs(List<ProductDTO> productDTOs, List<Feedback> feedbacks) {
-        return productDTOs.stream()
+    public static Page<ProductWithFeedbackDTO> toProductWithFeedbackDTOs(Page<ProductDTO> productDTOs, List<Feedback> feedbacks) {
+        List<ProductWithFeedbackDTO> productWithFeedbackDTOs = productDTOs.stream()
                 .map(productDTO -> toProductWithFeedbackDTO(productDTO, feedbacks))
                 .collect(Collectors.toList());
+
+        Pageable pageable = productDTOs.getPageable();
+
+        return new RestPage<>(productWithFeedbackDTOs, pageable.getPageNumber(), pageable.getPageSize(), productDTOs.getTotalElements());
     }
 
     public static ProductWithFeedbackDTO toProductWithFeedbackDTO(ProductDTO productDTO,

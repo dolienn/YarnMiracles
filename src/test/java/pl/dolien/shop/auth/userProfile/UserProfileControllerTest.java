@@ -12,7 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import pl.dolien.shop.auth.registration.dto.RegistrationDTO;
+import pl.dolien.shop.auth.userProfile.dto.UserProfileDTO;
 import pl.dolien.shop.user.User;
 
 import static java.time.LocalDate.parse;
@@ -41,7 +41,7 @@ class UserProfileControllerTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private User testUser;
-    private RegistrationDTO testRegistrationDTO;
+    private UserProfileDTO testUserProfileDTO;
 
     @BeforeEach
     void setUp() {
@@ -53,17 +53,17 @@ class UserProfileControllerTest {
 
     @Test
     void shouldUpdateUserProfile() throws Exception {
-        when(userProfileUpdater.updateUserProfile(any(RegistrationDTO.class), any(Authentication.class)))
+        when(userProfileUpdater.updateUserProfile(any(UserProfileDTO.class), any(Authentication.class)))
                 .thenReturn(testUser);
 
-        performUserProfileUpdateRequest(testRegistrationDTO)
+        performUserProfileUpdateRequest(testUserProfileDTO)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(testUser.getId()))
                 .andExpect(jsonPath("$.firstname").value(testUser.getFirstname()))
                 .andExpect(jsonPath("$.lastname").value(testUser.getLastname()))
                 .andExpect(jsonPath("$.email").value(testUser.getEmail()));
 
-        verify(userProfileUpdater, times(1)).updateUserProfile(any(RegistrationDTO.class), any(Authentication.class));
+        verify(userProfileUpdater, times(1)).updateUserProfile(any(UserProfileDTO.class), any(Authentication.class));
     }
 
     private void initializeTestData() {
@@ -76,7 +76,7 @@ class UserProfileControllerTest {
                 .dateOfBirth(parse("2020-01-01"))
                 .build();
 
-        testRegistrationDTO = RegistrationDTO.builder()
+        testUserProfileDTO = UserProfileDTO.builder()
                 .firstname("NewJohn")
                 .lastname("NewDoe")
                 .email("test@example.com")
@@ -85,10 +85,10 @@ class UserProfileControllerTest {
                 .build();
     }
 
-    private ResultActions performUserProfileUpdateRequest(RegistrationDTO registrationDTO) throws Exception {
+    private ResultActions performUserProfileUpdateRequest(UserProfileDTO testUserProfileDTO) throws Exception {
         return mockMvc.perform(post("/auth/update-user-profile")
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(registrationDTO))
+                .content(objectMapper.writeValueAsString(testUserProfileDTO))
                 .principal(authentication));
     }
 }

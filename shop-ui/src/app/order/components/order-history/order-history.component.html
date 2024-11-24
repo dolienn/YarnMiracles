@@ -29,8 +29,8 @@
             </tr>
         </table>
 
-        <app-pagination [totalElements]="totalElements" [pageSize]="pageSize" [isLoading]="isLoading"
-            [(pageNumber)]="pageNumber" (pageNumberChange)="scrollToOrders()"></app-pagination>
+        <app-pagination [totalElements]="page.totalElements" [pageSize]="page.size" [isLoading]="isLoading"
+            [(pageNumber)]="page.number" (pageNumberChange)="scrollToOrders()"></app-pagination>
 
     </div>
     <div *ngIf="orderHistoryList?.length === 0" class="alert">

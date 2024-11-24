@@ -1,5 +1,6 @@
 package pl.dolien.shop.favourite;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,5 +15,5 @@ import java.util.List;
 public interface FavouriteRepository extends JpaRepository<User, Integer> {
 
     @Query("SELECT p FROM User u JOIN u.favourites p WHERE u.id = :userId")
-    List<Product> findFavouritesByUserId(@Param("userId") Integer userId, Pageable pageable);
+    Page<Product> findFavouritesByUserId(@Param("userId") Integer userId, Pageable pageable);
 }

@@ -13,6 +13,7 @@ import pl.dolien.shop.exception.SamePasswordException;
 import pl.dolien.shop.user.User;
 import pl.dolien.shop.user.UserService;
 import pl.dolien.shop.user.dto.UserDTO;
+import pl.dolien.shop.user.dto.UserWithRoleDTO;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -37,7 +38,7 @@ class PasswordChangerTest {
     @Mock
     private Authentication authentication;
 
-    private UserDTO testUserDTO;
+    private UserWithRoleDTO testUserDTO;
     private User testUser;
     private PasswordRequestDTO testPasswordRequestDTO;
     private PasswordRequestDTO testPasswordRequestDTOWithSamePasswords;
@@ -92,7 +93,7 @@ class PasswordChangerTest {
     }
 
     private void initializeTestData() {
-        testUserDTO = UserDTO.builder()
+        testUserDTO = UserWithRoleDTO.builder()
                 .id(1)
                 .build();
 
@@ -102,24 +103,24 @@ class PasswordChangerTest {
                 .build();
 
         testPasswordRequestDTO = PasswordRequestDTO.builder()
-                .yourPassword(CURRENT_PASSWORD)
+                .currentPassword(CURRENT_PASSWORD)
                 .newPassword(NEW_PASSWORD)
                 .build();
 
         testPasswordRequestDTOWithSamePasswords = PasswordRequestDTO.builder()
-                .yourPassword(CURRENT_PASSWORD)
+                .currentPassword(CURRENT_PASSWORD)
                 .newPassword(CURRENT_PASSWORD)
                 .build();
     }
 
     private void mockUserServiceAndPasswordEncoder(boolean passwordMatches) {
-        when(userService.getUserDTOByAuth(authentication)).thenReturn(testUserDTO);
+        when(userService.getUserByAuth(authentication)).thenReturn(testUserDTO);
         when(userService.getUserById(testUserDTO.getId())).thenReturn(testUser);
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(passwordMatches);
     }
 
     private void verifyUserServiceAndPasswordEncoderInteractions() {
-        verify(userService, times(1)).getUserDTOByAuth(authentication);
+        verify(userService, times(1)).getUserByAuth(authentication);
         verify(userService, times(1)).getUserById(testUserDTO.getId());
         verify(passwordEncoder, times(1)).matches(anyString(), anyString());
     }

@@ -3,7 +3,6 @@ import {
   Component,
   ElementRef,
   Input,
-  OnDestroy,
   ViewChild,
 } from '@angular/core';
 
@@ -15,31 +14,33 @@ import {
 export class LoaderComponent implements AfterViewInit {
   @ViewChild('loader') loader!: ElementRef;
 
-  @Input()
-  isLoading: boolean = true;
-
-  @Input()
-  width: string = '4rem';
-
-  @Input()
-  height: string = '4rem';
-
-  @Input()
-  maxHeight: boolean = true;
+  @Input() isLoading: boolean = true;
+  @Input() width: string = '4rem';
+  @Input() height: string = '4rem';
+  @Input() maxHeight: boolean = true;
 
   ngAfterViewInit(): void {
-    this.updateLoaderStyles();
+    this.applyLoaderStyles();
   }
 
-  private updateLoaderStyles(): void {
-    if (this.loader && this.loader.nativeElement) {
-      const loaderElement = this.loader.nativeElement;
-      loaderElement.style.setProperty(
-        '--loader-max-height',
-        this.maxHeight ? '100vh' : 'auto'
-      );
-      loaderElement.style.setProperty('--loader-width', this.width);
-      loaderElement.style.setProperty('--loader-height', this.height);
-    }
+  private applyLoaderStyles(): void {
+    if (!this.loader?.nativeElement) return;
+
+    const loaderElement = this.loader.nativeElement;
+    this.setStyle(
+      loaderElement,
+      '--loader-max-height',
+      this.maxHeight ? '100vh' : 'auto'
+    );
+    this.setStyle(loaderElement, '--loader-width', this.width);
+    this.setStyle(loaderElement, '--loader-height', this.height);
+  }
+
+  private setStyle(
+    element: HTMLElement,
+    property: string,
+    value: string
+  ): void {
+    element.style.setProperty(property, value);
   }
 }

@@ -1,10 +1,15 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Product } from '../../models/product/product';
 import { ActivatedRoute } from '@angular/router';
-import { UserService } from '../../../user/services/user/user.service';
 import { User } from '../../../user/models/user/user';
 import { ProductService } from '../../services/product/product.service';
 import { TokenService } from '../../../token/services/token/token.service';
+import { PaginationAndSortParams } from '../../../pagination/models/pagination-and-sort-params/pagination-and-sort-params';
+import { EMPTY, Observable, switchMap } from 'rxjs';
+import { PaginatedProductResponse } from '../../models/paginated-product-response/paginated-product-response';
+import { Page } from '../../../shared/models/page/page';
+import { NotificationService } from '../../../notification/services/notification/notification.service';
+import { FavouriteService } from '../../../favourite/services/favourite/favourite.service';
 
 @Component({
   selector: 'app-product-list',
@@ -14,268 +19,55 @@ import { TokenService } from '../../../token/services/token/token.service';
 export class ProductListComponent implements OnInit {
   @ViewChild('productsSection') productsSection!: ElementRef;
 
-  isLoading: boolean = true;
-
+  isLoading = true;
   products: Product[] = [];
-  currentCategoryId: number = 1;
-  previousCategoryId: number = 1;
-  currentCategoryName: string = '';
-  searchMode: boolean = false;
-  isFavouriteRoute: boolean = false;
   user: User = new User();
 
-  pageNumber: number = 1;
-  pageSize: number = 15;
-  totalElements: number = 0;
+  currentCategoryId = 1;
+  currentCategoryName = '';
+  searchMode = false;
+  isFavouriteRoute = false;
 
-  previousKeyword: string = '';
+  previousCategoryId = 1;
+  previousKeyword = '';
+  selectedSortOption = 'default';
 
-  selectedSortOption: string = 'default';
+  page: Page = new Page();
 
   constructor(
     private productService: ProductService,
-    private userService: UserService,
+    private favouriteService: FavouriteService,
     private tokenService: TokenService,
+    private notificationService: NotificationService,
     private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(() => {
-      this.listProducts();
-    });
+    this.route.paramMap.subscribe(() => this.updatePageSize('15'));
   }
 
-  listProducts() {
+  listProducts(): void {
     this.isLoading = true;
     this.searchMode = this.route.snapshot.paramMap.has('keyword');
 
-    if (this.searchMode) {
-      this.handleSearchProducts();
-    } else {
-      this.route.url.subscribe((urlSegments) => {
-        this.isFavouriteRoute = urlSegments.some(
-          (segment) => segment.path === 'favourites'
-        );
-      });
-      if (this.isFavouriteRoute) {
-        this.handleFavouritesProducts();
-      } else {
-        this.handleListProducts();
-      }
-    }
-  }
-
-  handleSearchProducts() {
-    let keyword: string = this.route.snapshot.paramMap.get('keyword')!;
-
-    if (this.previousKeyword != keyword) {
-      this.pageNumber = 1;
-    }
-
-    this.previousKeyword = keyword;
-
-    if (this.selectedSortOption === 'default') {
-      this.productService
-        .searchProductsPaginate(this.pageNumber - 1, this.pageSize, keyword)
-        .subscribe(this.processResult());
-    } else if (this.selectedSortOption === 'lowest-price') {
-      this.productService
-        .searchProductsPaginateOrderByUnitPriceAsc(
-          this.pageNumber - 1,
-          this.pageSize,
-          keyword
-        )
-        .subscribe(this.processResult());
-    } else if (this.selectedSortOption === 'highest-price') {
-      this.productService
-        .searchProductsPaginateOrderByUnitPriceDesc(
-          this.pageNumber - 1,
-          this.pageSize,
-          keyword
-        )
-        .subscribe(this.processResult());
-    } else if (this.selectedSortOption === 'rating') {
-      this.productService
-        .searchProductsPaginateOrderByRateDesc(
-          this.pageNumber - 1,
-          this.pageSize,
-          keyword
-        )
-        .subscribe(this.processResult());
-    } else if (this.selectedSortOption === 'popularity') {
-      this.productService
-        .searchProductsPaginateOrderBySalesDesc(
-          this.pageNumber - 1,
-          this.pageSize,
-          keyword
-        )
-        .subscribe(this.processResult());
-    }
-  }
-
-  handleListProducts() {
-    const hasCategoryId: boolean = this.route.snapshot.paramMap.has('id');
-
-    if (hasCategoryId) {
-      this.currentCategoryId = +this.route.snapshot.paramMap.get('id')!;
-      this.currentCategoryName = this.route.snapshot.paramMap.get('name')!;
-
-      if (this.previousCategoryId != this.currentCategoryId) {
-        this.pageNumber = 1;
-      }
-
-      this.previousCategoryId = this.currentCategoryId;
-
-      this.handleListProductsByCategory();
-    } else {
-      this.handleListProductsWithoutCategory();
-    }
-  }
-
-  handleListProductsByCategory() {
-    if (this.selectedSortOption === 'default') {
-      this.productService
-        .getProductListPaginateWithCategory(
-          this.pageNumber - 1,
-          this.pageSize,
-          this.currentCategoryId
-        )
-        .subscribe(this.processResult());
-    } else if (this.selectedSortOption === 'lowest-price') {
-      this.productService
-        .getProductListPaginateOrderByUnitPriceAscWithCategory(
-          this.pageNumber - 1,
-          this.pageSize,
-          this.currentCategoryId
-        )
-        .subscribe(this.processResult());
-    } else if (this.selectedSortOption === 'highest-price') {
-      this.productService
-        .getProductListPaginateOrderByUnitPriceDescWithCategory(
-          this.pageNumber - 1,
-          this.pageSize,
-          this.currentCategoryId
-        )
-        .subscribe(this.processResult());
-    } else if (this.selectedSortOption === 'rating') {
-      this.productService
-        .getProductListPaginateOrderByRateDescWithCategory(
-          this.pageNumber - 1,
-          this.pageSize,
-          this.currentCategoryId
-        )
-        .subscribe(this.processResult());
-    } else if (this.selectedSortOption === 'popularity') {
-      this.productService
-        .getProductListPaginateOrderBySalesDescWithCategory(
-          this.pageNumber - 1,
-          this.pageSize,
-          this.currentCategoryId
-        )
-        .subscribe(this.processResult());
-    }
-  }
-
-  handleListProductsWithoutCategory() {
-    if (this.selectedSortOption === 'default') {
-      this.productService
-        .getProductListPaginate(this.pageNumber - 1, this.pageSize)
-        .subscribe(this.processResult());
-    } else if (this.selectedSortOption === 'lowest-price') {
-      this.productService
-        .getProductListPaginateOrderByUnitPriceAsc(
-          this.pageNumber - 1,
-          this.pageSize
-        )
-        .subscribe(this.processResult());
-    } else if (this.selectedSortOption === 'highest-price') {
-      this.productService
-        .getProductListPaginateOrderByUnitPriceDesc(
-          this.pageNumber - 1,
-          this.pageSize
-        )
-        .subscribe(this.processResult());
-    } else if (this.selectedSortOption === 'rating') {
-      this.productService
-        .getProductListPaginateOrderByRateDesc(
-          this.pageNumber - 1,
-          this.pageSize
-        )
-        .subscribe(this.processResult());
-    } else if (this.selectedSortOption === 'popularity') {
-      this.productService
-        .getProductListPaginateOrderBySalesDesc(
-          this.pageNumber - 1,
-          this.pageSize
-        )
-        .subscribe(this.processResult());
-    }
-  }
-
-  handleFavouritesProducts() {
-    this.tokenService.getUserInfo()?.subscribe((data) => {
-      this.user.id = data.id;
-      this.user.firstname = data.firstname;
-      this.user.lastname = data.lastname;
-      this.user.email = data.email;
-      if (this.selectedSortOption === 'default') {
-        this.userService
-          .getFavouriteProductsPaginate(
-            this.pageNumber - 1,
-            this.pageSize,
-            this.user.id
-          )
-          .subscribe(this.processResult());
-      } else if (this.selectedSortOption === 'lowest-price') {
-        this.userService
-          .getFavouriteProductsPaginateOrderByUnitPriceAsc(
-            this.pageNumber - 1,
-            this.pageSize,
-            this.user.id
-          )
-          .subscribe(this.processResult());
-      } else if (this.selectedSortOption === 'highest-price') {
-        this.userService
-          .getFavouriteProductsPaginateOrderByUnitPriceDesc(
-            this.pageNumber - 1,
-            this.pageSize,
-            this.user.id
-          )
-          .subscribe(this.processResult());
-      } else if (this.selectedSortOption === 'rating') {
-        this.userService
-          .getFavouriteProductsPaginateOrderByRateDesc(
-            this.pageNumber - 1,
-            this.pageSize,
-            this.user.id
-          )
-          .subscribe(this.processResult());
-      }
+    this.getProducts().subscribe({
+      next: (data) => this.updateProductList(data),
+      error: () => this.handleError(),
     });
   }
 
   isNewProduct(dateCreated: any): boolean {
-    return this.productService.isNewProduct(dateCreated);
+    return this.productService.isProductNew(dateCreated);
   }
 
   updatePageSize(pageSize: string) {
-    this.pageSize = +pageSize;
-    this.pageNumber = 1;
+    this.page.size = +pageSize;
+    this.page.number = 1;
     this.listProducts();
   }
 
-  processResult() {
-    return (data: any) => {
-      this.products = data._embedded.products;
-      this.pageNumber = data.page.number + 1;
-      this.pageSize = data.page.size;
-      this.totalElements = data.page.totalElements;
-      this.isLoading = false;
-    };
-  }
-
   onSortOptionChange() {
-    this.pageNumber = 1;
+    this.page.number = 1;
     this.listProducts();
   }
 
@@ -286,5 +78,122 @@ export class ProductListComponent implements OnInit {
         behavior: 'smooth',
       });
     }
+  }
+
+  private getProducts(): Observable<PaginatedProductResponse> {
+    const paginationParams = this.getPaginationParams();
+
+    this.checkFavouriteRoute();
+    if (this.isFavouriteRoute) {
+      return this.getFavouriteProducts(paginationParams);
+    }
+
+    if (this.searchMode) {
+      return this.getSearchResults(paginationParams);
+    }
+
+    return this.getProductsByCategoryOrAll(paginationParams);
+  }
+
+  private getPaginationParams(): PaginationAndSortParams {
+    return {
+      page: this.page.number - 1,
+      size: this.page.size,
+      sortBy: this.mapSortOption(this.selectedSortOption),
+    };
+  }
+
+  private mapSortOption(option: string): string | undefined {
+    const sortOptions: Record<string, string | undefined> = {
+      'lowest-price': 'PRICE_ASC',
+      'highest-price': 'PRICE_DESC',
+      rating: 'RATE_DESC',
+      sale: 'SALES_DESC',
+      default: undefined,
+    };
+    return sortOptions[option];
+  }
+
+  private checkFavouriteRoute(): void {
+    this.route.url.subscribe((urlSegments) => {
+      this.isFavouriteRoute = urlSegments.some(
+        (segment) => segment.path === 'favourites'
+      );
+    });
+  }
+
+  private getFavouriteProducts(
+    paginationParams: PaginationAndSortParams
+  ): Observable<PaginatedProductResponse> {
+    const userObservable = this.tokenService.getUserByJwtToken();
+    if (!userObservable) {
+      return EMPTY;
+    }
+
+    return userObservable.pipe(
+      switchMap((user) => {
+        this.user = user;
+        return this.favouriteService.getFavourites(
+          this.user.id,
+          paginationParams
+        );
+      })
+    );
+  }
+
+  private getSearchResults(
+    paginationParams: PaginationAndSortParams
+  ): Observable<PaginatedProductResponse> {
+    const keyword = this.route.snapshot.paramMap.get('keyword')!;
+    this.resetPageIfKeywordChanged(keyword);
+
+    return this.productService.getProductsByKeyword(keyword, paginationParams);
+  }
+
+  private resetPageIfKeywordChanged(keyword: string): void {
+    if (this.previousKeyword !== keyword) {
+      this.page.number = 1;
+    }
+    this.previousKeyword = keyword;
+  }
+
+  private getProductsByCategoryOrAll(
+    paginationParams: PaginationAndSortParams
+  ): Observable<PaginatedProductResponse> {
+    const hasCategoryId = this.route.snapshot.paramMap.has('id');
+
+    if (hasCategoryId) {
+      this.currentCategoryId = +this.route.snapshot.paramMap.get('id')!;
+      this.resetPageIfCategoryChanged();
+      return this.productService.getProductsByCategoryId(
+        this.currentCategoryId,
+        paginationParams
+      );
+    }
+
+    return this.productService.getAllProducts(paginationParams);
+  }
+
+  private resetPageIfCategoryChanged(): void {
+    if (this.previousCategoryId !== this.currentCategoryId) {
+      this.page.number = 1;
+    }
+    this.previousCategoryId = this.currentCategoryId;
+  }
+
+  private updateProductList(data: PaginatedProductResponse): void {
+    this.products = data.content;
+    this.page.number = data.page.number + 1;
+    this.page.size = data.page.size;
+    this.page.totalElements = data.page.totalElements;
+    this.isLoading = false;
+  }
+
+  private handleError(): void {
+    this.isLoading = false;
+    this.notificationService.showMessage(
+      'Something went wrong while fetching products',
+      false
+    );
   }
 }

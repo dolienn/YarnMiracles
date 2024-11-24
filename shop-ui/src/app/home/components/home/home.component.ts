@@ -1,11 +1,5 @@
-import {
-  Component,
-  ElementRef,
-  HostListener,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import { Router } from '@angular/router';
+import { PaginationAndSortParams } from '../../../pagination/models/pagination-and-sort-params/pagination-and-sort-params';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Product } from '../../../product/models/product/product';
 import { ProductService } from '../../../product/services/product/product.service';
 
@@ -17,50 +11,51 @@ import { ProductService } from '../../../product/services/product/product.servic
 export class HomeComponent implements OnInit {
   @ViewChild('trendingSection') trendingSection: ElementRef | undefined;
 
-  page: number = 0;
-  pageSize: number = 5;
+  paginationAndSortParams: PaginationAndSortParams = {
+    page: 0,
+    size: 5,
+    sortBy: 'SALES_DESC',
+  };
 
-  isLoading: boolean = true;
-  isLoadingProducts: boolean = true;
-
+  isPageLoading: boolean = true;
+  isProductsLoading: boolean = true;
   products: Product[] = [];
 
-  constructor(private productService: ProductService, private router: Router) {}
+  constructor(private productService: ProductService) {}
 
   ngOnInit(): void {
-    this.listProductsOrderBySales();
-    if (document.readyState === 'complete') {
-      this.onLoad();
-    } else {
-      window.addEventListener('load', this.onLoad.bind(this));
-    }
+    this.loadProducts();
+    this.registerPageLoadEvent();
   }
 
-  listProductsOrderBySales() {
-    this.isLoadingProducts = true;
+  scrollToTrending(): void {
+    this.trendingSection?.nativeElement.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  isProductNew(dateCreated: Date): boolean {
+    return this.productService.isProductNew(dateCreated);
+  }
+
+  private loadProducts(): void {
+    this.isProductsLoading = true;
     this.productService
-      .getAllProductsOrderBySales(this.page, this.pageSize)
-      .subscribe((data) => {
-        this.products = data._embedded.products;
-        this.isLoadingProducts = false;
+      .getAllProducts(this.paginationAndSortParams)
+      .subscribe((response) => {
+        this.products = response.content;
+        this.isProductsLoading = false;
       });
   }
 
-  onLoad() {
-    this.isLoading = true;
+  private registerPageLoadEvent(): void {
+    if (document.readyState === 'complete') {
+      this.updatePageLoadState();
+    } else {
+      window.addEventListener('load', this.updatePageLoadState.bind(this));
+    }
+  }
+
+  private updatePageLoadState(): void {
     const container = document.querySelector('.container');
-    if (container) {
-      this.isLoading = false;
-    }
-  }
-
-  scrollToTrending() {
-    if (this.trendingSection) {
-      this.trendingSection.nativeElement.scrollIntoView({ behavior: 'smooth' });
-    }
-  }
-
-  isNewProduct(dateCreated: any): boolean {
-    return this.productService.isNewProduct(dateCreated);
+    this.isPageLoading = !container;
   }
 }

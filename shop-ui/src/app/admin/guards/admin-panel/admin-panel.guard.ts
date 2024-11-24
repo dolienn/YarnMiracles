@@ -2,40 +2,35 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { catchError, map, Observable, of } from 'rxjs';
 import { TokenService } from '../../../token/services/token/token.service';
+import { RoleService } from '../../../role/services/role/role.service';
 
 export const adminPanelGuard: CanActivateFn = (): Observable<boolean> => {
   const tokenService = inject(TokenService);
+  const roleService = inject(RoleService);
   const router = inject(Router);
 
-  const token = tokenService.token;
-
-  if (!token) {
-    router.navigate(['page-not-found']);
+  const navigateAndDeny = (route: string): Observable<boolean> => {
+    router.navigate([route]);
     return of(false);
+  };
+
+  if (tokenService.isTokenNotValid()) {
+    return navigateAndDeny('page-not-found');
   }
 
-  const userInfo = tokenService.getUserInfo();
-
-  if (!userInfo) {
-    router.navigate(['page-not-found']);
-    return of(false);
+  const user$ = tokenService.getUserByJwtToken();
+  if (!user$) {
+    return navigateAndDeny('page-not-found');
   }
 
-  return userInfo.pipe(
-    map((data) => {
-      const hasAdminRole = data.roles.some(
-        (role: any) => role.name === 'ADMIN'
-      );
-      if (hasAdminRole) {
-        return true;
-      } else {
+  return user$.pipe(
+    map((user) => {
+      if (!roleService.hasAdminRole(user)) {
         router.navigate(['page-not-found']);
         return false;
       }
+      return true;
     }),
-    catchError(() => {
-      router.navigate(['login']);
-      return of(false);
-    })
+    catchError(() => navigateAndDeny('login'))
   );
 };

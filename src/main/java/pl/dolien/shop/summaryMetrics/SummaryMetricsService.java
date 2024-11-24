@@ -14,29 +14,25 @@ public class SummaryMetricsService {
 
     private final SummaryMetricsRepository repository;
 
-    @Cacheable(cacheNames = "summaryMetrics", key = "summaryMetrics")
     public SummaryMetrics getSummaryMetrics() {
         return repository.findById(1L).orElseThrow(() -> new SummaryMetricsNotFoundException("Summary metrics not found"));
     }
 
     @Transactional
-    @CacheEvict(cacheNames = "summaryMetrics", key = "summaryMetrics")
     public void updateOrderMetrics(Order order) {
         SummaryMetrics metrics = getSummaryMetrics();
         metrics.setTotalOrders(metrics.getTotalOrders() + 1);
         metrics.setRevenue(metrics.getRevenue().add(order.getTotalPrice()));
-        metrics.setProductsSell(metrics.getProductsSell() + order.getTotalQuantity());
+        metrics.setTotalProductsSold(metrics.getTotalProductsSold() + order.getTotalQuantity());
     }
 
     @Transactional
-    @CacheEvict(cacheNames = "summaryMetrics", key = "summaryMetrics")
     public void incrementUserCount() {
         SummaryMetrics metrics = getSummaryMetrics();
         metrics.setTotalUsers(metrics.getTotalUsers() + 1);
     }
 
     @Transactional
-    @CacheEvict(cacheNames = "summaryMetrics", key = "summaryMetrics")
     public void incrementCustomerFeedbackCount() {
         SummaryMetrics metrics = getSummaryMetrics();
         metrics.setTotalCustomerFeedback(metrics.getTotalCustomerFeedback() + 1);

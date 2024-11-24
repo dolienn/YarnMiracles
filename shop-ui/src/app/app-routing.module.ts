@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { ExtraOptions, RouterModule, Routes } from '@angular/router';
-import { ActivateAccountComponent } from './activate-account/components/activate-account.component';
+import { ActivateAccountComponent } from './auth/activation/components/activate-account.component';
 import { authGuard } from './auth/guards/auth/auth.guard';
 import { StarRatingModule } from 'angular-star-rating';
 import { checkoutGuard } from './checkout/guards/checkout/checkout.guard';
@@ -15,12 +15,12 @@ import { OrderHistoryComponent } from './order/components/order-history/order-hi
 import { CheckoutComponent } from './checkout/components/checkout/checkout.component';
 import { CartDetailsComponent } from './cart/components/cart-details/cart-details.component';
 import { ProductListComponent } from './product/components/product-list/product-list.component';
-import { UserDetailsComponent } from './user/components/user-details/user-details.component';
+import { UserDetailsComponent } from './auth/user-profile/components/user-details/user-details.component';
 import { ProductDetailsComponent } from './product/components/product-details/product-details.component';
 import { HomeComponent } from './home/components/home/home.component';
-import { RegisterComponent } from './auth/components/register/register.component';
+import { RegisterComponent } from './auth/registration/components/register/register.component';
 import { loggedInGuard } from './auth/guards/logged-in/logged-in.guard';
-import { LoginComponent } from './auth/components/login/login.component';
+import { LoginComponent } from './auth/login/components/login/login.component';
 
 const routes: Routes = [
   {
@@ -80,7 +80,7 @@ const routes: Routes = [
     component: ProductListComponent,
   },
   {
-    path: 'category/:id/:name',
+    path: 'category/:id',
     component: ProductListComponent,
   },
   {

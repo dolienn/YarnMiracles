@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { DashboardData } from '../../models/dashboard-data/dashboard-data';
 import { AdminService } from '../../services/admin/admin.service';
 import { User } from '../../../user/models/user/user';
+import { SummaryMetrics } from '../../models/summary-metrics/summary-metrics';
+import { UserService } from '../../../user/services/user/user.service';
+import { Page } from '../../../shared/models/page/page';
+import { UserResponse } from '../../../user/models/user-reponse/user-response';
+import { forkJoin, map } from 'rxjs';
 
 @Component({
   selector: 'app-admin-panel',
@@ -9,62 +13,67 @@ import { User } from '../../../user/models/user/user';
   styleUrl: './admin-panel.component.scss',
 })
 export class AdminPanelComponent implements OnInit {
-  dashboardData: DashboardData = {
-    totalUsers: 0,
-    totalOrders: 0,
-    totalCustomerFeedback: 0,
-    productsSell: 0,
-    thisMonthRevenue: 0,
-  };
-
+  summaryMetrics: SummaryMetrics = new SummaryMetrics();
   users: User[] = [];
-
-  pageNumber: number = 1;
-  pageSize: number = 20;
-  totalElements: number = 0;
-
+  page: Page = { size: 15, number: 1, totalElements: 0 };
   isLoading: boolean = true;
 
-  constructor(private adminService: AdminService) {}
+  constructor(
+    private adminService: AdminService,
+    private userService: UserService
+  ) {}
 
   ngOnInit(): void {
-    this.getDashboardData();
-    this.getUsers();
+    this.getSummaryMetrics();
+    this.loadUsers();
   }
 
-  getDashboardData() {
-    this.isLoading = true;
-    this.adminService
-      .getDashboardData()
-      .subscribe((dashboardData: DashboardData) => {
-        this.dashboardData = dashboardData;
-        this.isLoading = false;
-      });
-  }
-
-  getUsers() {
-    this.adminService
-      .getUsers(this.pageNumber - 1, this.pageSize)
-      .subscribe((data: any) => {
-        this.users = data._embedded.users;
-        this.pageNumber = data.page.number + 1;
-        this.pageSize = data.page.size;
-        this.totalElements = data.page.totalElements;
-        this.users.forEach((user) => {
-          this.adminService.getPurchasedProducts(user.id).subscribe((data) => {
-            user.purchasedProducts = data._embedded.products;
-          });
-        });
-      });
+  loadUsers(): void {
+    this.userService.getUsers(this.page.number - 1, this.page.size).subscribe({
+      next: (data: UserResponse) => {
+        this.updatePageData(data.page);
+        this.fetchUsersWithProductQuantities(data.content);
+      },
+      error: (err) => console.error('Error fetching users', err),
+    });
   }
 
   getRole(user: User) {
     return user.roles.some((role) => role.name === 'ADMIN') ? 'Admin' : 'User';
   }
 
-  getPurchasedProductsSize(user: User) {
-    return Array.isArray(user.purchasedProducts)
-      ? user.purchasedProducts.length
-      : 0;
+  private getSummaryMetrics() {
+    this.isLoading = true;
+    this.adminService
+      .getSummaryMetrics()
+      .subscribe((summaryMetrics: SummaryMetrics) => {
+        this.summaryMetrics = summaryMetrics;
+        this.isLoading = false;
+      });
+  }
+
+  private updatePageData(page: Page): void {
+    this.page = {
+      size: page.size,
+      number: page.number + 1,
+      totalElements: page.totalElements,
+    };
+  }
+
+  private fetchUsersWithProductQuantities(users: User[]): void {
+    const userQuantityRequests = users.map((user) =>
+      this.userService.getQuantityOfPurchasedProducts(user.id).pipe(
+        map((quantity) => ({
+          ...user,
+          quantityOfPurchasedProducts: quantity,
+        }))
+      )
+    );
+
+    forkJoin(userQuantityRequests).subscribe({
+      next: (updatedUsers) => (this.users = updatedUsers),
+      error: (err) =>
+        console.error('Error fetching user product quantities', err),
+    });
   }
 }

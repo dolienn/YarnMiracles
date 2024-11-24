@@ -10,6 +10,7 @@ import pl.dolien.shop.exception.SamePasswordException;
 import pl.dolien.shop.user.User;
 import pl.dolien.shop.user.UserService;
 import pl.dolien.shop.user.dto.UserDTO;
+import pl.dolien.shop.user.dto.UserWithRoleDTO;
 
 import java.util.Objects;
 
@@ -21,11 +22,11 @@ public class PasswordChanger {
     private final PasswordEncoder passwordEncoder;
 
     public User changePassword(PasswordRequestDTO dto, Authentication connectedUser) {
-        UserDTO currentUser = userService.getUserDTOByAuth(connectedUser);
+        UserWithRoleDTO currentUser = userService.getUserByAuth(connectedUser);
         User userFromDB = userService.getUserById(currentUser.getId());
 
-        verifyPasswordMatch(dto.getYourPassword(), userFromDB.getPassword());
-        validateDifferentPasswords(dto.getYourPassword(), dto.getNewPassword());
+        verifyPasswordMatch(dto.getCurrentPassword(), userFromDB.getPassword());
+        validateDifferentPasswords(dto.getCurrentPassword(), dto.getNewPassword());
 
         return updateUserPassword(dto.getNewPassword(), userFromDB);
     }

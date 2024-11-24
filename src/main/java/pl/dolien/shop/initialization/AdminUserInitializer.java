@@ -5,6 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import pl.dolien.shop.role.Role;
 import pl.dolien.shop.role.RoleService;
+import pl.dolien.shop.summaryMetrics.SummaryMetricsService;
 import pl.dolien.shop.user.User;
 import pl.dolien.shop.user.UserService;
 
@@ -24,11 +25,13 @@ public class AdminUserInitializer {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
+    private final SummaryMetricsService summaryMetricsService;
 
     public void initializeAdminUser() throws RoleNotFoundException {
         if (isAdminUserNotExists()) {
             User adminUser = buildAdminUser();
             userService.saveUser(adminUser);
+            summaryMetricsService.incrementUserCount();
         }
     }
 

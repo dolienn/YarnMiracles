@@ -9,16 +9,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class ObjectMapperConfig {
 
-    public ObjectMapper configureObjectMapper(boolean isFeedback) {
+    public ObjectMapper configureObjectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.findAndRegisterModules();
 
-        if (isFeedback) {
-            objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        } else {
-            objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL);
-        }
+        objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL);
 
         return objectMapper;
     }

@@ -12,35 +12,35 @@
         <div class="val-box">
             <i class='bx bxs-user'></i>
             <div>
-                <h3>{{dashboardData.totalUsers| number:'1.0-0'}}</h3>
+                <h3>{{summaryMetrics.totalUsers| number:'1.0-0'}}</h3>
                 <span>Total Users</span>
             </div>
         </div>
         <div class="val-box">
             <i class='bx bxs-cart'></i>
             <div>
-                <h3>{{dashboardData.totalOrders | number:'1.0-0'}}</h3>
+                <h3>{{summaryMetrics.totalOrders | number:'1.0-0'}}</h3>
                 <span>Total Orders</span>
             </div>
         </div>
         <div class="val-box">
             <i class='bx bxs-receipt'></i>
             <div>
-                <h3>{{dashboardData.totalCustomerFeedback | number:'1.0-0'}}</h3>
+                <h3>{{summaryMetrics.totalCustomerFeedback | number:'1.0-0'}}</h3>
                 <span>Total Feedback</span>
             </div>
         </div>
         <div class="val-box">
             <i class='bx bxs-t-shirt'></i>
             <div>
-                <h3>{{dashboardData.productsSell| number:'1.0-0'}}</h3>
+                <h3>{{summaryMetrics.totalProductsSold| number:'1.0-0'}}</h3>
                 <span>Product Sell</span>
             </div>
         </div>
         <div class="val-box">
             <i class='bx bxs-wallet'></i>
             <div>
-                <h3>{{dashboardData.thisMonthRevenue| currency:'PLN'}}</h3>
+                <h3>{{summaryMetrics.revenue| currency:'PLN'}}</h3>
                 <span>This Month</span>
             </div>
         </div>
@@ -76,7 +76,7 @@
                         </td>
 
                         <td class="purchases">
-                            <p>{{getPurchasedProductsSize(user)}}</p>
+                            <p>{{user.quantityOfPurchasedProducts}}</p>
                         </td>
 
                         <td class="role">
@@ -92,6 +92,6 @@
         </div>
     </div>
 
-    <app-pagination [totalElements]="totalElements" [pageSize]="pageSize" [isLoading]="isLoading"
-        [(pageNumber)]="pageNumber" (pageNumberChange)="getUsers()"></app-pagination>
+    <app-pagination [totalElements]="page.totalElements" [pageSize]="page.size" [isLoading]="isLoading"
+        [(pageNumber)]="page.number" (pageNumberChange)="loadUsers()"></app-pagination>
 </div>

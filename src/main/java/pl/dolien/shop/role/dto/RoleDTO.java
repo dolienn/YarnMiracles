@@ -1,13 +1,17 @@
 package pl.dolien.shop.role.dto;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @Builder
-public class RoleDTO {
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+public class RoleDTO implements Serializable {
     private Integer id;
     private String name;
     private LocalDateTime createdDate;

@@ -4,6 +4,7 @@ import { ProductCategory } from '../../../product/models/product-category/produc
 import { TokenService } from '../../../token/services/token/token.service';
 import { ProductService } from '../../../product/services/product/product.service';
 import { NotificationService } from '../../../notification/services/notification/notification.service';
+import { RoleService } from '../../../role/services/role/role.service';
 
 @Component({
   selector: 'app-navigation-bar',
@@ -23,159 +24,65 @@ export class NavigationBarComponent implements OnInit {
     private tokenService: TokenService,
     private productService: ProductService,
     private router: Router,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private roleService: RoleService
   ) {}
 
   ngOnInit(): void {
-    this.tokenService.getUserInfo()?.subscribe((userInfo) => {
-      this.isAdmin =
-        userInfo?.roles.some((role: any) => role.name === 'ADMIN') || false;
-    });
-    this.tokenService.isLoggedIn.subscribe((loggedIn) => {
-      this.isUserLoggedIn = loggedIn;
-    });
-    this.notificationService.isVisible$.subscribe((visible) => {
-      this.isNotificationVisible = visible;
-    });
-    this.listProductCategories();
+    this.initializeUserState();
+    this.initalizeNotificationVisibility();
+    this.showLoginOrLogoutMessage();
+    this.loadProductCategories();
     this.checkWindowWidth();
   }
 
-  listProductCategories() {
-    this.productService.getProductCategories().subscribe((data) => {
-      this.productCategories = data;
-    });
-  }
-
   @HostListener('window:scroll', [])
-  onWindowScroll() {
-    const header = document.querySelector('header');
-    const differentSearch = document.querySelector('.max-width-search');
-    header?.classList.toggle('sticky', window.scrollY > 0);
-    if (differentSearch?.classList.contains('sticky') && window.scrollY <= 0) {
-      differentSearch?.classList.remove('sticky');
-    }
-    if (!differentSearch?.classList.contains('sticky') && window.scrollY > 0) {
-      differentSearch?.classList.add('sticky');
-    }
+  onWindowScroll(): void {
+    this.toggleStickyHeader();
   }
 
   @HostListener('window:resize', ['$event'])
-  onResize(event: Event) {
+  onResize() {
     this.checkWindowWidth();
   }
 
   @HostListener('window:load', [])
-  onLoad() {
-    const iconContainer = document.querySelector('.nav-icon');
-    if (iconContainer) {
-      iconContainer.classList.remove('loading');
-      iconContainer.classList.add('loaded');
-    }
-
-    if (window.innerWidth <= 768) {
-      this.isMobile = true;
-    }
+  onLoad(): void {
+    this.handleIconLoad();
+    this.checkWindowWidth();
   }
 
-  checkWindowWidth() {
-    if (
-      window.innerWidth <= 1000 &&
-      document
-        .querySelector('.search-bar')
-        ?.classList.contains('active-search-bar')
-    ) {
-      document.querySelector('header')?.classList.add('mobile-search-active');
-      this.isMobile = true;
-    } else {
-      document
-        .querySelector('header')
-        ?.classList.remove('mobile-search-active');
-      this.isMobile = false;
-
-      if (window.innerWidth <= 768) {
-        this.isMobile = true;
-      } else {
-        this.isMobile = false;
-        this.isCategoryButtonClicked = false;
-      }
-    }
-
-    if (window.innerWidth <= 600) {
-      this.isDifferentSearchMode = true;
-      const differentSearch = document.querySelector('.max-width-search');
-
-      if (
-        differentSearch?.classList.contains('sticky') &&
-        window.scrollY <= 0
-      ) {
-        differentSearch?.classList.remove('sticky');
-      }
-      if (
-        !differentSearch?.classList.contains('sticky') &&
-        window.scrollY > 0
-      ) {
-        differentSearch?.classList.add('sticky');
-      }
-    } else {
-      this.isDifferentSearchMode = false;
-    }
+  toggleMenu(): void {
+    this.toggleClass('#menu-icon', 'bx-x');
+    this.toggleClass('.navmenu', 'open');
+    this.isCategoryButtonClicked = false;
   }
 
-  toggleMenu() {
-    document.querySelector('#menu-icon')?.classList.toggle('bx-x');
-    document.querySelector('.navmenu')?.classList.toggle('open');
-    if (this.isCategoryButtonClicked) {
-      this.isCategoryButtonClicked = false;
-    }
-  }
+  toggleSearch(): void {
+    const searchBar = document.querySelector('.search-bar');
+    const searchInput = document.querySelector('.search-input');
+    const closeIcon = document.querySelector('.bx-x');
 
-  toggleSearch() {
-    document
-      .querySelector('.search-bar')
-      ?.classList.toggle('active-search-bar');
-    document
-      .querySelector('.search-input')
-      ?.classList.toggle('active-search-input');
-    document.querySelector('.bx-x')?.classList.toggle('disabled');
+    searchBar?.classList.toggle('active-search-bar');
+    searchInput?.classList.toggle('active-search-input');
+    closeIcon?.classList.toggle('disabled');
 
-    if (
-      window.innerWidth <= 1000 &&
-      window.getComputedStyle(document.querySelector('.navmenu')!).position ===
-        'relative'
-    ) {
-      document.querySelector('header')?.classList.add('mobile-search-active');
-      this.isMobile = true;
-    }
-
-    if (
-      window.innerWidth <= 768 &&
-      window.getComputedStyle(document.querySelector('.navmenu')!).position ===
-        'absolute'
-    ) {
-      document
-        .querySelector('header')
-        ?.classList.remove('mobile-search-active');
-      this.isMobile = false;
+    if (window.innerWidth <= 1000) {
+      this.toggleMobileSearch();
     }
 
     this.checkWindowWidth();
   }
 
-  doSearch(value: string) {
-    if (
-      document
-        .querySelector('.search-bar')
-        ?.classList.contains('active-search-bar') ||
-      this.isDifferentSearchMode
-    ) {
+  doSearch(value: string): void {
+    if (this.isSearchActive()) {
       this.router.navigateByUrl(`/search/${value}`);
     }
     this.toggleSearch();
   }
 
-  handleCategoryButton() {
-    if (!this.isCategoryButtonClicked && this.isMobile) {
+  handleCategoryButton(): void {
+    if (this.isMobile) {
       this.isCategoryButtonClicked = true;
     }
   }
@@ -183,5 +90,100 @@ export class NavigationBarComponent implements OnInit {
   logout() {
     this.tokenService.logout();
     this.router.navigate(['']);
+  }
+
+  private initializeUserState(): void {
+    this.tokenService.getUserByJwtToken()?.subscribe((userInfo) => {
+      this.isAdmin = this.roleService.hasAdminRole(userInfo);
+    });
+
+    this.tokenService.isLoggedIn.subscribe((loggedIn) => {
+      this.isUserLoggedIn = loggedIn;
+    });
+  }
+
+  private initalizeNotificationVisibility(): void {
+    this.notificationService.isVisible$.subscribe((visible) => {
+      this.isNotificationVisible = visible;
+    });
+  }
+
+  private showLoginOrLogoutMessage(): void {
+    this.showMessageFromLocalStorage('loginMessage');
+    this.showMessageFromLocalStorage('logoutMessage');
+  }
+
+  private showMessageFromLocalStorage(key: string): void {
+    const message = localStorage.getItem(key);
+    if (message) {
+      this.notificationService.showMessage(message, true);
+      localStorage.removeItem(key);
+    }
+  }
+
+  private loadProductCategories() {
+    this.productService.getProductCategories().subscribe((data) => {
+      this.productCategories = data;
+    });
+  }
+
+  private checkWindowWidth(): void {
+    const width = window.innerWidth;
+    this.isMobile = width <= 768;
+    this.isDifferentSearchMode = width <= 600;
+
+    const header = document.querySelector('header');
+    const searchBar = document.querySelector('.search-bar');
+
+    if (this.isMobile && searchBar?.classList.contains('active-search-bar')) {
+      header?.classList.add('mobile-search-active');
+    } else {
+      header?.classList.remove('mobile-search-active');
+      this.isCategoryButtonClicked = false;
+    }
+  }
+
+  private toggleStickyHeader(): void {
+    const isScrolled = window.scrollY > 0;
+
+    this.toggleClass('header', 'sticky', isScrolled);
+    this.toggleClass('.max-width-search', 'sticky', isScrolled);
+  }
+
+  private toggleClass(
+    element: string | Element,
+    className: string,
+    condition: boolean = true
+  ): void {
+    const el =
+      typeof element === 'string' ? document.querySelector(element) : element;
+    el?.classList.toggle(className, condition);
+  }
+
+  private handleIconLoad(): void {
+    const iconContainer = document.querySelector('.nav-icon');
+    if (iconContainer) {
+      iconContainer.classList.remove('loading');
+      iconContainer.classList.add('loaded');
+    }
+  }
+
+  private toggleMobileSearch(): void {
+    const header = document.querySelector('header');
+    const navMenu = document.querySelector('.navmenu');
+
+    if (navMenu && window.getComputedStyle(navMenu).position === 'relative') {
+      header?.classList.add('mobile-search-active');
+    } else {
+      header?.classList.remove('mobile-search-active');
+    }
+  }
+
+  private isSearchActive(): boolean {
+    return (
+      document
+        .querySelector('.search-bar')
+        ?.classList.contains('active-search-bar') || this.isDifferentSearchMode
+    );
   }
 }

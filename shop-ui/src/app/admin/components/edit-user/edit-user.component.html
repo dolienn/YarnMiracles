@@ -46,14 +46,25 @@
                 id="accountLocked">
         </div>
 
+        <div *ngIf="!hasAdminRole(user)">
+            <button (click)="addAdminRole()" class="add_btn">
+                <span>Add Admin Role</span>
+            </button>
+        </div>
 
-        <div *ngIf="!editUserLoading">
+        <div *ngIf="hasAdminRole(user)">
+            <button (click)="removeAdminRole()" class="add_btn">
+                <span>Remove Admin Role</span>
+            </button>
+        </div>
+
+        <div *ngIf="!isEditUserLoading">
             <button (click)="editUser()" class="edit_btn">
                 <span>Edit User</span>
             </button>
         </div>
 
-        <div *ngIf="editUserLoading">
+        <div *ngIf="isEditUserLoading">
             <button class="edit_btn"><app-loader width="1rem" height="1rem" [maxHeight]="false"></app-loader></button>
         </div>
 

@@ -1,13 +1,15 @@
 package pl.dolien.shop.auth.userProfile;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import pl.dolien.shop.auth.password.PasswordChanger;
 import pl.dolien.shop.auth.registration.dto.RegistrationDTO;
+import pl.dolien.shop.auth.userProfile.dto.UserProfileDTO;
 import pl.dolien.shop.user.User;
 import pl.dolien.shop.user.UserService;
-import pl.dolien.shop.user.dto.UserDTO;
+import pl.dolien.shop.user.dto.UserWithRoleDTO;
 
 @Service
 @RequiredArgsConstructor
@@ -16,8 +18,10 @@ public class UserProfileUpdater {
     private final UserService userService;
     private final PasswordChanger passwordChanger;
 
-    public User updateUserProfile(RegistrationDTO request, Authentication connectedUser) {
-        UserDTO currentUser = userService.getUserDTOByAuth(connectedUser);
+    @CacheEvict(cacheNames = {"connectedUser", "products", "productsByCategory",
+                "productsByName", "productsWithFeedbacks", "feedbacksByProduct"}, allEntries = true)
+    public User updateUserProfile(UserProfileDTO request, Authentication connectedUser) {
+        UserWithRoleDTO currentUser = userService.getUserByAuth(connectedUser);
         User userFromDB = userService.getUserById(currentUser.getId());
 
         passwordChanger.verifyPasswordMatch(request.getPassword(), userFromDB.getPassword());

@@ -65,7 +65,7 @@ class PasswordControllerTest {
                 .build();
 
         testPasswordRequestDTO = PasswordRequestDTO.builder()
-                .yourPassword("password123")
+                .currentPassword("password123")
                 .newPassword("newPassword123")
                 .build();
     }

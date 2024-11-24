@@ -128,4 +128,16 @@ public class User implements UserDetails, Principal {
 
         roles.add(role);
     }
+
+    public void removeFromRoles(Role role) {
+        if (role == null) {
+            return;
+        }
+
+        if (this.roles == null) {
+            this.roles = new HashSet<>();
+        }
+
+        roles.remove(role);
+    }
 }

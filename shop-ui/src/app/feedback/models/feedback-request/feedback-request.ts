@@ -1,5 +1,7 @@
 export class FeedbackRequest {
-  public note?: number;
-  public comment?: string;
-  public productId?: number;
+  constructor(
+    public note: number = 0,
+    public comment: string = '',
+    public productId: number = 0
+  ) {}
 }

@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import pl.dolien.shop.exception.ProductCategoryNotFoundException;
+import pl.dolien.shop.productCategory.dto.ProductCategoryDTO;
 
 import java.util.Optional;
 

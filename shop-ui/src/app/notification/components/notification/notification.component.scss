@@ -4,9 +4,15 @@
   position: fixed;
   height: $noti-height;
   width: 100%;
-  background-color: $success--01;
   color: white;
   text-align: center;
   padding: 1rem;
   z-index: 1000;
+}
+
+.success {
+  background-color: $success--01;
+}
+.error {
+  background-color: $error--01;
 }

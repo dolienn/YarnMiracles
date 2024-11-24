@@ -17,6 +17,7 @@ import pl.dolien.shop.user.User;
 import pl.dolien.shop.user.UserService;
 
 import javax.management.relation.RoleNotFoundException;
+import java.util.HashSet;
 import java.util.Set;
 
 @Service
@@ -36,8 +37,11 @@ public class RegistrationService {
         validateUserNotExists(dto.getEmail());
 
         User user = createUser(dto);
-        sendActivationEmail(user);
-        return userService.saveUser(user);
+        User savedUser = userService.saveUser(user);
+
+        sendActivationEmail(savedUser);
+
+        return savedUser;
     }
 
     private void validateUserNotExists(String email) {
@@ -56,7 +60,7 @@ public class RegistrationService {
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .accountLocked(false)
                 .enabled(false)
-                .roles(Set.of(userRole))
+                .roles(new HashSet<>(Set.of(userRole)))
                 .build();
     }
 

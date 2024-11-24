@@ -6,20 +6,21 @@ import pl.dolien.shop.exception.InvalidSortOrderException;
 
 @Service
 public class SortGenerator {
-    public Sort generateSort(String sortOrderType) {
-        if (sortOrderType == null)
+    public Sort generateSort(String sortBy) {
+        System.out.println(sortBy);
+        if (sortBy == null)
             return Sort.unsorted();
 
-        SortOrder validatedSortOrder  = parseAndValidateSortOrder(sortOrderType);
+        SortOrder validatedSortOrder  = parseAndValidateSortOrder(sortBy);
         return buildSort(validatedSortOrder);
     }
 
-    private SortOrder parseAndValidateSortOrder(String sortOrderType) {
+    private SortOrder parseAndValidateSortOrder(String sortBy) {
         SortOrder sortOrder;
         try {
-            sortOrder = SortOrder.valueOf(sortOrderType);
+            sortOrder = SortOrder.valueOf(sortBy);
         } catch (IllegalArgumentException e) {
-            throw new InvalidSortOrderException("Invalid sort order type provided: " + sortOrderType);
+            throw new InvalidSortOrderException("Invalid sort order type provided: " + sortBy);
         }
 
         return sortOrder;

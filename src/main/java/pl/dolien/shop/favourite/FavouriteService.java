@@ -3,6 +3,7 @@ package pl.dolien.shop.favourite;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class FavouriteService {
     private final FavouriteRepository favouriteRepository;
 
     @Cacheable(cacheNames = "favouritesByUser", keyGenerator = "customKeyGenerator")
-    public List<ProductDTO> getFavourites(Integer userId,
+    public Page<ProductDTO> getFavourites(Integer userId,
                                           PaginationAndSortParams paginationAndSortParams,
                                           Authentication connectedUser) {
         userService.verifyUserIsAuthenticatedUser(userId, connectedUser);

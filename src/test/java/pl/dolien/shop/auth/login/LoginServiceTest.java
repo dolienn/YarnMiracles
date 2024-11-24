@@ -14,6 +14,7 @@ import pl.dolien.shop.security.JwtService;
 import pl.dolien.shop.user.User;
 import pl.dolien.shop.user.UserService;
 import pl.dolien.shop.user.dto.UserDTO;
+import pl.dolien.shop.user.dto.UserWithRoleDTO;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -39,7 +40,7 @@ class LoginServiceTest {
     private Authentication authentication;
 
     private LoginRequestDTO testLoginRequestDTO;
-    private UserDTO testUserDTO;
+    private UserWithRoleDTO testUserDTO;
 
     @BeforeEach
     void setUp() {
@@ -65,7 +66,7 @@ class LoginServiceTest {
                 .password("password123")
                 .build();
 
-        testUserDTO = UserDTO.builder()
+        testUserDTO = UserWithRoleDTO.builder()
                 .id(1)
                 .email(TEST_EMAIL)
                 .build();
@@ -74,13 +75,13 @@ class LoginServiceTest {
     private void mockDependencies() {
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenReturn(authentication);
-        when(userService.getUserDTOByAuth(authentication)).thenReturn(testUserDTO);
+        when(userService.getUserByAuth(authentication)).thenReturn(testUserDTO);
         when(jwtService.generateToken(anyMap(), any(User.class))).thenReturn(TEST_JWT_TOKEN);
     }
 
     private void verifyInteractions() {
         verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
-        verify(userService, times(1)).getUserDTOByAuth(authentication);
+        verify(userService, times(1)).getUserByAuth(authentication);
         verify(jwtService, times(1)).generateToken(anyMap(), any(User.class));
     }
 }

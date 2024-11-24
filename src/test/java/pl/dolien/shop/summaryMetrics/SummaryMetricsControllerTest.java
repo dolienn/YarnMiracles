@@ -59,7 +59,7 @@ class SummaryMetricsControllerTest {
                 .totalUsers(0)
                 .totalOrders(0)
                 .totalCustomerFeedback(0)
-                .productsSell(0)
+                .totalProductsSold(0)
                 .revenue(BigDecimal.ZERO)
                 .build();
     }

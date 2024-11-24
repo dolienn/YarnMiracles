@@ -36,11 +36,9 @@ public class RedisConfig {
 
     @Bean
     public RedisCacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
-        RedisCacheConfiguration defaultCacheConfig = cacheConfigBuilder.buildCacheConfig(objectMapperConfig.configureObjectMapper(false));
-        RedisCacheConfiguration feedbackCacheConfig = cacheConfigBuilder.buildCacheConfig(objectMapperConfig.configureObjectMapper(true));
+        RedisCacheConfiguration defaultCacheConfig = cacheConfigBuilder.buildCacheConfig(objectMapperConfig.configureObjectMapper());
 
         Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
-        cacheConfigurations.put("feedbacksByProduct", feedbackCacheConfig);
         cacheConfigurations.put("default", defaultCacheConfig);
 
         return RedisCacheManager.builder(redisConnectionFactory)

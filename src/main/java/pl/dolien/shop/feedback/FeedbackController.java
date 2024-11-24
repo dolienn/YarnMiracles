@@ -3,14 +3,13 @@ package pl.dolien.shop.feedback;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import pl.dolien.shop.feedback.dto.FeedbackDTO;
 import pl.dolien.shop.feedback.dto.FeedbackRequestDTO;
 import pl.dolien.shop.feedback.dto.FeedbackResponseDTO;
 import pl.dolien.shop.pagination.PaginationParams;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("feedbacks")
@@ -29,7 +28,7 @@ public class FeedbackController {
     }
 
     @GetMapping("/products/{productId}")
-    public List<FeedbackResponseDTO> getAllFeedbacksByProduct(
+    public Page<FeedbackResponseDTO> getAllFeedbacksByProduct(
             @PathVariable Long productId,
             @ModelAttribute PaginationParams paginationParams,
             Authentication connectedUser
