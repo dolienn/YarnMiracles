@@ -1,72 +1,31 @@
 package pl.dolien.shop.product;
 
-import com.cloudinary.Cloudinary;
-import com.cloudinary.utils.ObjectUtils;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import pl.dolien.shop.settings.AppSettings;
-import pl.dolien.shop.settings.AppSettingsRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
+import pl.dolien.shop.pagination.PaginationAndSortParams;
+import pl.dolien.shop.product.dto.ProductDTO;
+import pl.dolien.shop.product.dto.ProductRequestDTO;
+import pl.dolien.shop.product.dto.ProductWithFeedbackDTO;
 
-import java.io.File;
 import java.util.List;
-import java.util.Map;
 
-@Service
-@RequiredArgsConstructor
-public class ProductService {
+public interface ProductService {
 
-    private final ProductRepository productRepository;
-    private final Cloudinary cloudinary;
-    private final AppSettingsRepository appSettingsRepository;
+    Product getProductById(Long productId);
 
-    public void updateProductImages() {
-        AppSettings settings = appSettingsRepository.findById(1L).orElse(new AppSettings());
+    List<Product> getAllProducts();
 
-        if (settings.isImagesUpdated()) {
-            return;
-        }
+    Page<ProductDTO> getAllProducts(PaginationAndSortParams paginationAndSortParams);
 
+    Page<ProductDTO> getProductsByCategoryId(Integer categoryId, PaginationAndSortParams paginationAndSortParams);
 
-        List<Product> products = productRepository.findAll();
-        String localImagePath = "shop-ui/src/assets/images/products/";
+    Page<ProductDTO> getProductsByKeyword(String keyword, PaginationAndSortParams paginationAndSortParams);
 
-        for (Product product : products) {
-            String localImageFileName = product.getImageUrl().substring(product.getImageUrl().lastIndexOf("/") + 1);
-            File localFile = new File(localImagePath + localImageFileName);
+    Page<ProductWithFeedbackDTO> getAllProductsWithFeedbacks(PaginationAndSortParams paginationAndSortParams);
 
-            if (localFile.exists()) {
-                try {
-                    Map imageInfo = cloudinary.uploader().upload(localFile, ObjectUtils.asMap("resource_type", "image", "image_metadata", true));
-                    int width = (int) imageInfo.get("width");
-                    int height = (int) imageInfo.get("height");
+    Product saveProduct(Product product);
 
-                    String transformation;
-                    if (height > width) {
-                        transformation = "w_171,h_171,c_fill";
-                    } else {
-                        transformation = "w_171,h_171,c_pad,b_auto";
-                    }
-
-                    Map uploadResult = cloudinary.uploader().upload(localFile, ObjectUtils.asMap("transformation", transformation));
-                    String imageUrl = (String) uploadResult.get("secure_url");
-
-                    product.setImageUrl(imageUrl);
-                    productRepository.save(product);
-
-                    settings.setImagesUpdated(true);
-                    appSettingsRepository.save(settings);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else {
-                System.out.println("File does not exist: " + localFile.getAbsolutePath());
-            }
-        }
-    }
-
-    public String generateSku(String productName, Long productId) {
-        String namePart = productName.substring(0, Math.min(3, productName.length())).toUpperCase();
-        String idPart = String.format("%04d", productId);
-        return namePart + "-" + idPart;
-    }
+    ProductDTO saveProductWithImage(ProductRequestDTO request, MultipartFile file, Authentication connectedUser);
 }
+

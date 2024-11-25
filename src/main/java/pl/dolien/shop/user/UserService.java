@@ -1,83 +1,45 @@
 package pl.dolien.shop.user;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import pl.dolien.shop.product.Product;
-import pl.dolien.shop.product.ProductRepository;
-import pl.dolien.shop.role.RoleRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
+import pl.dolien.shop.pagination.PaginationAndSortParams;
+import pl.dolien.shop.user.dto.UserDTO;
+import pl.dolien.shop.user.dto.UserRequestDTO;
+import pl.dolien.shop.user.dto.UserWithRoleDTO;
 
-import java.time.LocalDate;
-import java.util.List;
+import javax.management.relation.RoleNotFoundException;
 
-@Service
-@RequiredArgsConstructor
-public class UserService {
+public interface UserService {
 
-    private final UserRepository userRepository;
-    private final ProductRepository productRepository;
-    private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;
+    Page<UserWithRoleDTO> getAllUsers(PaginationAndSortParams paginationAndSortParams, Authentication connectedUser);
 
-    public void addFavouriteProduct(Integer userId, Long productId) {
-        if(userId == 0) {
-            throw new IllegalArgumentException("User id should not be zero");
-        }
+    UserWithRoleDTO getUserWithRolesById(Integer userId, Authentication connectedUser);
 
-        if(productId == 0) {
-            throw new IllegalArgumentException("Product id should not be zero");
-        }
+    User getUserById(Integer userId);
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
-        Product product = productRepository.findById(productId).orElseThrow(() -> new IllegalArgumentException("Product not found"));
+    User getUserByEmail(String email);
 
-        if (user.getFavourites().contains(product)) {
-            throw new IllegalArgumentException("Product is a favourite of the user");
-        }
+    UserWithRoleDTO getUserByAuth(Authentication connectedUser);
 
-        user.getFavourites().add(product);
-        product.getUsersWhoFavourited().add(user);
-        userRepository.save(user);
-    }
+    User saveUser(User user);
 
-    public void removeFavouriteProduct(Integer userId, Long productId) {
-        if(userId == 0) {
-            throw new IllegalArgumentException("User id should not be zero");
-        }
+    UserDTO editUser(UserRequestDTO userDTO, Authentication connectedUser);
 
-        if(productId == 0) {
-            throw new IllegalArgumentException("Product id should not be zero");
-        }
+    UserWithRoleDTO addRole(String email, String roleName, Authentication connectedUser) throws RoleNotFoundException;
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
-        Product product = productRepository.findById(productId).orElseThrow(() -> new IllegalArgumentException("Product not found"));
+    void removeRole(String email, String roleName, Authentication connectedUser) throws RoleNotFoundException;
 
-        if (!user.getFavourites().contains(product)) {
-            throw new IllegalArgumentException("Product is not a favourite of the user");
-        }
+    boolean hasUserPurchasedProduct(Integer userId, Long productId);
 
-        user.getFavourites().remove(product);
-        product.getUsersWhoFavourited().remove(user);
-        userRepository.save(user);
-    }
+    Integer getNumberOfPurchasedProducts(Integer userId);
 
-    public void addAdminUser() {
+    void verifyUserHasAdminRole(Authentication connectedUser);
 
-        if (userRepository.findByEmail("admin@test.com").isPresent()) {
-            return;
-        }
+    void verifyUserIsAuthenticatedUser(Integer userId, Authentication connectedUser);
 
-        var adminRole = roleRepository.findByName("ADMIN").orElseThrow(() -> new IllegalStateException("ROLE ADMIN was not initialized"));
-        var user = User.builder()
-                .firstname("Admin")
-                .lastname("Admin")
-                .email("admin@test.com")
-                .dateOfBirth(LocalDate.now())
-                .password(passwordEncoder.encode("testadmin123"))
-                .accountLocked(false)
-                .enabled(true)
-                .roles(List.of(adminRole))
-                .build();
-        userRepository.save(user);
-    }
+    void assertEmailNotInUse(String newEmail, String currentEmail);
+
+    boolean isEmailTaken(String email, String userFromDBEmail);
+
+    boolean isUserExists(String email);
 }

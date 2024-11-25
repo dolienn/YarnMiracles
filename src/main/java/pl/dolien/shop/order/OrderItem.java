@@ -1,6 +1,7 @@
 package pl.dolien.shop.order;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,22 +17,14 @@ public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
     private Long id;
-
-    @Column
     private String imageUrl;
-
-    @Column
     private BigDecimal unitPrice;
-
-    @Column
     private int quantity;
-
-    @Column
     private Long productId;
 
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
+    @JsonIgnore
     private Order order;
 }

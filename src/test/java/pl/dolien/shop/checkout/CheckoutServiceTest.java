@@ -1,177 +1,78 @@
 package pl.dolien.shop.checkout;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.Authentication;
-import pl.dolien.shop.order.*;
-import pl.dolien.shop.product.Product;
-import pl.dolien.shop.product.ProductRepository;
-import pl.dolien.shop.purchase.Purchase;
-import pl.dolien.shop.purchase.PurchaseResponse;
-
-import java.math.BigDecimal;
-import java.util.*;
+import pl.dolien.shop.checkout.dto.PurchaseRequestDTO;
+import pl.dolien.shop.checkout.dto.PurchaseResponseDTO;
+import pl.dolien.shop.customer.CustomerService;
+import pl.dolien.shop.kafka.producer.KafkaJsonProducer;
+import pl.dolien.shop.order.Order;
+import pl.dolien.shop.order.OrderService;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class CheckoutServiceTest {
+class CheckoutServiceTest {
 
     @InjectMocks
-    private CheckoutService service;
+    private CheckoutServiceImpl checkoutService;
 
     @Mock
-    private CustomerRepository customerRepository;
+    private OrderService orderService;
 
     @Mock
-    private ProductRepository productRepository;
+    private CustomerService customerService;
 
     @Mock
     private Authentication authentication;
 
-    private Customer customer;
+    @Mock
+    private KafkaJsonProducer kafkaJsonProducer;
 
-    private Address shippingAddress;
-
-    private Address billingAddress;
-
-    private Set<OrderItem> orderItems;
-
-    private Order order;
-
-    private Product product;
+    private PurchaseRequestDTO testPurchaseRequestDTO;
+    private Order testOrder;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        customer = Customer.builder()
-                .id(1L)
-                .firstname("testFirstname")
-                .lastname("testLastname")
-                .email("test@test.com")
-                .orders(null)
-                .build();
-
-        shippingAddress = Address.builder()
-                .id(1L)
-                .street("testStreet")
-                .city("testCity")
-                .country("testCountry")
-                .zipCode("testZipCode")
-                .order(null)
-                .build();
-
-        billingAddress = Address.builder()
-                .id(2L)
-                .street("testStreet")
-                .city("testCity")
-                .country("testCountry")
-                .zipCode("testZipCode")
-                .order(null)
-                .build();
-
-        orderItems = new HashSet<>(Set.of(
-                OrderItem.builder()
-                        .id(1L)
-                        .imageUrl("testImageUrl")
-                        .unitPrice(BigDecimal.valueOf(1))
-                        .quantity(1)
-                        .productId(1L)
-                        .order(null)
-                        .build()
-        ));
-
-        order = Order.builder()
-                .id(1L)
-                .orderTrackingNumber("testOrderTrackingNumber")
-                .totalQuantity(1)
-                .totalPrice(BigDecimal.valueOf(1))
-                .status("testStatus")
-                .dateCreated(new Date())
-                .lastUpdated(new Date())
-                .customer(customer)
-                .shippingAddress(shippingAddress)
-                .billingAddress(billingAddress)
-                .orderItems(orderItems)
-                .build();
-
-        product = Product.builder()
-                .id(1L)
-                .name("testName")
-                .description("testDescription")
-                .unitPrice(BigDecimal.valueOf(1))
-                .imageUrl("testImageUrl")
-                .unitsInStock(1)
-                .active(true)
-                .dateCreated(new Date())
-                .lastUpdated(new Date())
-                .rate(0.0)
-                .sales(1L)
-                .build();
-
-        customer.setOrders(new HashSet<>(Set.of(order)));
-        shippingAddress.setOrder(order);
-        billingAddress.setOrder(order);
+        initializeTestData();
     }
 
     @Test
-    public void shouldSuccessfullyPlaceOrder() {
-        when(authentication.getPrincipal()).thenReturn(customer);
-        when(productRepository.findById(1L)).thenReturn(Optional.ofNullable(product));
-        when(productRepository.save(Product.builder().id(1L).build())).thenReturn(product);
-        when(customerRepository.save(customer)).thenReturn(customer);
+    void shouldPlaceOrder() {
+        mockDependenciesForPlaceOrder();
 
-        Purchase purchase = Purchase.builder()
-                .customer(customer)
-                .shippingAddress(shippingAddress)
-                .billingAddress(billingAddress)
-                .order(order)
-                .orderItems(orderItems)
+        PurchaseResponseDTO response = checkoutService.placeOrder(testPurchaseRequestDTO, authentication);
+
+        assertPurchaseResponse(response);
+        verifyInteractionsForPlaceOrder();
+    }
+
+    private void initializeTestData() {
+        testPurchaseRequestDTO = PurchaseRequestDTO.builder()
                 .build();
 
-        PurchaseResponse response = service.placeOrder(purchase, authentication);
+        testOrder = Order.builder()
+                .id(1L)
+                .orderTrackingNumber("trackingNumber")
+                .build();
+    }
 
+    private void mockDependenciesForPlaceOrder() {
+        when(orderService.buildOrder(testPurchaseRequestDTO)).thenReturn(testOrder);
+    }
+
+    private void assertPurchaseResponse(PurchaseResponseDTO response) {
         assertNotNull(response);
-
-        verify(productRepository, times(orderItems.size())).findById(1L);
-        verify(productRepository, times(orderItems.size())).save(product);
-        verify(customerRepository, times(1)).save(customer);
-
+        assertEquals(testOrder.getOrderTrackingNumber(), response.getOrderTrackingNumber());
     }
 
-    @Test
-    public void shouldThrowExceptionWhenPurchaseIsNull() {
-        when(authentication.getPrincipal()).thenReturn(customer);
-        when(productRepository.findById(1L)).thenReturn(Optional.ofNullable(product));
-        when(productRepository.save(Product.builder().id(1L).build())).thenReturn(product);
-        when(customerRepository.save(customer)).thenReturn(customer);
-
-        var exp = assertThrows(NullPointerException.class, () -> service.placeOrder(null, authentication));
-
-        assertEquals("Purchase not found", exp.getMessage());
-    }
-
-    @Test
-    public void shouldThrowExceptionWhenProductIsNotFound() {
-        when(authentication.getPrincipal()).thenReturn(customer);
-        when(productRepository.findById(1L)).thenReturn(Optional.empty());
-        when(productRepository.save(Product.builder().id(1L).build())).thenReturn(product);
-        when(customerRepository.save(customer)).thenReturn(customer);
-
-        Purchase purchase = Purchase.builder()
-                .customer(customer)
-                .shippingAddress(shippingAddress)
-                .billingAddress(billingAddress)
-                .order(order)
-                .orderItems(orderItems)
-                .build();
-
-
-        var exp = assertThrows(IllegalArgumentException.class, () -> service.placeOrder(purchase, authentication));
-
-        assertEquals("Product not found", exp.getMessage());
+    private void verifyInteractionsForPlaceOrder() {
+        verify(orderService, times(1)).buildOrder(testPurchaseRequestDTO);
     }
 }

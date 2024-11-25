@@ -5,6 +5,8 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import pl.dolien.shop.address.Address;
+import pl.dolien.shop.customer.Customer;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -16,6 +18,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "\"order\"")
@@ -23,20 +26,11 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
     private Long id;
-
-    @Column
     private String orderTrackingNumber;
-
-    @Column
     private int totalQuantity;
-
-    @Column
     private BigDecimal totalPrice;
-
-    @Column
-    private String status;
+    private OrderStatus status;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -62,13 +56,10 @@ public class Order {
     private Address billingAddress;
 
     public void add(OrderItem item) {
-        if(item != null) {
-            if(orderItems == null) {
-                orderItems = new HashSet<>();
-            }
+        if(orderItems == null)
+            orderItems = new HashSet<>();
 
-            orderItems.add(item);
-            item.setOrder(this);
-        }
+        orderItems.add(item);
+        item.setOrder(this);
     }
 }

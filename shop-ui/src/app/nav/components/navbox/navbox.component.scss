@@ -1,0 +1,11 @@
+@import "../../../variables.scss";
+
+.navbox {
+  height: $nav-height;
+}
+
+@media (max-width: 600px) {
+  .navbox {
+    height: $nav-height * 2;
+  }
+}

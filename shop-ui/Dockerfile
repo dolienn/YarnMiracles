@@ -11,6 +11,8 @@ RUN npm run build --prod
 
 FROM nginx:alpine
 
+COPY custom-nginx.conf /etc/nginx/conf.d/default.conf
+
 COPY --from=build /app/dist/shop-ui/browser /usr/share/nginx/html
 
 EXPOSE 80

@@ -16,9 +16,7 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
@@ -36,41 +34,16 @@ public class User implements UserDetails, Principal {
     private Integer id;
 
     private String firstname;
-
     private String lastname;
-
-    private LocalDate dateOfBirth;
 
     @Column(unique = true)
     private String email;
 
     private String password;
+    private LocalDate dateOfBirth;
 
     private boolean accountLocked;
-
     private boolean enabled;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<Role> roles;
-
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "favourite_products",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private List<Product> favourites;
-
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "purchased_products",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private List<Product> purchasedProducts;
-
-    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Feedback> feedbacks;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -80,32 +53,37 @@ public class User implements UserDetails, Principal {
     @Column(insertable = false)
     private LocalDateTime lastModifiedDate;
 
-    @Override
-    public String getName() {
-        return email;
-    }
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Role> roles = new HashSet<>();
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "favourite_products",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    private Set<Product> favourites = new HashSet<>();
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "purchased_products",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    private List<Product> purchasedProducts = new ArrayList<>();
+
+    @OneToMany
+    @JoinColumn(name = "createdBy", updatable = false, insertable = false)
+    private Set<Feedback> feedbacks = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles
-                .stream()
-                .map(r -> new SimpleGrantedAuthority(r.getName()))
+        if(roles == null) {
+            return new HashSet<>();
+        }
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
     }
 
     @Override
@@ -114,34 +92,52 @@ public class User implements UserDetails, Principal {
     }
 
     @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
     public boolean isEnabled() {
         return enabled;
     }
 
-    public String fullName() {
+    @Override
+    public String getName() {
+        return email;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    public String getFullName() {
         return firstname + " " + lastname;
     }
 
-    public void addPurchasedProduct(Product product) {
-        if (product != null) {
-            if (purchasedProducts == null) {
-                purchasedProducts = new ArrayList<>();
-            }
-            purchasedProducts.add(product);
+    public void addToPurchasedProducts(Product product) {
+        if (product == null) {
+            return;
         }
+        purchasedProducts.add(product);
     }
 
-    public void addRole(Role role) {
-        if (role != null) {
-            if (roles == null) {
-                roles = new ArrayList<>();
-            }
-            roles.add(role);
+    public void addToRoles(Role role) {
+        if (role == null) {
+            return;
         }
+
+        if (this.roles == null) {
+            this.roles = new HashSet<>();
+        }
+
+        roles.add(role);
+    }
+
+    public void removeFromRoles(Role role) {
+        if (role == null) {
+            return;
+        }
+
+        if (this.roles == null) {
+            this.roles = new HashSet<>();
+        }
+
+        roles.remove(role);
     }
 }

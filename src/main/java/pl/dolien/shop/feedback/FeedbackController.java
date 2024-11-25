@@ -3,10 +3,13 @@ package pl.dolien.shop.feedback;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import pl.dolien.shop.common.PageResponse;
+import pl.dolien.shop.feedback.dto.FeedbackDTO;
+import pl.dolien.shop.feedback.dto.FeedbackRequestDTO;
+import pl.dolien.shop.feedback.dto.FeedbackResponseDTO;
+import pl.dolien.shop.pagination.PaginationParams;
 
 @RestController
 @RequestMapping("feedbacks")
@@ -17,20 +20,19 @@ public class FeedbackController {
     private final FeedbackService service;
 
     @PostMapping
-    public ResponseEntity<Integer> saveFeedback(
-            @Valid @RequestBody FeedbackRequest request,
+    public FeedbackDTO saveFeedback(
+            @Valid @RequestBody FeedbackRequestDTO request,
             Authentication connectedUser
     ) {
-        return ResponseEntity.ok(service.save(request, connectedUser));
+        return service.saveFeedback(request, connectedUser);
     }
 
-    @GetMapping("/product/{product-id}")
-    public ResponseEntity<PageResponse<FeedbackResponse>> findAllFeedbacksByProduct(
-            @PathVariable("product-id") Long productId,
-            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
-            @RequestParam(name = "size", defaultValue = "5", required = false) int size,
+    @GetMapping("/products/{productId}")
+    public Page<FeedbackResponseDTO> getAllFeedbacksByProduct(
+            @PathVariable Long productId,
+            @ModelAttribute PaginationParams paginationParams,
             Authentication connectedUser
     ) {
-        return ResponseEntity.ok(service.findAllFeedbacksByProduct(productId, page, size, connectedUser));
+        return service.getFeedbacksByProduct(productId, paginationParams, connectedUser);
     }
 }

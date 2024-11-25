@@ -1,0 +1,77 @@
+<header [ngClass]="{ 'with-notification': isNotificationVisible }">
+    <a href="#" routerLink="/" class="logo"><img src="../assets/images/temporary_logo-02.png" alt=""> </a>
+
+    <ul class="navmenu">
+        <h2 *ngIf="isCategoryButtonClicked">Categories</h2>
+        <li *ngIf="!isCategoryButtonClicked"><a class="navlink" href="#" routerLink="/">home</a></li>
+        <li *ngIf="!isCategoryButtonClicked">
+            <a class="categories navlink" (click)="handleCategoryButton()">categories</a>
+            <div class="categoryList">
+                <p *ngFor="let productCategory of productCategories" routerLink="/category/{{productCategory.id }}"
+                    class="categoryName">{{productCategory.categoryName}}
+                </p>
+            </div>
+        </li>
+        <li *ngIf="!isCategoryButtonClicked"><a class="navlink" href="#" routerLink="/products"
+                routerLinkActive="active-link">products</a></li>
+        <li *ngIf="!isCategoryButtonClicked"><a class="navlink" href="#" routerLink="/contact-us">contact</a></li>
+        <li *ngIf="isCategoryButtonClicked">
+            <a *ngFor="let productCategory of productCategories"
+                routerLink="/category/{{productCategory.id }}/{{ productCategory.categoryName }}" class="navlink">
+                {{productCategory.categoryName}}
+            </a>
+        </li>
+    </ul>
+
+    <div class="nav-icon loading">
+        <div class="search-bar" *ngIf="!isDifferentSearchMode">
+            <div class="search-button" (click)="doSearch(myInput.value)">
+                <i class="bx bx-search"></i>
+            </div>
+            <div class="search-input">
+                <input #myInput type="text" placeholder="Search" id="search" (keyup.enter)="doSearch(myInput.value)">
+            </div>
+            <i class="bx bx-x disabled" (click)="toggleSearch()"></i>
+        </div>
+        <div class="profile-wrapper">
+            <i class="bx bx-user profile-icon"></i>
+            <div class="profile-list">
+                <p class="profile-option" routerLink="/profile">
+                    Profile
+                </p>
+                <p class="profile-option" routerLink="/admin-panel" *ngIf="isAdmin">
+                    Admin Panel
+                </p>
+                <p class="profile-option" routerLink="/order-history">
+                    Orders
+                </p>
+                <p class="profile-option" routerLink="/favourites">
+                    Favourites
+                </p>
+                <p class="profile-option" *ngIf="isUserLoggedIn" (click)="logout()">
+                    Log-out
+                </p>
+                <p class="profile-option" *ngIf="!isUserLoggedIn" routerLink="/login">
+                    Login / Register
+                </p>
+            </div>
+        </div>
+        <a routerLink="/cart" class="cart-status">
+            <app-cart-status></app-cart-status>
+            <i class="bx bx-cart"></i>
+        </a>
+
+        <div class="bx bx-menu" (click)="toggleMenu()" id="menu-icon"></div>
+    </div>
+</header>
+
+<div class="max-width-search" *ngIf="isDifferentSearchMode">
+    <div class="search-bar">
+        <div class="search-button " (click)="doSearch(myInput.value)">
+            <i class="bx bx-search"></i>
+        </div>
+        <div class="search-input">
+            <input #myInput type="text" placeholder="Search" id="search" (keyup.enter)="doSearch(myInput.value)">
+        </div>
+    </div>
+</div>

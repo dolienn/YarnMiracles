@@ -1,0 +1,76 @@
+<div class="navbox">
+
+</div>
+
+<div class="container">
+    <h2>Cart</h2>
+    <div *ngIf="cartItems.length > 0" class="cart-items">
+        <table>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+            </tr>
+
+            <tr *ngFor="let cartItem of cartItems">
+                <td>
+                    <div class="cart-info">
+                        <div class="image">
+                            <img src='{{cartItem.imageUrl}}' alt="Product Name">
+                        </div>
+                        <div class="info">
+                            <div class="name">{{cartItem.name}}</div>
+                            <div class="price">{{cartItem.unitPrice | currency: 'PLN'}}</div>
+                            <div class="remove-button">
+                                <button (click)="removeItem(cartItem)">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="row">
+                        <button (click)="incrementQuantity(cartItem)" class="plus">
+                            <i class='bx bx-plus'></i>
+                        </button>
+                        <div>
+                            {{cartItem.quantity}}
+                        </div>
+                        <button (click)="decrementQuantity(cartItem)" class="minus">
+                            <i class='bx bx-minus'></i>
+                        </button>
+                    </div>
+                </td>
+                <td>
+                    <div class="subtotal">{{ cartItem.quantity * cartItem.unitPrice | currency: 'PLN'}}</div>
+                </td>
+            </tr>
+        </table>
+
+        <div class="total-price">
+            <table>
+                <tr>
+                    <td>Subtotal</td>
+                    <td>{{totalPrice | currency:'PLN'}}</td>
+                </tr>
+
+                <tr>
+                    <td>Shipping</td>
+                    <td>{{shipping | currency: 'PLN'}}</td>
+                </tr>
+
+                <tr>
+                    <td>Total</td>
+                    <td>{{totalPrice + shipping | currency: 'PLN'}}</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="checkout-button">
+            <button routerLink="/checkout">Checkout</button>
+        </div>
+    </div>
+
+    <div *ngIf="cartItems.length === 0" class="alert">
+        <app-alert msg="No products found."></app-alert>
+    </div>
+</div>

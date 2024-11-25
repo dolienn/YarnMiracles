@@ -1,0 +1,253 @@
+<div class="navbox"></div>
+
+<app-loader [isLoading]="isLoading"></app-loader>
+
+<div class="container" [class.visible]="!isLoading">
+    <form [formGroup]="checkoutFormGroup" (ngSubmit)="onSubmit()">
+        <div formGroupName="customer" class="form-group">
+            <h3>Customer</h3>
+            <div class="row">
+                <div class="form-control">
+                    <input formControlName="firstname" type="text" id="firstname" placeholder=" ">
+                    <label for="firstname">First Name</label>
+                </div>
+
+                <div *ngIf="isFieldInvalid('customer.firstname')" #alert>
+                    <app-alert msg="First name is required"
+                        *ngIf="hasError('customer.firstname', 'required') || hasError('customer.firstname', 'notOnlyWhitespace')"
+                        backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
+
+                    <app-alert msg="First name must be at least 2 characters"
+                        *ngIf="hasError('customer.firstname', 'minlength')" backgroundColor="#ff6961"
+                        borderColor="#d60b00"></app-alert>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-control">
+                    <input formControlName="lastname" type="text" id="lastname" placeholder=" ">
+                    <label for="lastname">Last Name</label>
+                </div>
+
+                <div *ngIf="isFieldInvalid('customer.lastname')" #alert>
+                    <app-alert msg="Last name is required"
+                        *ngIf="hasError('customer.lastname', 'required') || hasError('customer.lastname', 'notOnlyWhitespace')"
+                        backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
+
+                    <app-alert msg="Last name must be at least 2 characters"
+                        *ngIf="hasError('customer.lastname', 'minlength')" backgroundColor="#ff6961"
+                        borderColor="#d60b00"></app-alert>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-control">
+                    <input formControlName="email" type="text" id="email" placeholder=" ">
+                    <label for="email">Email</label>
+                </div>
+
+                <div *ngIf="isFieldInvalid('customer.email')" #alert>
+                    <app-alert msg="Email is required" *ngIf="hasError('customer.email', 'required')"
+                        backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
+
+                    <app-alert msg="Email must be a valid email address format"
+                        *ngIf="hasError('customer.email', 'pattern')" backgroundColor="#ff6961"
+                        borderColor="#d60b00"></app-alert>
+                </div>
+            </div>
+        </div>
+
+        <div formGroupName="billingAddress" class="form-group">
+            <h3>Billing Address</h3>
+            <div class="row">
+                <div class="form-control">
+                    <select formControlName="country" (change)="onCountryChange(countrySelect.value)" #countrySelect>
+                        <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}
+                            ({{country.code}})
+                        </option>
+                    </select>
+                    <label for="country">Country</label>
+                </div>
+
+                <div *ngIf="isFieldInvalid('billingAddress.country')" #alert>
+                    <app-alert msg="Country is required" *ngIf="hasError('billingAddress.country', 'required')"
+                        backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-control">
+                    <input formControlName="street" type="text" id="street" placeholder=" ">
+                    <label for="street">Street</label>
+                </div>
+
+                <div *ngIf="isFieldInvalid('billingAddress.street')" #alert>
+                    <app-alert msg="Street is required"
+                        *ngIf="hasError('billingAddress.street', 'required') || hasError('billingAddress.street', 'notOnlyWhitespace')"
+                        backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
+
+                    <app-alert msg="Street must be at least 2 characters"
+                        *ngIf="hasError('billingAddress.street', 'minlength')" backgroundColor="#ff6961"
+                        borderColor="#d60b00"></app-alert>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-control">
+                    <input formControlName="city" type="text" id="city" placeholder=" ">
+                    <label for="city">City</label>
+                </div>
+
+                <div *ngIf="isFieldInvalid('billingAddress.city')" #alert>
+                    <app-alert msg="City is required"
+                        *ngIf="hasError('billingAddress.city', 'required') || hasError('billingAddress.city', 'notOnlyWhitespace')"
+                        backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
+
+                    <app-alert msg="City must be at least 2 characters"
+                        *ngIf="hasError('billingAddress.city', 'minlength')" backgroundColor="#ff6961"
+                        borderColor="#d60b00"></app-alert>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-control">
+                    <input formControlName="zipCode" type="text" id="zipCode" placeholder=" ">
+                    <label for="zipCode">Zip Code</label>
+                </div>
+
+                <div *ngIf="isFieldInvalid('billingAddress.zipCode')" #alert>
+                    <app-alert msg="Zip Code is required"
+                        *ngIf="hasError('billingAddress.zipCode', 'required') || hasError('billingAddress.zipCode', 'notOnlyWhitespace')"
+                        backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
+
+                    <app-alert msg="Zip Code must be at least 2 characters"
+                        *ngIf="hasError('billingAddress.zipCode', 'minlength')" backgroundColor="#ff6961"
+                        borderColor="#d60b00"></app-alert>
+                </div>
+            </div>
+        </div>
+
+        <div class="shippingAsBilling">
+            <input type="checkbox" [checked]="isChecked" (change)="copyBillingToShipping($event)" id="checkbox"
+                [disabled]="isCheckboxDisabled">
+            <label for="checkbox" [class.checkboxDisabled]="isCheckboxDisabled">Shipping Address same as Billing
+                Address</label>
+        </div>
+
+        <div formGroupName="shippingAddress" class="shippingAddressContainer form-group">
+            <h3>Shipping Address</h3>
+            <div class="row">
+                <div class="onlyPoland">
+                    <p>Shipping is only within Poland</p>
+                </div>
+                <div class="form-control">
+                    <select disabled>
+                        <option *ngFor="let country of countries">{{ country.name }}
+                            ({{country.code}})
+                        </option>
+                    </select>
+                    <select formControlName="country" hidden>
+                        <option *ngFor="let country of countries" [ngValue]="country"></option>
+                    </select>
+                    <label for="country">Country</label>
+                </div>
+
+                <div *ngIf="isFieldInvalid('shippingAddress.country')" #alert>
+                    <app-alert msg="Country is required" *ngIf="hasError('shippingAddress.country', 'required')"
+                        backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-control">
+                    <input formControlName="street" type="text" id="street" placeholder=" ">
+                    <label for="street">Street</label>
+                </div>
+
+                <div *ngIf="isFieldInvalid('shippingAddress.street')" #alert>
+                    <app-alert msg="Street is required"
+                        *ngIf="hasError('shippingAddress.street', 'required') || hasError('shippingAddress.street', 'notOnlyWhitespace')"
+                        backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
+
+                    <app-alert msg="Street must be at least 2 characters"
+                        *ngIf="hasError('shippingAddress.street', 'minlength')" backgroundColor="#ff6961"
+                        borderColor="#d60b00"></app-alert>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-control">
+                    <input formControlName="city" type="text" id="city" placeholder=" ">
+                    <label for="city">City</label>
+                </div>
+
+                <div *ngIf="isFieldInvalid('shippingAddress.city')" #alert>
+                    <app-alert msg="City is required"
+                        *ngIf="hasError('shippingAddress.city', 'required') || hasError('shippingAddress.city', 'notOnlyWhitespace')"
+                        backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
+
+                    <app-alert msg="City must be at least 2 characters"
+                        *ngIf="hasError('shippingAddress.city', 'minlength')" backgroundColor="#ff6961"
+                        borderColor="#d60b00"></app-alert>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-control">
+                    <input formControlName="zipCode" type="text" id="zipCode" placeholder=" ">
+                    <label for="zipCode">Zip Code</label>
+                </div>
+
+                <div *ngIf="isFieldInvalid('shippingAddress.zipCode')" #alert>
+                    <app-alert msg="Zip Code is required"
+                        *ngIf="hasError('shippingAddress.zipCode', 'required') || hasError('shippingAddress.zipCode', 'notOnlyWhitespace')"
+                        backgroundColor="#ff6961" borderColor="#d60b00"></app-alert>
+
+                    <app-alert msg="Zip Code must be at least 2 characters"
+                        *ngIf="hasError('shippingAddress.zipCode', 'minlength')" backgroundColor="#ff6961"
+                        borderColor="#d60b00"></app-alert>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <h3>Credit Card</h3>
+
+            <div id="card-element"></div>
+
+            <div *ngIf="displayError" #alert>
+                <app-alert *ngIf="displayError" [msg]="displayError" backgroundColor="#ff6961"
+                    borderColor="#d60b00"></app-alert>
+            </div>
+        </div>
+
+        <div class="review-order">
+            <table>
+                <tr>
+                    <td>Subtotal</td>
+                    <td>{{totalPrice | currency:'PLN'}}</td>
+                </tr>
+
+                <tr>
+                    <td>Shipping</td>
+                    <td>{{shippingCost | currency: 'PLN'}}</td>
+                </tr>
+
+                <tr>
+                    <td>Total</td>
+                    <td>{{totalPrice + shippingCost | currency: 'PLN'}}</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="purchase-button">
+            <div *ngIf="!purchaseLoading">
+                <button type="submit" [disabled]="isDisabled">Purchase</button>
+            </div>
+
+            <div *ngIf="purchaseLoading">
+                <button><app-loader width="1rem" height="1rem" [maxHeight]="false"></app-loader></button>
+            </div>
+        </div>
+    </form>
+</div>

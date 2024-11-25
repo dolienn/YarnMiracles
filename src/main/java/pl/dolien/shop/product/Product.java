@@ -1,6 +1,5 @@
 package pl.dolien.shop.product;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -10,9 +9,9 @@ import pl.dolien.shop.feedback.Feedback;
 import pl.dolien.shop.user.User;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+
+import static pl.dolien.shop.product.RatingCalculator.calculateRating;
 
 @Getter
 @Setter
@@ -26,41 +25,31 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    @JsonIgnore
-    private ProductCategory category;
-
     private String sku;
 
     @Column(unique = true)
     private String name;
 
     private String description;
-
     private BigDecimal unitPrice;
-
     private String imageUrl;
-
     private boolean active;
-
     private int unitsInStock;
-
     private Double rate;
-
     private Long sales = 0L;
 
+    @Column(nullable = false, updatable = false)
+    private Integer categoryId;
+
     @ManyToMany(mappedBy = "favourites")
-    @JsonIgnore
-    private List<User> usersWhoFavourited;
+    private Set<User> favouritedBy = new HashSet<>();
 
     @ManyToMany(mappedBy = "purchasedProducts")
-    @JsonIgnore
-    private List<User> usersWhoPurchased;
+    private Set<User> buyers = new HashSet<>();
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
-    private List<Feedback> feedbacks;
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "productId", updatable = false, insertable = false)
+    private Set<Feedback> feedbacks = new HashSet<>();
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -70,32 +59,6 @@ public class Product {
     @Column(insertable = false)
     private Date lastUpdated;
 
-    @Transient
-    public void calculateRate() {
-        if (feedbacks == null || feedbacks.isEmpty()) {
-            this.rate = 0.0;
-        } else {
-            var rate = this.feedbacks.stream()
-                    .mapToDouble(Feedback::getNote)
-                    .average()
-                    .orElse(0.0);
-
-            this.rate = Math.round(rate * 10.0) / 10.0;
-        }
-    }
-
-    public void addSales(int quantity) {
-        if(this.sales == null || this.sales == 0) {
-            this.sales = (long) quantity;
-        } else {
-            this.sales = this.sales + quantity;
-        }
-    }
-
-    public void removeUnitsInStock(int quantity) {
-        this.unitsInStock = this.unitsInStock - quantity;
-    }
-
     @PostLoad
     @PostPersist
     @PostUpdate
@@ -103,10 +66,21 @@ public class Product {
         calculateRate();
     }
 
-    public void addUserWhoPurchased(User user) {
-        if (usersWhoPurchased == null) {
-            usersWhoPurchased = new ArrayList<>();
-        }
-        usersWhoPurchased.add(user);
+    @Transient
+    public void calculateRate() {
+        this.rate = calculateRating(this.feedbacks);
+    }
+
+    public void incrementSales(int quantity) {
+        this.sales = (this.sales == null ? 0L : this.sales) + quantity;
+    }
+
+    public void removeUnitsInStock(int quantity) {
+        this.unitsInStock -= quantity;
+    }
+
+    public void addBuyer(User user) {
+        user.addToPurchasedProducts(this);
+        buyers.add(user);
     }
 }

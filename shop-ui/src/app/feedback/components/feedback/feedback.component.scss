@@ -1,0 +1,148 @@
+@import "../../../variables.scss";
+
+.form-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .overlay {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.6);
+    z-index: 2;
+
+    i {
+      font-size: 3rem;
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-top: 2rem;
+    }
+
+    button {
+      width: 20rem;
+      padding: 1rem 0;
+      font-size: 1rem;
+      color: $background-color--01;
+      font-size: 500;
+      margin-top: 2rem;
+      border-radius: $border-radius;
+      background-color: $color--01;
+      transition: 0.1s ease;
+    }
+
+    button:hover {
+      background-color: $color--00;
+      cursor: pointer;
+    }
+  }
+
+  form {
+    background-color: $background-color--02;
+    display: grid;
+    place-items: center;
+    gap: 2rem;
+    width: 100%;
+
+    h2 {
+      font-size: 2rem;
+      margin-top: 3rem;
+    }
+
+    textarea {
+      max-width: 30rem;
+      width: 80vw;
+      height: 10rem;
+      font-size: 1.1rem;
+      padding: 0.5rem;
+      resize: none;
+    }
+
+    button {
+      width: 12rem;
+      padding: 1rem 0;
+      font-size: 1rem;
+      color: $background-color--01;
+      font-size: 500;
+      border-radius: $border-radius;
+      background-color: $color--01;
+      justify-self: center;
+      transition: 0.1s ease;
+      margin-bottom: 4rem;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: $color--00;
+    }
+  }
+
+  .not-logged-in {
+    filter: blur(5px);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .already-sent-feedback {
+    filter: blur(5px);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .has-not-purchased-product {
+    filter: blur(5px);
+    pointer-events: none;
+    z-index: 1;
+  }
+}
+
+.feedbacks {
+  display: grid;
+  gap: 3rem;
+  padding: 3rem 0;
+
+  .feedback {
+    padding: 0 5%;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    .user-and-date {
+      display: flex;
+      flex-direction: row;
+
+      .username {
+        font-weight: 700;
+      }
+
+      .date {
+        margin-left: 1rem;
+        font-style: italic;
+      }
+    }
+
+    .comment {
+      margin-top: 1rem;
+      width: 70vw;
+      box-sizing: border-box;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      resize: vertical;
+    }
+  }
+
+  app-alert {
+    padding: 5% 10%;
+  }
+}

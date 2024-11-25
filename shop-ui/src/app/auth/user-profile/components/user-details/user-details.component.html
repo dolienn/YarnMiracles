@@ -1,0 +1,89 @@
+<div class="navbox"></div>
+
+<app-loader [isLoading]="isLoading"></app-loader>
+
+<div class="container" [class.visible]="!isLoading">
+    <div class="profile-wrapper">
+        <h3>Your account details</h3>
+        <p>Email: <span>{{user.email}}</span></p>
+        <p>First name: <span>{{user.firstname}}</span></p>
+        <p>Last name: <span>{{user.lastname}}</span></p>
+        <p>Date of birth: <span>{{user.dateOfBirth}}</span></p>
+    </div>
+    <form>
+        <div class="profile-wrapper">
+            <h3>Change account details</h3>
+
+            <div class="alerts" *ngFor="let msg of errorMsg">
+                <app-alert backgroundColor="#ff6961" borderColor="#d60b00" msg="{{msg}}"></app-alert>
+            </div>
+
+            <div class="row">
+                <div class="profile-control">
+                    <input [(ngModel)]="userProfileDTO.firstname" name="firstname" type="text" id="firstname"
+                        placeholder=" " [value]="user.firstname">
+                    <label for="changeFirstName">Your first name</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="profile-control">
+                    <input [(ngModel)]="userProfileDTO.lastname" name="lastname" type="text" id="lastname"
+                        placeholder=" " value="{{user.lastname}}">
+                    <label for="lastname">Your last name</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="profile-control">
+                    <input [(ngModel)]="userProfileDTO.email" name="email" type="text" id="email" placeholder=" "
+                        value="{{user.email}}">
+                    <label for="email">Your email</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="profile-control">
+                    <input type="date" id="dateOfBirth" placeholder=" " value="{{user.dateOfBirth}}" min="1930-01-01"
+                        [max]="maxDate">
+                    <label for="dateOfBirth">Your date of birth</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="profile-control">
+                    <input [(ngModel)]="userProfileDTO.password" name="password" type="password" id="password"
+                        placeholder=" ">
+                    <label for="password">Your password</label>
+                </div>
+            </div>
+
+            <div class="change-account-details-button">
+                <button (click)="changeAccountDetails()" type="button">Change Account Details</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="profile-wrapper">
+        <h3>Change your password</h3>
+
+        <div class="alerts" *ngFor="let msg of errorMsgPassword">
+            <app-alert backgroundColor="#ff6961" borderColor="#d60b00" msg="{{msg}}"></app-alert>
+        </div>
+
+        <div class="profile-control">
+            <input [(ngModel)]="passwordRequest.currentPassword" name="yourPassword" type="password" id="yourPassword"
+                placeholder=" ">
+            <label for="yourPassword">Your password</label>
+        </div>
+        <div class="profile-control">
+            <input [(ngModel)]="passwordRequest.newPassword" name="newPassword" type="password" id="newPassword"
+                placeholder=" ">
+            <label for="newPassword">New password</label>
+        </div>
+
+        <div class="change-account-details-button">
+            <button (click)="changePassword()" type="button">Change Account Details</button>
+        </div>
+    </div>
+</div>

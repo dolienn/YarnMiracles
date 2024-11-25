@@ -6,381 +6,151 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
-import pl.dolien.shop.common.PageResponse;
-import pl.dolien.shop.product.Product;
-import pl.dolien.shop.product.ProductRepository;
-import pl.dolien.shop.user.User;
+import pl.dolien.shop.kafka.producer.KafkaJsonProducer;
+import pl.dolien.shop.pagination.RestPage;
+import pl.dolien.shop.feedback.dto.FeedbackDTO;
+import pl.dolien.shop.feedback.dto.FeedbackRequestDTO;
+import pl.dolien.shop.feedback.dto.FeedbackResponseDTO;
+import pl.dolien.shop.pagination.PageableBuilder;
+import pl.dolien.shop.pagination.PaginationParams;
+import pl.dolien.shop.user.UserService;
+import pl.dolien.shop.user.dto.UserWithRoleDTO;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static java.time.LocalDate.parse;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class FeedbackServiceTest {
 
     @InjectMocks
-    private FeedbackService service;
+    private FeedbackServiceImpl feedbackService;
 
     @Mock
-    private FeedbackRepository repository;
+    private FeedbackRepository feedbackRepository;
 
     @Mock
-    private ProductRepository productRepository;
+    private FeedbackMapper feedbackMapper;
 
     @Mock
-    private FeedbackMapper mapper;
+    private UserService userService;
+
+    @Mock
+    private KafkaJsonProducer kafkaJsonProducer;
+
+    @Mock
+    private PageableBuilder pageableBuilder;
 
     @Mock
     private Authentication authentication;
 
+    private UserWithRoleDTO testUserDTO;
+    private Feedback testFeedback;
+    private FeedbackDTO testFeedbackDTO;
+    private FeedbackRequestDTO testFeedbackRequestDTO;
+    private FeedbackResponseDTO testFeedbackResponseDTO;
+    private PaginationParams testPaginationParams;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+
+        initializeTestData();
     }
 
     @Test
-    public void shouldSuccessfullySaveAStudent() {
-        FeedbackRequest request = new FeedbackRequest(
-                5D,
-                "What an amazing product!",
-                2L
-        );
+    void shouldSaveFeedback() {
+        mockDependenciesForSaveFeedback();
 
-        Feedback feedback = new Feedback(
-                1,
-                5D,
-                "What an amazing product!",
-                Product.builder().id(4L).build(),
-                LocalDateTime.now(),
-                null,
-                2,
-                null
-        );
+        FeedbackDTO result = feedbackService.saveFeedback(testFeedbackRequestDTO, authentication);
 
-        User user = new User();
-        user.setId(2);
+        assertEquals(testFeedbackDTO.getId(), result.getId());
 
-        when(mapper.toFeedback(request)).thenReturn(feedback);
-        when(repository.save(feedback)).thenReturn(feedback);
-        when(authentication.getPrincipal()).thenReturn(user);
-
-        Integer savedFeedbackId = service.save(request, authentication);
-
-        assertEquals(feedback.getId(), savedFeedbackId);
-        verify(mapper, times(1)).toFeedback(request);
-        verify(repository, times(1)).save(feedback);
+        verifyInteractionsForSaveFeedback();
     }
 
     @Test
-    public void shouldThrowExceptionWhenRequestIsNull() {
-        Feedback feedback = new Feedback(
-                1,
-                5D,
-                "What an amazing product!",
-                Product.builder().id(4L).build(),
-                LocalDateTime.now(),
-                null,
-                2,
-                null
-        );
+    void shouldGetFeedbacksByProduct() {
+        mockDependenciesForGetFeedbacksByProduct();
 
-        User user = new User();
-        user.setId(1);
+        Page<FeedbackResponseDTO> result = feedbackService.getFeedbacksByProduct(1L, testPaginationParams, authentication);
 
-        when(mapper.toFeedback(null)).thenReturn(feedback);
-        when(repository.save(feedback)).thenReturn(feedback);
-        when(authentication.getPrincipal()).thenReturn(user);
+        assertEquals(1, result.getContent().size());
+        assertEquals(testFeedback.getCreatedBy(), result.getContent().get(0).getCreatedBy().getId());
 
-        var exp = assertThrows(NullPointerException.class, () -> service.save(null, authentication));
-        assertEquals("Feedback request should not be null", exp.getMessage());
+        verifyInteractionsForGetFeedbacksByProduct();
     }
 
-    @Test
-    public void shouldThrowExceptionWhenMapperReturnsNull() {
-        FeedbackRequest request = new FeedbackRequest(
-                5D,
-                "What an amazing product!",
-                2L
-        );
+    private void initializeTestData() {
+        testUserDTO = UserWithRoleDTO.builder()
+                .id(1)
+                .firstname("John")
+                .lastname("Doe")
+                .email("test@example")
+                .dateOfBirth(parse("2020-01-01"))
+                .accountLocked(false)
+                .enabled(true)
+                .createdDate(parse("2020-01-01").atStartOfDay())
+                .lastModifiedDate(parse("2020-01-01").atStartOfDay())
+                .build();
 
-        Feedback feedback = new Feedback(
-                1,
-                5D,
-                "What an amazing product!",
-                Product.builder().id(4L).build(),
-                LocalDateTime.now(),
-                null,
-                2,
-                null
-        );
+        testFeedback = Feedback.builder()
+                .id(1)
+                .createdBy(1)
+                .build();
 
-        when(mapper.toFeedback(request)).thenReturn(null);
-        when(repository.save(feedback)).thenReturn(feedback);
+        testFeedbackDTO = FeedbackDTO.builder()
+                .id(1)
+                .build();
 
-        User user = new User();
-        user.setId(1);
+        testFeedbackRequestDTO = FeedbackRequestDTO.builder()
+                .note(5D)
+                .comment("testFeedback")
+                .productId(1L)
+                .build();
 
-        when(authentication.getPrincipal()).thenReturn(user);
+        testFeedbackResponseDTO = FeedbackResponseDTO.builder()
+                .createdBy(testUserDTO)
+                .build();
 
-        assertThrows(NullPointerException.class, () -> service.save(request, authentication));
+        testPaginationParams = PaginationParams.builder()
+                .page(1)
+                .size(10)
+                .build();
     }
 
-    @Test
-    public void shouldThrowExceptionWhenRepositoryReturnsNull() {
-        FeedbackRequest request = new FeedbackRequest(
-                5D,
-                "What an amazing product!",
-                2L
-        );
-
-        Feedback feedback = new Feedback(
-                1,
-                5D,
-                "What an amazing product!",
-                Product.builder().id(4L).build(),
-                LocalDateTime.now(),
-                null,
-                2,
-                1
-        );
-
-        when(mapper.toFeedback(request)).thenReturn(feedback);
-        when(repository.save(feedback)).thenReturn(null);
-
-        User user = new User();
-        user.setId(1);
-
-        when(authentication.getPrincipal()).thenReturn(user);
-
-        assertThrows(NullPointerException.class, () -> service.save(request, authentication));
+    private void mockDependenciesForSaveFeedback() {
+        when(userService.getUserByAuth(authentication)).thenReturn(testUserDTO);
+        when(feedbackRepository.save(any(Feedback.class))).thenReturn(testFeedback);
     }
 
-    @Test
-    public void shouldThrowExceptionWhenAuthenticationPrincipalIsNull() {
-        FeedbackRequest request = new FeedbackRequest(
-                5D,
-                "What an amazing product!",
-                2L
-        );
-
-        Feedback feedback = new Feedback(
-                1,
-                5D,
-                "What an amazing product!",
-                Product.builder().id(4L).build(),
-                LocalDateTime.now(),
-                null,
-                2,
-                1
-        );
-
-        when(mapper.toFeedback(request)).thenReturn(feedback);
-        when(repository.save(feedback)).thenReturn(feedback);
-        when(authentication.getPrincipal()).thenReturn(null);
-
-        assertThrows(NullPointerException.class, () -> service.save(request, authentication));
+    private void verifyInteractionsForSaveFeedback() {
+        verify(userService, times(1)).getUserByAuth(authentication);
+        verify(feedbackRepository, times(1)).save(any(Feedback.class));
     }
 
-    @Test
-    public void shouldReturnAllFeedbacksByProduct() {
-        Long productId = 2L;
-        int page = 0;
-        int size = 5;
-
-        User user = new User();
-        user.setId(1);
-        when(authentication.getPrincipal()).thenReturn(user);
-
-        when(productRepository.findById(productId)).thenReturn(Optional.ofNullable(Product.builder().id(productId).build()));
-
-        Feedback feedback1 = new Feedback(
-                1,
-                5D,
-                "What an amazing product!",
-                Product.builder().id(4L).build(),
-                LocalDateTime.now(),
-                null,
-                user.getId(),
-                1
-        );
-
-        Feedback feedback2 = new Feedback(
-                2,
-                3D,
-                "Nah. It's not bad but.. you know, should be better",
-                Product.builder().id(4L).build(),
-                LocalDateTime.now(),
-                null,
-                user.getId(),
-                1
-        );
-
-        List<Feedback> feedbackList = Arrays.asList(feedback1, feedback2);
-        Page<Feedback> feedbackPage = new PageImpl<>(feedbackList, PageRequest.of(page, size), feedbackList.size());
-
-        when(repository.findAllByProductId(productId, PageRequest.of(page, size))).thenReturn(feedbackPage);
-
-        FeedbackResponse feedbackResponse1 = new FeedbackResponse(
-                feedback1.getNote(),
-                feedback1.getComment(),
-                feedback1.getCreatedDate(),
-                feedback1.getCreatedBy(),
-                Objects.equals(feedback1.getCreatedBy(), user.getId())
-        );
-
-        FeedbackResponse feedbackResponse2 = new FeedbackResponse(
-                feedback2.getNote(),
-                feedback2.getComment(),
-                feedback2.getCreatedDate(),
-                feedback2.getCreatedBy(),
-                Objects.equals(feedback2.getCreatedBy(), user.getId())
-        );
-
-        when(mapper.toFeedbackResponse(feedback1, user.getId())).thenReturn(feedbackResponse1);
-        when(mapper.toFeedbackResponse(feedback2, user.getId())).thenReturn(feedbackResponse2);
-
-        PageResponse<FeedbackResponse> result = service.findAllFeedbacksByProduct(productId, page, size, authentication);
-
-        assertEquals(feedbackPage.getSize(), result.getSize());
-        verify(repository, times(1)).findAllByProductId(productId, PageRequest.of(page, size));
-        assertThat(result.getContent()).containsExactly(feedbackResponse1, feedbackResponse2);
-        assertThat(result.getNumber()).isEqualTo(page);
-        assertThat(result.getSize()).isEqualTo(size);
-        assertThat(result.getTotalElements()).isEqualTo(feedbackList.size());
-        assertThat(result.getTotalPages()).isEqualTo(1);
-        assertThat(result.isFirst()).isTrue();
-        assertThat(result.isLast()).isTrue();
+    private void mockDependenciesForGetFeedbacksByProduct() {
+        when(userService.getUserByAuth(any(Authentication.class))).thenReturn(testUserDTO);
+        when(feedbackMapper.toFeedbackResponses(any(Page.class), anyInt())).thenReturn(buildRestPageByFeedbackResponseDTO(List.of(testFeedbackResponseDTO)));
+        when(pageableBuilder.buildPageable(testPaginationParams)).thenReturn(mock(Pageable.class));
+        when(feedbackRepository.findAllByProductId(anyLong(), any(Pageable.class)))
+                .thenReturn(buildRestPageByFeedback(List.of(testFeedback)));
     }
 
-    @Test
-    public void shouldThrowExceptionWhenProductIdIs0() {
-        Long productId = 0L;
-        int page = 0;
-        int size = 5;
-
-        User user = new User();
-        user.setId(1);
-        when(authentication.getPrincipal()).thenReturn(user);
-
-        when(productRepository.findById(productId)).thenReturn(Optional.ofNullable(Product.builder().id(productId).build()));
-
-        Feedback feedback1 = new Feedback(
-                1,
-                5D,
-                "What an amazing product!",
-                Product.builder().id(4L).build(),
-                LocalDateTime.now(),
-                null,
-                user.getId(),
-                1
-        );
-
-        Feedback feedback2 = new Feedback(
-                2,
-                3D,
-                "Nah. It's not bad but.. you know, should be better",
-                Product.builder().id(4L).build(),
-                LocalDateTime.now(),
-                null,
-                user.getId(),
-                1
-        );
-
-        List<Feedback> feedbackList = Arrays.asList(feedback1, feedback2);
-        Page<Feedback> feedbackPage = new PageImpl<>(feedbackList, PageRequest.of(page, size), feedbackList.size());
-
-        when(repository.findAllByProductId(productId, PageRequest.of(page, size))).thenReturn(feedbackPage);
-
-        FeedbackResponse feedbackResponse1 = new FeedbackResponse(
-                feedback1.getNote(),
-                feedback1.getComment(),
-                feedback1.getCreatedDate(),
-                feedback1.getCreatedBy(),
-                Objects.equals(feedback1.getCreatedBy(), user.getId())
-        );
-
-        FeedbackResponse feedbackResponse2 = new FeedbackResponse(
-                feedback2.getNote(),
-                feedback2.getComment(),
-                feedback2.getCreatedDate(),
-                feedback2.getCreatedBy(),
-                Objects.equals(feedback2.getCreatedBy(), user.getId())
-        );
-
-        when(mapper.toFeedbackResponse(feedback1, user.getId())).thenReturn(feedbackResponse1);
-        when(mapper.toFeedbackResponse(feedback2, user.getId())).thenReturn(feedbackResponse2);
-
-        var exp = assertThrows(IllegalArgumentException.class, () -> service.findAllFeedbacksByProduct(productId, page, size, authentication));
-        assertEquals("Invalid product ID", exp.getMessage());
+    private void verifyInteractionsForGetFeedbacksByProduct() {
+        verify(userService, times(1)).getUserByAuth(any(Authentication.class));
+        verify(pageableBuilder, times(1)).buildPageable(testPaginationParams);
+        verify(feedbackRepository, times(1)).findAllByProductId(anyLong(), any(Pageable.class));
     }
 
-    @Test
-    public void shouldThrowExceptionWhenProductIsNull() {
-        Long productId = 2L;
-        int page = 0;
-        int size = 5;
+    private Page<Feedback> buildRestPageByFeedback(List<Feedback> content) {
+        return new RestPage<>(content, 1, 1, 1);
+    }
 
-        User user = new User();
-        user.setId(1);
-        when(authentication.getPrincipal()).thenReturn(user);
-
-        when(productRepository.findById(productId)).thenReturn(null);
-
-        Feedback feedback1 = new Feedback(
-                1,
-                5D,
-                "What an amazing product!",
-                Product.builder().id(4L).build(),
-                LocalDateTime.now(),
-                null,
-                user.getId(),
-                1
-        );
-
-        Feedback feedback2 = new Feedback(
-                2,
-                3D,
-                "Nah. It's not bad but.. you know, should be better",
-                Product.builder().id(4L).build(),
-                LocalDateTime.now(),
-                null,
-                user.getId(),
-                1
-        );
-
-        List<Feedback> feedbackList = Arrays.asList(feedback1, feedback2);
-        Page<Feedback> feedbackPage = new PageImpl<>(feedbackList, PageRequest.of(page, size), feedbackList.size());
-
-        when(repository.findAllByProductId(productId, PageRequest.of(page, size))).thenReturn(feedbackPage);
-
-        FeedbackResponse feedbackResponse1 = new FeedbackResponse(
-                feedback1.getNote(),
-                feedback1.getComment(),
-                feedback1.getCreatedDate(),
-                feedback1.getCreatedBy(),
-                Objects.equals(feedback1.getCreatedBy(), user.getId())
-        );
-
-        FeedbackResponse feedbackResponse2 = new FeedbackResponse(
-                feedback2.getNote(),
-                feedback2.getComment(),
-                feedback2.getCreatedDate(),
-                feedback2.getCreatedBy(),
-                Objects.equals(feedback2.getCreatedBy(), user.getId())
-        );
-
-        when(mapper.toFeedbackResponse(feedback1, user.getId())).thenReturn(feedbackResponse1);
-        when(mapper.toFeedbackResponse(feedback2, user.getId())).thenReturn(feedbackResponse2);
-
-        var exp = assertThrows(NullPointerException.class, () -> service.findAllFeedbacksByProduct(productId, page, size, authentication));
-        assertEquals("Cannot invoke \"java.util.Optional.isEmpty()\" because the return value of \"pl.dolien.shop.product.ProductRepository.findById(Object)\" is null", exp.getMessage());
+    private Page<FeedbackResponseDTO> buildRestPageByFeedbackResponseDTO(List<FeedbackResponseDTO> testFeedbackResponseDTO) {
+        return new RestPage<>(testFeedbackResponseDTO, 1, 1, 1);
     }
 }

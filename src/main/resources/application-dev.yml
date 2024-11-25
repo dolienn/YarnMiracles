@@ -2,7 +2,7 @@ spring:
   config:
     import: optional:file:.env[.properties]
   datasource:
-    url: ${DATABASE_URL}
+    url: jdbc:postgresql://localhost:${DATABASE_PORT}/shop
     username: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
     driver-class-name: org.postgresql.Driver
@@ -16,7 +16,7 @@ spring:
     database : postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   mail:
-    host: ${MAIL_HOST}
+    host: localhost
     port: ${MAIL_PORT}
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
@@ -37,6 +37,27 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
     mode: HTML
+  cache:
+    type: redis
+  redis:
+    host: localhost
+    port: ${REDIS_PORT}
+    password: ${REDIS_PASSWORD}
+    client-type: jedis
+  liquibase:
+    change-log: classpath:liquibase/master-changelog.xml
+  kafka:
+    bootstrap-servers: localhost:29092
+    group-id: kafka-group
+    consumer:
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: pl.dolien.*
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
 stripe:
   key:
@@ -49,14 +70,21 @@ application:
       expiration: ${JWT_EXPIRATION}
   mailing:
     frontend:
-      activation-url: http://localhost:4200/activate-account
+      activation-url: ${ACTIVATION_URL}
+
 server:
   address: ${SERVER_ADDRESS}
   port: ${SERVER_PORT}
+
+support:
+  email: ${SUPPORT_EMAIL}
+
 file:
   upload-dir: ./shop-ui/src/assets/images/products
+
 cloudinary:
   cloud:
     name: ${CLOUDINARY_CLOUD_NAME}
-    api_key: ${CLOUDINARY_API_KEY}
-    api_secret: ${CLOUDINARY_API_SECRET}
+  api:
+    key: ${CLOUDINARY_API_KEY}
+    secret: ${CLOUDINARY_API_SECRET}

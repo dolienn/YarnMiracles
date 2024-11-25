@@ -1,0 +1,97 @@
+<div class="navbox">
+
+</div>
+
+<app-loader [isLoading]="isLoading"></app-loader>
+
+<div class="container" *ngIf="!isLoading">
+    <h3 class="title">
+        Dashboard
+    </h3>
+    <div class="values">
+        <div class="val-box">
+            <i class='bx bxs-user'></i>
+            <div>
+                <h3>{{summaryMetrics.totalUsers| number:'1.0-0'}}</h3>
+                <span>Total Users</span>
+            </div>
+        </div>
+        <div class="val-box">
+            <i class='bx bxs-cart'></i>
+            <div>
+                <h3>{{summaryMetrics.totalOrders | number:'1.0-0'}}</h3>
+                <span>Total Orders</span>
+            </div>
+        </div>
+        <div class="val-box">
+            <i class='bx bxs-receipt'></i>
+            <div>
+                <h3>{{summaryMetrics.totalCustomerFeedback | number:'1.0-0'}}</h3>
+                <span>Total Feedback</span>
+            </div>
+        </div>
+        <div class="val-box">
+            <i class='bx bxs-t-shirt'></i>
+            <div>
+                <h3>{{summaryMetrics.totalProductsSold| number:'1.0-0'}}</h3>
+                <span>Product Sell</span>
+            </div>
+        </div>
+        <div class="val-box">
+            <i class='bx bxs-wallet'></i>
+            <div>
+                <h3>{{summaryMetrics.revenue| currency:'PLN'}}</h3>
+                <span>This Month</span>
+            </div>
+        </div>
+
+        <div class="val-box" routerLink="/admin-panel/add-product">
+            <i class='bx bxs-book-add'></i>
+            <div>
+                <h3>Add Product</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="board-wrapper">
+        <div class="board">
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Locked</td>
+                        <td>Total Purchases</td>
+                        <td>Role</td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let user of users">
+                        <td class="people">
+                            <h5>{{user.firstname + ' ' + user.lastname}}</h5>
+                            <p>{{user.email}}</p>
+                        </td>
+                        <td class="locked">
+                            <p>{{user.accountLocked}}</p>
+                        </td>
+
+                        <td class="purchases">
+                            <p>{{user.quantityOfPurchasedProducts}}</p>
+                        </td>
+
+                        <td class="role">
+                            <p>{{getRole(user)}}</p>
+                        </td>
+
+                        <td class="edit">
+                            <a routerLink="/admin-panel/edit-user/{{user.id}}">Edit</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <app-pagination [totalElements]="page.totalElements" [pageSize]="page.size" [isLoading]="isLoading"
+        [(pageNumber)]="page.number" (pageNumberChange)="loadUsers()"></app-pagination>
+</div>
