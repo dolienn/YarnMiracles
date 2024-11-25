@@ -28,7 +28,7 @@ class RegistrationServiceTest {
     private static final String USER_ALREADY_EXISTS_MESSAGE = "User with email " + USER_EMAIL + " already exists";
 
     @InjectMocks
-    private RegistrationService registrationService;
+    private RegistrationServiceImpl registrationService;
 
     @Mock
     private RoleService roleService;

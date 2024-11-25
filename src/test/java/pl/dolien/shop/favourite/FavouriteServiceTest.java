@@ -31,7 +31,7 @@ class FavouriteServiceTest {
     private static final String PRODUCT_NOT_FAVOURITE_MESSAGE = "Product is not a favourite of the user";
 
     @InjectMocks
-    private FavouriteService favouriteService;
+    private FavouriteServiceImpl favouriteService;
 
     @Mock
     private FavouriteRepository favouriteRepository;

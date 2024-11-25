@@ -21,7 +21,7 @@ class UserProfileUpdaterTest {
     private static final String USER_NEW_EMAIL = "newTest@example.com";
 
     @InjectMocks
-    private UserProfileUpdater userProfileUpdater;
+    private UserProfileUpdaterImpl userProfileUpdater;
 
     @Mock
     private UserService userService;

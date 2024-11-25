@@ -29,7 +29,7 @@ class ProductServiceTest {
     private static final String PRODUCT_NAME = "Test product";
 
     @InjectMocks
-    private ProductService productService;
+    private ProductServiceImpl productService;
 
     @Mock
     private UserService userService;

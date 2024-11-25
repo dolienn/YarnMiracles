@@ -24,7 +24,7 @@ class LoginServiceTest {
     private static final String TEST_JWT_TOKEN = "test-jwt-token";
 
     @InjectMocks
-    private LoginService loginService;
+    private LoginServiceImpl loginService;
 
     @Mock
     private UserService userService;

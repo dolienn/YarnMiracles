@@ -23,7 +23,7 @@ class TokenServiceTest {
     private static final String TOKEN_INVALID_MESSAGE = "Invalid token";
 
     @InjectMocks
-    private TokenService tokenService;
+    private TokenServiceImpl tokenService;
 
     @Mock
     private TokenRepository tokenRepository;

@@ -20,7 +20,7 @@ class SummaryMetricsServiceTest {
     private static final String SUMMARY_METRICS_NOT_FOUND_MESSAGE = "Summary metrics not found";
 
     @InjectMocks
-    private SummaryMetricsService summaryMetricsService;
+    private SummaryMetricsServiceImpl summaryMetricsService;
 
     @Mock
     private SummaryMetricsRepository summaryMetricsRepository;

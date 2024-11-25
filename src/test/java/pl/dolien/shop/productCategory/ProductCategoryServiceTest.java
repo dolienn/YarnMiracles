@@ -18,7 +18,7 @@ class ProductCategoryServiceTest {
     private static final String CATEGORY_NAME = "Test category";
 
     @InjectMocks
-    private ProductCategoryService productCategoryService;
+    private ProductCategoryServiceImpl productCategoryService;
 
     @Mock
     private ProductCategoryRepository productCategoryRepository;

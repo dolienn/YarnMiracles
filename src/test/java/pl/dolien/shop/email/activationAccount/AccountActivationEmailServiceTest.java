@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 class AccountActivationEmailServiceTest {
 
     @InjectMocks
-    private AccountActivationEmailService accountActivationEmailService;
+    private AccountActivationEmailServiceImpl accountActivationEmailService;
 
     @Mock
     private JavaMailSender mailSender;

@@ -11,7 +11,7 @@ public class ProductInventoryListener {
 
     private final ProductInventoryUpdater productInventoryService;
 
-    @KafkaListener(topics = "update-inventory", groupId = "order-sent-group")
+    @KafkaListener(topics = "update-inventory", groupId = "kafka-group")
     public void updateProductInventory(OrderItemsEvent event) {
         event.getItems().forEach(productInventoryService::updateProductInventory);
     }

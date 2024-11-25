@@ -23,7 +23,7 @@ class CustomerServiceTest {
     private static final String TEST_EMAIL = "test@example.com";
 
     @InjectMocks
-    private CustomerService customerService;
+    private CustomerServiceImpl customerService;
 
     @Mock
     private CustomerRepository customerRepository;

@@ -26,7 +26,7 @@ class PasswordChangerTest {
     private static final String NEW_PASSWORD = "newPassword123";
 
     @InjectMocks
-    private PasswordChanger passwordChanger;
+    private PasswordChangerImpl passwordChanger;
 
     @Mock
     private UserService userService;

@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 class CheckoutServiceTest {
 
     @InjectMocks
-    private CheckoutService checkoutService;
+    private CheckoutServiceImpl checkoutService;
 
     @Mock
     private OrderService orderService;

@@ -10,7 +10,7 @@ public class CustomerProductsListener {
 
     private final CustomerService customerService;
 
-    @KafkaListener(topics = "update-customer-products", groupId = "order-sent-group")
+    @KafkaListener(topics = "update-customer-products", groupId = "kafka-group")
     public void associateProductsWithCustomer(CustomerProductsEvent event) {
         customerService.updatePurchasedProducts(event.getCustomer(), event.getOrderItems());
     }

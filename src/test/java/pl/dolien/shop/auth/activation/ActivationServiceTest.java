@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 class ActivationServiceTest {
 
     @InjectMocks
-    private ActivationService activationService;
+    private ActivationServiceImpl activationService;
 
     @Mock
     private TokenService tokenService;

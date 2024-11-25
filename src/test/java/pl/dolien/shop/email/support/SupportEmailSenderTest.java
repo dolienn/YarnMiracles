@@ -14,7 +14,7 @@ import static org.mockito.Mockito.*;
 class SupportEmailSenderTest {
 
     @InjectMocks
-    private SupportEmailSender supportEmailSender;
+    private SupportEmailSenderImpl supportEmailSender;
 
     @Mock
     private JavaMailSender mailSender;

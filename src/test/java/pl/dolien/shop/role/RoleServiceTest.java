@@ -19,7 +19,7 @@ class RoleServiceTest {
     private static final String ROLE_NOT_FOUND_MESSAGE = "Role USER not found";
 
     @InjectMocks
-    private RoleService roleService;
+    private RoleServiceImpl roleService;
 
     @Mock
     private RoleRepository roleRepository;
