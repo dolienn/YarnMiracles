@@ -10,7 +10,7 @@
 
 **Tech Stack Highlights**:
 - **Backend**: Spring Boot, Spring Security, Hibernate, JWT (JSON Web Tokens)
-- **Frontend**:  Angular
+- **Frontend**:  Angular, TypeScript, HTML, SCSS
 - **Database**: PostgreSQL, Liquibase
 - **Infrastructure**: Docker, NGINX, Redis, Apache Kafka, Zookeeper
 - **Integrations**: Stripe, Cloudinary API, Swagger
