@@ -1,19 +1,23 @@
-# YarnMiracles
+# YarnMiracles - E-Commerce Platform
 
 
 ![Logo](https://i.ibb.co/DVR4fgg/temporary-logo-02.png)
 
 
-YarnMiracles is a cutting-edge e-commerce platform designed to offer a seamless shopping experience. Built with a robust tech stack including **Spring Boot**, **Spring Security**, **Hibernate**, **PostgreSQL**, **Angular**, **TypeScript**, **HTML**, **SCSS**, **Docker**, and **Stripe**, YarnMiracles combines security, efficiency, and user satisfaction.
+**YarnMiracles** is a cutting-edge e-commerce platform built to deliver a secure, scalable, and high-performance shopping experience. Using a robust modern tech stack, the platform ensures seamless integration of powerful tools and technologies, making it a reliable foundation for a growing online business.
 
-## Key Features
+**Tech Stack Highlights**:
+- **Backend**: Spring Boot, Spring Security, Hibernate
+- **Frontend**:  Angular
+- **Database**: PostgreSQL, Liquibase
+- **Infrastructure**: Docker, NGINX, Redis, Apache Kafka, Zookeeper
+- **Integrations**: Stripe, Cloudinary API, Swagger
 
-- **User Management**: Secure registration and login with email verification. Users can manage their sessions effectively.
-- **Product Interaction**: Browse and interact with products, including rating (1-5 stars) and leaving comments.
-- **Payment Integration**: Secure transactions using Stripe.
-- **Order and Favorites**: Access your order history and manage a list of favorite products.
-- **Navigation**: Efficient product browsing with pagination and sorting options.
-- **Contact Form**: Directly communicate with the site owner via the contact form.
+The platform adheres strictly to **Clean Code** principles and industry best practices, ensuring maintainable, robust, and well-structured solutions.
+
+## Key Responsibilities and Achievements
+
+-- **System Architecture & Security**
 
 The platform emphasizes security and user experience, leveraging **JUnit** and **Mockito** for testing, **Docker** for containerization, and **JWT** with **Spring Security** for authentication. **Maildev** handles email verification processes.
 
