@@ -6,20 +6,61 @@
 
 **YarnMiracles** is a cutting-edge e-commerce platform built to deliver a secure, scalable, and high-performance shopping experience. Using a robust modern tech stack, the platform ensures seamless integration of powerful tools and technologies, making it a reliable foundation for a growing online business.
 
+---
+
 **Tech Stack Highlights**:
-- **Backend**: Spring Boot, Spring Security, Hibernate
-- **Frontend**:  Angular
+- **Backend**: Spring Boot, Spring Security, Hibernate, JWT (JSON Web Tokens)
+- **Frontend**:  Angular, TypeScript, HTML, SCSS
 - **Database**: PostgreSQL, Liquibase
 - **Infrastructure**: Docker, NGINX, Redis, Apache Kafka, Zookeeper
 - **Integrations**: Stripe, Cloudinary API, Swagger
+- **Testing**: JUnit, Mockito
 
-The platform adheres strictly to **Clean Code** principles and industry best practices, ensuring maintainable, robust, and well-structured solutions.
+The platform adheres strictly to **Clean Code** principles and industry **best practices**, ensuring maintainable, robust, and well-structured solutions.
+
+---
 
 ## Key Responsibilities and Achievements
 
--- **System Architecture & Security**
+- **System Architecture & Security**
+  - Designed and implemented a scalable backend using **Spring Boot**.
+  - Secured user authentication and authorization with **Spring Security** and **JWT**.
+  - Integrated **Stripe** for secure payment processing.
+  - Ensured a modular, reusable codebase by following **SOLID** principles and Clean Code practices.
+- **API Development & Documentation**
+  - Documented comprehensive API endpoints with **Swagger**, enabling easy exploration and testing for developers.
+- **Database Management**
+  - Employed **Liquibase** for version-controlled database migrations, ensuring seamless schema updates across environments.
+  - Designed an efficient, relational database schema in **PostgreSQL** to support complex e-commerce workflows.
+- **Advanced Media Management**
+  - Integrated **Cloudinary API** for efficient image upload, storage, and optimization, ensuring smooth product image handling.
+- **User Management & Authentication**
+  - Developed a secure user registration and login system with email verification using **Maildev**.
+  - Added advanced user features like session management, password recovery, and profile updates to enhance the overall experience.
+- **Product Interaction & Ratings**
+  - Implemented sorting, filtering, and pagination features to enable advanced product browsing.
+  - Developed product rating (1-5 stars) and review functionality to boost user engagement.
+- **Order Tracking & Favorites Management**
+  - Built intuitive systems for users to:
+    - Track order history.
+    - Manage their favorite products for easy future access.
+- **Real-Time Data Processing**
+  - Leveraged **Apache Kafka** and **Zookeeper** to build a real-time, event-driven architecture for efficient message streaming across microservices.
+- **Performance Optimization**
+  - Integrated **Redis** for caching, significantly reducing database load and improving response times.
+  - Optimized **Hibernate** queries and resolved N+1 query issues using Spring Cache, ensuring top-notch performance.
+- **Enhanced User Experience with Pagination & Sorting**
+  - Developed robust sorting and pagination functionalities for smoother, more efficient navigation.
+- **Load Balancing & High Availability**
+  - Configured **NGINX** for load balancing, ensuring high availability and smooth operation in production.
+- **Testing & Reliability**
+  - Applied **JUnit** and **Mockito** for thorough unit and integration testing, ensuring a defect-free application.
+  - Followed **Test-Driven Development** (**TDD**) practices to uphold code quality.
+- **Containerization & Deployment**
+  - Utilized **Docker** for containerization, streamlining deployment across various environments.
+  - Built CI/CD pipelines for efficient development and release management.
 
-The platform emphasizes security and user experience, leveraging **JUnit** and **Mockito** for testing, **Docker** for containerization, and **JWT** with **Spring Security** for authentication. **Maildev** handles email verification processes.
+---
 
 # Project Setup
 
@@ -91,12 +132,22 @@ Ensure the following tools are installed on your system:
    MAIL_USERNAME=username
    MAIL_PASSWORD=password
 
+   SUPPORT_EMAIL=yoursupportemail@test.com
+
    # Stripe Configuration
    STRIPE_SECRET_KEY=your_stripe_secret_key
 
    # JWT Configuration
    JWT_SECRET_KEY=your_jwt_secret_key
    JWT_EXPIRATION=8640000
+
+   # Redis Configuration
+   REDIS_HOST=redis
+   REDIS_PORT=6380
+   REDIS_PASSWORD=password
+
+   # Kafka Configuration
+   KAFKA_BOOTSTRAP_SERVERS=kafka:29092
 
    #Cloudinary Configuration
    CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
