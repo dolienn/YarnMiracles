@@ -13,7 +13,7 @@
 - **Frontend**:  Angular, TypeScript, HTML, SCSS
 - **Database**: PostgreSQL, Liquibase
 - **Infrastructure**: Docker, NGINX, Redis, Apache Kafka, Zookeeper
-- **Integrations**: Stripe, Cloudinary API, Swagger
+- **Integrations**: Stripe, Cloudinary API, Swagger, Maildev
 - **Testing**: JUnit, Mockito
 
 The platform adheres strictly to **Clean Code** principles and industry **best practices**, ensuring maintainable, robust, and well-structured solutions.
