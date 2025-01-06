@@ -26,7 +26,6 @@ class ActivationControllerTest {
     @Mock
     private ActivationService activationService;
 
-    @Autowired
     private MockMvc mockMvc;
 
     @BeforeEach

@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -23,18 +22,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class RegistrationControllerTest {
 
+        private final ObjectMapper objectMapper = new ObjectMapper();
+
     @InjectMocks
     private RegistrationController registrationController;
 
     @Mock
     private RegistrationService registrationService;
 
-    @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
     private User testUser;
     private RegistrationDTO testRegistrationDTO;
 

@@ -40,10 +40,8 @@ class ProductControllerTest {
     @Mock
     private Authentication authentication;
 
-    @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private ProductDTO testProductDTO;

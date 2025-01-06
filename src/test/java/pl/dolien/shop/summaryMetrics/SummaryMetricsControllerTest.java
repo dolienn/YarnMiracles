@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -26,10 +25,8 @@ class SummaryMetricsControllerTest {
     @Mock
     private SummaryMetricsService summaryMetricsService;
 
-    @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private SummaryMetrics testSummaryMetrics;

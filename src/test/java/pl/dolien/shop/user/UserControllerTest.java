@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.web.servlet.MockMvc;
@@ -28,7 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static pl.dolien.shop.role.RoleMapper.toRoleDTO;
 
-public class UserControllerTest {
+public class    UserControllerTest {
 
     private static final String USER_EMAIL = "test@example.com";
     private static final String ADMIN_ROLE = "ADMIN";
@@ -42,10 +41,8 @@ public class UserControllerTest {
     @Mock
     private Authentication authentication;
 
-    @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private UserDTO testUserDTO;

@@ -27,10 +27,8 @@ class LoginControllerTest {
     @Mock
     private LoginService loginService;
 
-    @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private LoginRequestDTO testLoginRequestDTO;
